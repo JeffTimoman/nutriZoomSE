@@ -1,0 +1,8 @@
+#Command For Running the Db First Time
+flask db init
+kalo error 
+flask db stamp head 
+flask db upgrade -m "Bla Bla"
+flask db migrate
+
+# kalo misal stamp head masih error dan ga bisa jalan sisanya, delete folder migrations di backend
