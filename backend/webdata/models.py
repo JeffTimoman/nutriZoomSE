@@ -1,4 +1,5 @@
 from webdata import db, app
+
 #Table List:
 # - User
 # - BahanMakanan
@@ -7,6 +8,9 @@ from webdata import db, app
 # - ResepMakananDetail
 # - ResepMakanan
 # - Artikel
+
+from webdata import jwt
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
