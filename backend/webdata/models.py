@@ -35,7 +35,7 @@ class BahanMakanan(db.Model):
 class ResepMakanan(db.Model):
     __tablename__ = 'resepmakanan'
     id_resep = db.Column(db.Integer, primary_key=True)
-    id_detailnutrisi = db.Column(db.Integer, db.ForeignKey('DetailNutrisi.id_detailnutrisi'))#disini gw jadiin FK karena menurut gw resepmakanan ngambil data dari detailnutrisi, bukan sebaliknya
+    id_detailnutrisi = db.Column(db.Integer, db.ForeignKey('detailnutrisi.id_detailnutrisi'))
     namamakanan = db.Column(db.String(100), unique=True)
     langkahpembuatan = db.Column(db.String(200))
     jumlahporsi = db.Column(db.Integer)
@@ -55,8 +55,8 @@ class ResepMakananDetail(db.Model):
     __tablename__ = 'resepmakanandetail'
     id_resepdetail = db.Column(db.Integer, primary_key=True)
     #Disini gw nambahin idResepDetail karena dari class diagram cuma ada idResep ama id, sedangkan perlu ada PK untuk tiap tabel
-    id_resep = db.Column(db.Integer, db.ForeignKey('ResepMakanan.id_resep'))
-    id = db.Column(db.Integer, db.ForeignKey('BahanMakanan.id_bahan'))
+    id_resep = db.Column(db.Integer, db.ForeignKey('resepmakanan.id_resep'))
+    id = db.Column(db.Integer, db.ForeignKey('bahanmakanan.id_bahan'))
     jumlahbahan = db.Column(db.Float)
     satuanjumlah = db.Column(db.String(50))
 
