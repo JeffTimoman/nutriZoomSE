@@ -12,4 +12,7 @@ class Config():
         self.SECRET_KEY = 'secret'
         
         self.DB_URI = f'{self.DB_PLATFORM}://{self.DB_USERNAME}:{self.DB_PASSWORD}@{self.DB_SERVER}:{self.DB_PORT}/{self.DB_NAME}'
+        # create db_URI for linux
+        # self.DB_URI = f'{self.DB_PLATFORM}://{self.DB_USERNAME}:{self.DB_PASSWORD}@{DB_SERVER}/{DB_NAME}'
+        # self.DB_URL=f"{self.DB_PLATFORM}://{self.DB_SERVER}/{self.DB_NAME}"
         
