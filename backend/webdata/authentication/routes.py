@@ -25,15 +25,11 @@ login = api.model('Login', {
 })
 
 logout = api.model('Logout', {  
-    'headers': {
-      'Authorization': "Bearer <access_token>",
-    }
+    'access_token': fields.String(description='Authorization : Bearer the_token', required=True)
 })
 
 protected_test = api.model('ProtectedTest', {
-    'headers': {
-        'Authorization': fields.String(description='Bearer token', required=True),
-    }
+    'headers': "{'Authorization': fields.String(description='Bearer token', required=True)}"
 })
 @api.route('/login')
 class Login(Resource):
