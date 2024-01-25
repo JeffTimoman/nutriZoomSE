@@ -1,4 +1,4 @@
-
+from webdata import app
 def createuser():
     from flask import Flask
     from flask_sqlalchemy import SQLAlchemy
@@ -33,7 +33,7 @@ def createuser():
         print('User created successfully')
 
 def runserver():
-    from webdata import app
+
     app.run(debug=True)
 
 if __name__ == '__main__':
