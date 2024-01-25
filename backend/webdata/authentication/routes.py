@@ -1,36 +1,27 @@
 from flask import request, jsonify, Blueprint
-from flask_restx import Api, Resource, fields
+from flask_restx import Api, Resource, fields, reqparse
 
-from webdata.models import User
+from webdata.models import User 
 from webdata import jwt, bcrypt
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_cors import CORS
 
+
 authenticator = Blueprint('authenticator', __name__)
 api = Api(authenticator, doc='/docs')
 
 cors = CORS(authenticator, resources={r"/auth/*": {"origins": "*"}})
-
-user = api.model('User', {
-    'name': fields.String,
-    'email': fields.String,
-    'password': fields.String
-})
-
 login = api.model('Login', {
     'email': fields.String,
     'password': fields.String
 })
 
-logout = api.model('Logout', {  
-    'access_token': fields.String(description='Authorization : Bearer the_token', required=True)
-})
+authorization_header = reqparse.RequestParser()
+authorization_header.add_argument('Authorization', location='headers', required=True, help='Bearer <access_token>')
 
-protected_test = api.model('ProtectedTest', {
-    'headers': "{'Authorization': fields.String(description='Bearer token', required=True)}"
-})
+
 @api.route('/login')
 class Login(Resource):
     @api.expect(login)
@@ -47,10 +38,21 @@ class Login(Resource):
                 return {'message': 'User not found or invalid credentials'}, 401
         else:
             return {'message': 'User not found or invalid credentials'}, 401
-        
+
 @api.route('/logout')
-class Logout(Resource):
-    @api.expect(logout)
+class ProtectedResource(Resource):
+    @api.expect(authorization_header, validate=True)
     @jwt_required()
     def post(self):
-        return {'message': 'User logged out successfully'}, 200
+        user_id = get_jwt_identity()
+        user = User.query.filter_by(id=user_id).first()
+        return {'message': f'Logged out successfully {user_id}'}, 200
+    
+@api.route('/protected')
+class ProtectedResource(Resource):
+    @api.expect(authorization_header, validate=True)
+    @jwt_required()
+    def get(self):
+        user_id = get_jwt_identity()
+        user = User.query.filter_by(id=user_id).first()
+        return {'message': f'Hello {user.name}'}, 200

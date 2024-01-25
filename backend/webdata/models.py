@@ -1,4 +1,9 @@
 from webdata import db, app
+# jwt loader
+
+from webdata import jwt
+
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
