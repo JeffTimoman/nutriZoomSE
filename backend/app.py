@@ -26,7 +26,7 @@ def createsuperuser():
         user_email = input('Enter your email: ')
         user_password = input('Enter your password: ')
         
-        user = User(name=user_name, email=user_email, password=bcrypt.generate_password_hash(user_password).decode('utf-8'), id_admin=True)
+        user = User(name=user_name, email=user_email, password=bcrypt.generate_password_hash(user_password).decode('utf-8'), is_admin=True)
         db.session.add(user)
         db.session.commit()
         sleep(1)
