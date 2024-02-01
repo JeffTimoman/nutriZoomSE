@@ -65,6 +65,4 @@ class Logout(Resource):
     @api.expect(authorization_header, validate=True)
     @jwt_required()
     def post(self):
-        jti = get_raw_jwt()['jti']
-        blacklist.add(jti)
         return {'message': 'Successfully logged out'}, 200
