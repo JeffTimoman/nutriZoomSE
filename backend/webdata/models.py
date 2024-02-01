@@ -25,17 +25,23 @@ class User(db.Model):
 
     def __repr__(self):
         return f'<User: {self.name}>'
-    
+
+class ResepFavorit(db.Model):
+    __tablename__ = 'resepfavorite'
+    id_user = db.Column(db.Integer, db.ForeignKey('user.id'))
+    id_resepfavorit = db.Column(db.Integer, db.ForeignKey('resepmakanan.id_resep'), primary_key=True)
+
+
 class BahanMakanan(db.Model):
     __tablename__ = 'bahanmakanan'
     id_bahan = db.Column(db.Integer, primary_key=True)
+    id_nutrisi = db.Column(db.Integer, db.ForeignKey('nutrisi.id_nutrisi'))
     namabahan = db.Column(db.String(100))
     deskripsibahan = db.Column(db.String(200))
 
 class ResepMakanan(db.Model):
     __tablename__ = 'resepmakanan'
     id_resep = db.Column(db.Integer, primary_key=True)
-    id_detailnutrisi = db.Column(db.Integer, db.ForeignKey('detailnutrisi.id_detailnutrisi'))
     namamakanan = db.Column(db.String(100), unique=True)
     langkahpembuatan = db.Column(db.String(200))
     jumlahporsi = db.Column(db.Integer)
@@ -44,6 +50,7 @@ class ResepMakanan(db.Model):
 class Nutrisi(db.Model):
     __tablename__ = 'nutrisi'
     id_nutrisi = db.Column(db.Integer, primary_key=True)
+    id_detailnutrisi = db.Column(db.Integer, db.ForeignKey('detailnutrisi.id_detailnutrisi'))
     nama = db.Column(db.String(100), unique=True)
 
 class DetailNutrisi(db.Model):
@@ -56,7 +63,7 @@ class ResepMakananDetail(db.Model):
     id_resepdetail = db.Column(db.Integer, primary_key=True)
     #Disini gw nambahin idResepDetail karena dari class diagram cuma ada idResep ama id, sedangkan perlu ada PK untuk tiap tabel
     id_resep = db.Column(db.Integer, db.ForeignKey('resepmakanan.id_resep'))
-    id = db.Column(db.Integer, db.ForeignKey('bahanmakanan.id_bahan'))
+    id_bahan = db.Column(db.Integer, db.ForeignKey('bahanmakanan.id_bahan'))
     jumlahbahan = db.Column(db.Float)
     satuanjumlah = db.Column(db.String(50))
 
