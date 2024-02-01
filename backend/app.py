@@ -1,5 +1,5 @@
 from webdata import app
-def createuser():
+def createsuperuser():
     from flask import Flask
     from flask_sqlalchemy import SQLAlchemy
     from flask_migrate import Migrate
@@ -26,7 +26,7 @@ def createuser():
         user_email = input('Enter your email: ')
         user_password = input('Enter your password: ')
         
-        user = User(name=user_name, email=user_email, password=bcrypt.generate_password_hash(user_password).decode('utf-8'))
+        user = User(name=user_name, email=user_email, password=bcrypt.generate_password_hash(user_password).decode('utf-8'), id_admin=True)
         db.session.add(user)
         db.session.commit()
         sleep(1)
@@ -39,11 +39,11 @@ def runserver():
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('command', help='the command to run', choices=['createuser', 'runserver'])
+    parser.add_argument('command', help='the command to run', choices=['createsuperuser', 'runserver'])
     args = parser.parse_args()
 
-    if args.command == 'createuser':
-        createuser()
+    if args.command == 'createsuperuser':
+        createsuperuser()
     elif args.command == 'runserver':
         runserver()
 

@@ -22,7 +22,6 @@ authorization_header = reqparse.RequestParser()
 authorization_header.add_argument('Authorization', location='headers', required=True, help='Bearer <access_token>')
 
 
-
 @api.route('/login')
 class Login(Resource):
     @api.expect(login)
