@@ -1,5 +1,6 @@
 alembic==1.13.1
 aniso8601==9.0.1
+async-timeout==4.0.3
 attrs==23.2.0
 bcrypt==4.1.2
 blinker==1.7.0
@@ -24,6 +25,7 @@ MarkupSafe==2.1.4
 PyJWT==2.8.0
 PyMySQL==1.1.0
 pytz==2023.3.post1
+redis==5.0.1
 referencing==0.32.1
 rpds-py==0.17.1
 SQLAlchemy==2.0.25
