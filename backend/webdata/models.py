@@ -1,6 +1,8 @@
 from webdata import db, app, auth
 from webdata import jwt
 from flask_login import UserMixin
+from datetime import datetime
+from pytz import timezone
 # Table List:
 # - User
 # - BahanMakanan
@@ -79,9 +81,13 @@ class Article(db.Model):
     title = db.Column(db.String(150), unique=True)
     detail = db.Column(db.String(1000))
     author = db.Column(db.String(100))
-    publishdate = db.Column(db.DateTime)
+    publishdate = db.Column(db.DateTime, default=datetime.now(timezone('Asia/Jakarta')))
     created_by = db.Column(db.Integer, db.ForeignKey("user.id"))
 
     @property
     def formatted_tanggal_terbit(self):
         return self.publishdate.strftime("%d%m%Y")
+    
+    @property
+    def created_by_username(self):
+        return User.query.filter_by(id=self.created_by).first().username

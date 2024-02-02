@@ -1,0 +1,61 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Add User{% endblock title %}
+{% block style %}
+
+{% endblock style%}
+
+{% block body %}
+<div class="container-fluid row d-flex justify-content-center align-items-center">
+    <div class="col-md-11 card mt-3">
+
+        <div class="card mt-3 mb-3 ml-2 mr-2">
+            <div class="card-header">
+                    <a href="{{url_for('admin.articles')}}" class="btn btn-secondary">Back</a>
+                    <h4 class="text-center mt-2">Add Article</h4>
+                </div>
+                <div class="card-body">
+                    <form action="" method="post">
+                        <div class="form-group">
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="title">Title</label>
+                                    <input type="text" class="form-control" name="title" id="title" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="author">Author</label>
+                                    <input type="text" name="author" id="author" class="form-control" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="datetime">Published Date <small> | Today</small> </label>
+                                    <input type="date" name="date" id="date" class="form-control">
+                                    
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="time">Time <small> | Current</small> </label>
+                                    <input type="time" name="time" id="time" class="form-control">
+                                </div>
+                            </div>
+                            
+                            <textarea id="mytextarea" name="detail"></textarea>
+                            
+                            <button type="submit" class="btn btn-primary mt-2 float-right">Add Article</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}
+
+{% block script %}
+<script src="https://cdn.tiny.cloud/1/j8ax8fabwx053zjxweooidbuyzfltl4hex7jwutvuwqrsg2p/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    //j8ax8fabwx053zjxweooidbuyzfltl4hex7jwutvuwqrsg2p
+    tinymce.init({
+        selector: '#mytextarea'
+    });
+</script>
+
+{% endblock script%}

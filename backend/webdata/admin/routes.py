@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 
 from webdata import db, jwt, bcrypt
-from webdata.models import User
+from webdata.models import User, Article
+
+from datetime import datetime
 
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -142,3 +144,90 @@ def delete_user():
     
     flash('User has been deleted', 'success')
     return redirect(url_for('admin.users'))
+
+@admin.route('/articles')
+def articles():
+    articles = Article.query.all()
+    return render_template('admin/articles.html', articles=articles)
+
+@admin.route('/add_article', methods=['GET', 'POST'])
+def add_article():
+    if request.method == 'POST':
+        title = request.form.get('title')
+        detail = request.form.get('detail')
+        author = request.form.get('author')
+        date = request.form.get('date')
+        time = request.form.get('time')
+        if time == '':
+            time = datetime.now().strftime('%H:%M:%S')
+        if date == '':
+            date = datetime.now().strftime('%Y-%m-%d')
+        
+        date = f"{date} {time}"
+            
+        article = Article(title=title, detail=detail, author=author, publishdate=date, created_by=current_user.id)
+        
+        db.session.add(article)
+        db.session.commit()
+        flash('Article has been added', 'success')
+        return redirect(url_for('admin.add_article'))
+    return render_template('admin/add_article.html')
+
+@admin.route('/edit_article/<int:id>', methods=['GET', 'POST'])
+def edit_article(id):
+    
+    if request.method == 'POST':
+        
+        article = Article.query.filter_by(id=id).first()  
+        
+        if not article:
+            flash('Article not found', 'danger')
+            return redirect(url_for('admin.articles'))
+        
+        title = request.form.get('title')
+        detail = request.form.get('detail')
+        author = request.form.get('author')
+        date = request.form.get('date')
+        time = request.form.get('time')
+        if time == '':
+            time = datetime.now().strftime('%H:%M:%S')
+        
+        if date == '':
+            date = datetime.now().strftime('%Y-%m-%d')
+        
+        date = f"{date} {time}"
+      
+
+        
+        article.title = title
+        article.detail = detail
+        article.author = author
+        article.publishdate = date
+        
+        db.session.commit()
+        flash('Article has been updated', 'success')
+        return redirect(url_for('admin.edit_article', id=id))
+    
+    article = Article.query.filter_by(id=id).first()
+    
+    if not article:
+        flash('Article not found', 'danger')
+        return redirect(url_for('admin.articles'))
+    
+    return render_template('admin/edit_article.html', article=article)
+
+
+@admin.route('/delete_article', methods=['POST'])
+def delete_article():
+    article_id = request.form.get('id')
+    article = Article.query.filter_by(id=article_id).first()
+    
+    if not article:
+        flash('Article not found', 'danger')
+        return redirect(url_for('admin.articles'))
+    
+    db.session.delete(article)
+    db.session.commit()
+    
+    flash('Article has been deleted', 'success')
+    return redirect(url_for('admin.articles'))
