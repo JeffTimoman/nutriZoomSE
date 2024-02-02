@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container-fluid{
+            margin-top: 40vh;
+            transform: translateY(-50%);
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="card col-md-5">
+                
+                <div class="card-body">
+                    <h3 class="text-center">Login</h3>
+                    <legend class="border border-bottom"></legend>
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }} alert-dismissible fade show mt-2" role="alert">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                    <form action="" method="post">
+                        <div class="form-group">
+                            <label for="username" class="">Email</label>
+                            <input type="email" name="email" placeholder="Enter your email . . ." class="form-control" required>
+                            <label for="password" class="mt-2">Password</label>
+                            <input type="password" name="password" placeholder="Enter your password . . . " class="form-control" required>
+                            <div class="row  mt-3">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</html>

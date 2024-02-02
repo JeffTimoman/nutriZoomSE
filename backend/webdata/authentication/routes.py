@@ -1,13 +1,26 @@
 from flask import request, jsonify, Blueprint
 from flask_restx import Api, Resource, fields, reqparse
+from datetime import timedelta
 
 from webdata.models import User 
 from webdata import jwt, bcrypt
 from flask_jwt_extended import create_access_token, create_refresh_token
-from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import get_jwt_identity, get_jwt
 from flask_jwt_extended import jwt_required
 from flask_cors import CORS
 
+import redis
+
+#Setup block token
+# jwt_redis_blocklist = redis.StrictRedis(
+#     host="127.0.0.1", port=6379, db=0, decode_responses=True
+# )
+
+# @jwt.token_in_blocklist_loader
+# def check_if_token_is_revoked(jwt_header, jwt_payload: dict):
+#     jti = jwt_payload["jti"]
+#     token_in_redis = jwt_redis_blocklist.get(jti)
+#     return token_in_redis is not None
 
 authenticator = Blueprint('authenticator', __name__)
 api = Api(authenticator, doc='/docs')
@@ -45,6 +58,7 @@ class Login(Resource):
 class ProtectedResource(Resource):
     @api.expect(authorization_header, validate=True)
     @jwt_required()
+    
     def get(self):
         user_id = get_jwt_identity()
         user = User.query.filter_by(id=user_id).first()
@@ -62,6 +76,10 @@ class RefreshToken(Resource):
 @api.route('/logout')
 class Logout(Resource):
     @api.expect(authorization_header, validate=True)
+    
     @jwt_required()
     def post(self):
-        return {'message': 'Successfully logged out'}, 200
+        # jti = get_jwt()["jti"]
+        # jwt_redis_blocklist.set(jti, "", ex=timedelta(hours=1))
+
+        return {'message': 'Access token revoked succesfully.'}, 200
