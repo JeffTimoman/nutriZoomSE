@@ -1,0 +1,44 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Add User{% endblock title %}
+{% block style %}
+
+{% endblock style%}
+
+{% block body %}
+<!-- Button trigger modal -->
+
+<div class="container-fluid row d-flex justify-content-center align-items-center">
+    <div class="col-md-11 card mt-3">
+
+        <div class="card mt-3 mb-3 ml-2 mr-2">
+            <div class="card-header">
+                    <a href="{{url_for('admin.users')}}" class="btn btn-secondary">Back</a>
+                    <h4 class="text-center mt-2">Add User</h4>
+                </div>
+                <div class="card-body">
+                    <form action="" method="post">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" name="name" id="name" class="form-control">
+                            <label for="email" class="mt-2">Email</label>
+                            <input type="email" name="email" id="email" class="form-control" required>
+                            <label for="password" class="mt-2">Password</label>
+                            <input type="password" name="password" id="password" class="form-control" required>
+                            <label for="username" name="username" class="mt-2">Username</label>
+                            <input type="text" name="username" id="username" class="form-control" required>
+                            <label for="birth" class="mt-2">Birth</label>
+                            <input type="date" name="birth" id="birth" class="form-control" required>
+                            <button type="submit" class="btn btn-primary float-right mt-3">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}
+
+{% block script %}
+
+{% endblock script%}

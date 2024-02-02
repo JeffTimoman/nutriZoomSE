@@ -21,7 +21,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True)
     username = db.Column(db.String(100), unique=True)
-    birth = db.Column(db.DateTime)
+    birth = db.Column(db.Date)
     is_admin = db.Column(db.Boolean, default=False)
 
     def __repr__(self):

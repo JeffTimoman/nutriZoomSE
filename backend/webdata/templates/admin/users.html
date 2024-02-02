@@ -1,0 +1,200 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Dashboard{% endblock title %}
+{% block style %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+
+{% endblock style%}
+
+{% block body %}
+
+<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteUserModalLabel">Delete Password | User ID : <span
+                        id="deleteID">OK</span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this user? 
+                 <br>
+                Once this user is deleted it <span class="text-danger">CAN NOT BE RECOVERED.</span>
+                <br>
+                <br>
+                <span>All Data Regarding this User will Also be deleted</span>
+                <form action="{{url_for('admin.delete_user')}}" method="post">
+                    <div class="form-group">
+                        <input type="hidden" id="deletePasswordID" name="id">
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success">Confirm</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="resetPassword" tabindex="-1" role="dialog" aria-labelledby="resetPasswordLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resetPasswordLabel">Reset Password | User ID : <span id="resetPassRef">OK</span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{url_for('admin.reset_user_password')}}" method="post">
+                    <div class="form-group">
+                        <input type="hidden" id="resetPasswordID" name="id">
+                        <label for="password">New Password</label>
+                        <input type="password" name="password" id="password" class="form-control" required>
+                        <label for="confirm" class="mt-2">Confirm Password</label>
+                        <input type="password" name="confirm" id="confirm" class="form-control" required>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success">Change</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="editUserLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserLabel">Edit User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{url_for('admin.edit_user')}}" method="post">
+                    <div class="form-group">
+                        <input type="hidden" id="userEditID" name="id">
+                        <label for="name">Name</label>
+                        <input type="text" name="name" id="name" class="form-control" required>
+                        <label for="email" class="mt-2">Email</label>
+                        <input type="email" name="email" id="email" class="form-control" required>
+                        <label for="username" name="username" class="mt-2">Username</label>
+                        <input type="text" name="username" id="username" class="form-control" required>
+                        <label for="birth" class="mt-2">Birth</label>
+                        <input type="date" name="birth" id="birth" class="form-control" required>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success">Save</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container-fluid row d-flex justify-content-center align-items-center">
+    <div class="col-md-11 card mt-3">
+        <div class="card-header">
+            <a href="{{url_for('admin.add_user')}}" class="btn btn-primary">Add User</a>
+        </div>
+        <h1 class="text-center mt-2">Users</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Birth</th>
+                    <th>Username</th>
+                    <th>Admin</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.password[0:10]}} . . {{user.password[-5:-1]}}</td>
+                    <td>{{ user.birth }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.is_admin }}</td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                            data-target="#editUser">
+                            Edit
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#resetPassword">
+                            Reset
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteUserModal">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock body %}
+
+{% block script %}
+
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('table').DataTable();
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#editUser').on('show.bs.modal', function (event) {
+            // get data from the closest tr
+            var button = $(event.relatedTarget);
+            var tr = button.closest('tr');
+            var id = tr.find('td').eq(0).text();
+            var name = tr.find('td').eq(1).text();
+            var email = tr.find('td').eq(2).text();
+            var password = tr.find('td').eq(3).text();
+            var birth = tr.find('td').eq(4).text();
+            var username = tr.find('td').eq(5).text();
+            var modal = $(this);
+            modal.find('.modal-body #userEditID').val(id);
+            modal.find('.modal-body #name').val(name);
+            modal.find('.modal-body #email').val(email);
+            modal.find('.modal-body #password').val(password);
+            modal.find('.modal-body #birth').val(birth);
+            modal.find('.modal-body #username').val(username);
+        });
+
+        $('#resetPassword').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var tr = button.closest('tr');
+            var id = tr.find('td').eq(0).text();
+            var modal = $(this);
+            modal.find('.modal-body #resetPasswordID').val(id);
+            modal.find('#resetPassRef').text(id);
+        });
+        $('#deleteUserModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var tr = button.closest('tr');
+            var id = tr.find('td').eq(0).text();
+            var modal = $(this);
+            modal.find('.modal-body #deletePasswordID').val(id);
+            modal.find('#deleteID').text(id);
+        });
+    });
+</script>
+{% endblock script%}
