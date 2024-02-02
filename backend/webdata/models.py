@@ -1,6 +1,6 @@
-from webdata import db, app
+from webdata import db, app, auth
 from webdata import jwt
-
+from flask_login import UserMixin
 # Table List:
 # - User
 # - BahanMakanan
@@ -10,7 +10,11 @@ from webdata import jwt
 # - ResepMakananDetail
 # - Artikel
 
-class User(db.Model):
+@auth.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+class User(db.Model, UserMixin):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
