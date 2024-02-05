@@ -31,5 +31,5 @@ auth.login_message = 'Please log in to access this page.'
 
 from webdata.authentication.routes import authenticator
 from webdata.admin.routes import admin
-app.register_blueprint(authenticator, url_prefix='/auth')
+app.register_blueprint(authenticator, url_prefix='/api/auth')
 app.register_blueprint(admin, url_prefix='/admin')
