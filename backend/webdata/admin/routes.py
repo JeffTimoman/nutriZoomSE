@@ -132,6 +132,8 @@ def reset_user_password():
 
 @admin.route('delete_user', methods=['POST'])
 def delete_user():
+    flash('This feature is currently disabled.', 'info')
+    return redirect(url_for('admin.users'))
     user_id = request.form.get('id')
     user = User.query.filter_by(id=user_id).first()
     
