@@ -27,7 +27,7 @@
                         <a class="nav-link" href="#">Ingredients</a>
                     </li>
                     <li>
-                        <a class="nav-link" href="#">Nutritions</a>
+                        <a class="nav-link" href="{{url_for('admin.nutritions')}}">Nutritions</a>
                     </li>
                     <!-- <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="ingredientDropDown" data-toggle="dropdown" aria-haspopup="true"
@@ -54,6 +54,7 @@
 
                 </ul>
             </div>
+            <a href="{{url_for('admin.logout')}}"  class="btn btn-danger btn-sm float-right">Logout</a>
         </nav>
     </div>
     <div class="container-fluid">

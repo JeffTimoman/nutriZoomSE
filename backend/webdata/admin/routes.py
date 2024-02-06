@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 
 from webdata import db, jwt, bcrypt
-from webdata.models import User, Article
+from webdata.models import User, Article, Nutrition
 
 from datetime import datetime
 
@@ -221,6 +221,7 @@ def edit_article(id):
 
 @admin.route('/delete_article', methods=['POST'])
 def delete_article():
+    
     article_id = request.form.get('id')
     article = Article.query.filter_by(id=article_id).first()
     
@@ -233,3 +234,75 @@ def delete_article():
     
     flash('Article has been deleted', 'success')
     return redirect(url_for('admin.articles'))
+
+@admin.route('/nutritions')
+def nutritions():
+    nutritions = Nutrition.query.all()
+    return render_template('admin/nutritions.html', nutritions=nutritions)
+
+@admin.route('/add_nutrition', methods=['GET', 'POST'])
+def add_nutrition():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        description = request.form.get('description')
+        
+        nutrition = Nutrition(name=name, description=description)
+        
+        db.session.add(nutrition)
+        db.session.commit()
+        
+        flash('Nutrition has been added', 'success')
+        return redirect(url_for('admin.add_nutrition'))
+    return render_template('admin/add_nutrition.html')
+
+@admin.route('/edit_nutrition/<int:id>', methods=['GET', 'POST'])
+def edit_nutrition(id):
+    
+    if request.method == 'POST':
+        
+        nutrition = Nutrition.query.filter_by(id=id).first()  
+        
+        if not nutrition:
+            flash('Nutrition not found', 'danger')
+            return redirect(url_for('admin.nutritions'))
+        
+        name = request.form.get('name')
+        description = request.form.get('description')
+        
+        if nutrition.name == name and nutrition.description == description:
+            flash('No changes has been made', 'info')
+            return redirect(url_for('admin.edit_nutrition', id=id))
+        
+        nutrition.name = name
+        nutrition.description = description
+        
+        db.session.commit()
+        flash('Nutrition has been updated', 'success')
+        return redirect(url_for('admin.edit_nutrition', id=id))
+    
+    nutrition = Nutrition.query.filter_by(id=id).first()
+    
+    if not nutrition:
+        flash('Nutrition not found.', 'danger')
+        return redirect(url_for('admin.nutritions'))
+    
+    return render_template('admin/edit_nutrition.html', nutrition=nutrition)
+
+@admin.route('/delete_nutrition', methods=['POST'])
+def delete_nutrition():
+    nutrition_id = request.form.get('id')
+    nutrition = Nutrition.query.filter_by(id=nutrition_id).first()
+    
+    if not nutrition:
+        flash('Nutrition not found', 'danger')
+        return redirect(url_for('admin.nutritions'))
+    
+    if nutrition.used_by_length > 0:
+        flash('Nutrition is currently used by some ingredients', 'danger')
+        return redirect(url_for('admin.nutritions'))
+    
+    db.session.delete(nutrition)
+    db.session.commit()
+    
+    flash('Nutrition has been deleted', 'success')
+    return redirect(url_for('admin.nutritions'))
