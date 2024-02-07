@@ -1,11 +1,13 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 
 from webdata import db, jwt, bcrypt
-from webdata.models import User, Article, Nutrition, Ingredient
+from webdata.models import User, Article, Nutrition, Ingredient, NutritionDetail
 
 from datetime import datetime
 
 from flask_login import login_user, current_user, logout_user, login_required
+
+import json
 
 admin = Blueprint('admin', __name__)
 
@@ -316,9 +318,41 @@ def ingredients():
 def add_ingredient():
     
     if request.method == "POST":
-        data = request.form.to_dict()
+        data = request.form
         print(data)
-    
+        name = request.form.get('name')
+        description = request.form.get('description')
+        nutritions = json.loads(request.form.get('nutritions'))
+        
+        if name == '' or description == '':
+            flash('Name and description cannot be empty', 'danger')
+            return redirect(url_for('admin.add_ingredient'))
+        
+        name = name.rstrip().lstrip()
+        
+        check = Ingredient.query.filter_by(name=name).first()
+        if check:
+            flash('Ingredient already exists', 'danger')
+            return redirect(url_for('admin.add_ingredient'))
+        
+        ingredient = Ingredient(name=name, description=description)
+        db.session.add(ingredient)
+        db.session.commit()
+        
+        nutrition_key = list(nutritions.keys())
+        print(nutritions, nutrition_key)
+        
+        for key in nutrition_key:
+            temp = NutritionDetail(nutrition_id=int(key), ingredient_id=ingredient.id, amount=int(nutritions[key]))
+            print(temp.info)
+            db.session.add(temp)
+            db.session.commit()
+        
+        flash('Ingredient has been added', 'success')
+        return redirect(url_for('admin.add_ingredient'))
+        
+            
+
     nutritions = Nutrition.query.all()
     return render_template('admin/add_ingredient.html', nutritions=nutritions)
 

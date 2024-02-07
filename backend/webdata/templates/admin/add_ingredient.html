@@ -18,24 +18,29 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="modalName">Name</label>
-                    <input type="text" name="name" id="modalName" class="form-control" disabled>
+            <form action="" method="POST" id="modalForm">
 
-                    <label for="modalDescription" class="mt-2">Description</label>
-                    <input type="text" name="description" id="modalDescription" class="form-control" disabled>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="modalName">Name</label>
+                        <input type="text" name="name" id="modalName" class="form-control" disabled>
+                        
+                        <label for="modalDescription" class="mt-2">Description</label>
+                        <input type="text" name="description" id="modalDescription" class="form-control" disabled>
+                        
+                        <div class="nutritionContainer">
+                            <label for="text" class="mt-2">NutritionA</label>
+                            <input type="number" class="form-control" id="nutritionA" required>
+                        </div>
 
-                    <div class="nutritionContainer">
-                        <label for="text" class="mt-2">NutritionA</label>
-                        <input type="number" class="form-control" id="nutritionA" required>
+                        <input type="hidden" name="nutritions" id="modalNutritionJSON">
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-success" id="modalSubmit">Confirm</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="modalSubmit">Confirm</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -118,19 +123,9 @@
                 nutrition[nutritionId] = $(`input[name="nutrition[${nutritionId}]"]`).val();
             });
 
-            $.ajax({
-                url: "{{url_for('admin.add_ingredient')}}",
-                type: "POST",
-                data: {
-                    name: name,
-                    description: description,
-                    nutrition: nutrition
-                },
-                success: function (response) {
-                    console.log(response);
-                    $('#addIngredientModel').modal('hide');
-                }
-            });
+            $('#modalNutritionJSON').val(JSON.stringify(nutrition));
+
+            $('#modalForm').submit();
         });
     });
 </script>
