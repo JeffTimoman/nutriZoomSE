@@ -19,43 +19,28 @@ authorization_header.add_argument('Authorization', location='headers',  required
 
 @api.route('/get_nutrition')
 @api.route('/get_nutrititon?page=<int:page>')
-# class GetNutrition(Resource):
+class GetNutrition(Resource):
     # @api.expect(authorization_header, validate=True)
     # @jwt_required()
-    # def get(self):
-    #     page = request.args.get('page', default=1, type=int)
-    #     per_page = request.args.get('per_page', default=10, type=int)
-
-    #     articles = Article.query.paginate(page=page, per_page=per_page)
-    #     response = dict()
-
-    #     for article in articles.items:
-    #         response[article.id] = {
-    #             'title': article.title,
-    #             'content': article.detail,
-    #             'author': article.author
-    #         }
+    def get(self):
+        page = request.args.get('page', default=1, type=int)
+        per_page = request.args.get('per_page', default=5, type=int)
         
-    #     return {
-    #         'data': response,
-    #         'total_pages': articles.pages,
-    #         'current_page': articles.page,
-    #         'per_page': articles.per_page,
-    #         'total_items': articles.total
-    #     }, 200
+        nutritions = Nutrition.query.paginate(page=page, per_page=per_page)
+        response = dict()
 
-# @api.route('/show_article/<int:id>')
-# class ShowArticle(Resource):
-#     #ini unutk jwt 
-#     def get(self, id):
-#         article = Article.query.get(id)
-#         if not article:
-#             return {'message': 'Article not found!'}, 404
+        for nutrition in nutritions.items:
+            response[nutrition.id]={
+                'name' : nutrition.name,
+                'description' : nutrition.description,
+                'id' : nutrition.id
+            }
 
-#         return {
-#             'title': article.title,
-#             'content': article.detail,
-#             'author': article.author,
-#             'publishdate': article.formatted_tanggal_terbit,
-#             'createdby': article.created_by_username
-#         }, 200
+        return {
+            'data': response,
+            'total_pages': nutritions.pages,
+            'current_page': page,
+            'per_page': per_page,
+            'total_items': nutritions.total
+        }, 200
+
