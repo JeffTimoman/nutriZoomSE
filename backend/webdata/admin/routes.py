@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 
 from webdata import db, jwt, bcrypt
-from webdata.models import User, Article, Nutrition
+from webdata.models import User, Article, Nutrition, Ingredient
 
 from datetime import datetime
 
@@ -306,3 +306,20 @@ def delete_nutrition():
     
     flash('Nutrition has been deleted', 'success')
     return redirect(url_for('admin.nutritions'))
+
+@admin.route('/ingredients')
+def ingredients():
+    ingredients = Ingredient.query.all()
+    return render_template('admin/ingredients.html', ingredients=ingredients)
+
+@admin.route('/add_ingredient', methods=['GET', 'POST'])
+def add_ingredient():
+    
+    if request.method == "POST":
+        data = request.form.to_dict()
+        print(data)
+    
+    nutritions = Nutrition.query.all()
+    return render_template('admin/add_ingredient.html', nutritions=nutritions)
+
+

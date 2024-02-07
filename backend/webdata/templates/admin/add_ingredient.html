@@ -1,0 +1,137 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Add Ingredient{% endblock title %}
+{% block style %}
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock style%}
+
+
+{% block body %}
+<div class="modal fade" id="addIngredientModel" tabindex="-1" role="dialog" aria-labelledby="addIngredientModelLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addIngredientModelLabel">Add The Ingredient</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="modalName">Name</label>
+                    <input type="text" name="name" id="modalName" class="form-control" disabled>
+
+                    <label for="modalDescription" class="mt-2">Description</label>
+                    <input type="text" name="description" id="modalDescription" class="form-control" disabled>
+
+                    <div class="nutritionContainer">
+                        <label for="text" class="mt-2">NutritionA</label>
+                        <input type="number" class="form-control" id="nutritionA" required>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="modalSubmit">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid row d-flex justify-content-center align-items-center">
+    <div class="col-md-11 card mt-3">
+
+        <div class="card mt-3 mb-3 ml-2 mr-2">
+            <div class="card-header">
+                <a href="{{url_for('admin.ingredients')}}" class="btn btn-secondary">Back</a>
+                <h4 class="text-center mt-2">Add Ingredient</h4>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" id="name" class="form-control" required>
+
+                    <label for="description" class="mt-2">Description</label>
+                    <input type="text" name="description" id="description" class="form-control">
+
+                    <label for="nutrition" class="mt-2">Nutrition</label>
+                    <select class="form-control" name="nutrition[]" multiple="multiple" name="nutrition"
+                        id="nutritionSelectForm">
+                        {% for nutrition in nutritions %}
+                        <option value="{{nutrition.id}}">{{nutrition.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="button" class="btn btn-primary float-right mt-3" data-toggle="modal"
+                        data-target="#addIngredientModel">Add</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    var nutritions = {
+        {% for nutrition in nutritions %}
+
+        {{ nutrition.id }}: {
+            name: "{{nutrition.name}}",
+            },
+        {% endfor %}
+    };
+
+    $(document).ready(function () {
+        var selectedNutrition = [];
+        $('#nutritionSelectForm').on('change', function (e) {
+            selectedNutrition = $(this).val();
+            console.log(selectedNutrition)
+        });
+
+        $('#nutritionSelectForm').select2();
+
+        $('#addIngredientModel').on('show.bs.modal', function (event) {
+            $('#modalName').val($('#name').val());
+            $('#modalDescription').val($('#description').val());
+            $('.nutritionContainer').empty();
+
+            selectedNutrition.forEach(function (nutritionId) {
+                var nutrition = nutritions[nutritionId];
+                var nutritionInput = `<label for="text" class="mt-2">${nutrition.name}</label>
+                <input type="number" class="form-control" name="nutrition[${nutritionId}]" required>`;
+                $('.nutritionContainer').append(nutritionInput);
+            });
+        })
+
+        $('#modalSubmit').on('click', function () {
+            var name = $('#modalName').val();
+            var description = $('#modalDescription').val();
+            var nutrition = {};
+
+            selectedNutrition.forEach(function (nutritionId) {
+                nutrition[nutritionId] = $(`input[name="nutrition[${nutritionId}]"]`).val();
+            });
+
+            $.ajax({
+                url: "{{url_for('admin.add_ingredient')}}",
+                type: "POST",
+                data: {
+                    name: name,
+                    description: description,
+                    nutrition: nutrition
+                },
+                success: function (response) {
+                    console.log(response);
+                    $('#addIngredientModel').modal('hide');
+                }
+            });
+        });
+    });
+</script>
+{% endblock script%}
