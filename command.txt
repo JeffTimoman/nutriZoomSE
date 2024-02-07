@@ -6,3 +6,12 @@ flask db migrate -m "Bla Bla"
 flask db upgrade -m "Bla Bla"
 
 # kalo misal stamp head masih error dan ga bisa jalan sisanya, delete folder migrations di backend
+
+
+#misal migratoin error 
+#dibilang : revision not found 
+# copy rev id dari yang error
+#command : flask db revision --rev-id id_dari_copy_diatas
+# command : flask db stamp head
+# command : flask db migrate
+# command : flask db upgrade
