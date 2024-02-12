@@ -328,7 +328,7 @@ def add_ingredient():
             flash('Name and description cannot be empty', 'danger')
             return redirect(url_for('admin.add_ingredient'))
         
-        name = name.rstrip().lstrip()
+        name = name
         
         check = Ingredient.query.filter_by(name=name).first()
         if check:
