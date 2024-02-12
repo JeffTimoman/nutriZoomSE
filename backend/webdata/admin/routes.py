@@ -328,12 +328,11 @@ def add_ingredient():
             flash('Name and description cannot be empty', 'danger')
             return redirect(url_for('admin.add_ingredient'))
         
-        name = name
-        
+        print(name, description)
         check = Ingredient.query.filter_by(name=name).first()
-        if check:
-            flash('Ingredient already exists', 'danger')
-            return redirect(url_for('admin.add_ingredient'))
+        # if check:
+        #     flash('Ingredient already exists', 'danger')
+        #     return redirect(url_for('admin.add_ingredient'))
         
         ingredient = Ingredient(name=name, description=description)
         db.session.add(ingredient)
