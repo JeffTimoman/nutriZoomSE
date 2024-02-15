@@ -72,7 +72,7 @@ class Recipe(db.Model):
     steps = db.Column(db.String(300))
     favorite_count = db.Column(db.Integer)
     cooktime = db.Column(db.Integer)
-    portion = db.Column(db.Float)
+    portions = db.Column(db.Float)
 
 
 class Nutrition(db.Model):
