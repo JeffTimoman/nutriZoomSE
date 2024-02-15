@@ -45,15 +45,8 @@ class GetNutrition(Resource):
         }, 200
 
 @api.route('/showingredients/<string:name1>')
-# @api.route('/showingredients?name1=<string:name1>&name2=<string:name2>')
-# @api.route('/showingredients?name1=<string:name1>&name2=<string:name2>&name3=<string:name3>')
 class ShowIngredient(Resource):
-    #ini belum di tst karena masih ada problem di admin add ingredient. Kalau ini bisa akan gw ganti ke post
     def get(self, name1):
-        # if not name2:
-        #     name2 = ''
-        # if not name3:
-        #     name3 = ''
         nutritions =  Nutrition.query.all()
         response = []
         if not name1:
@@ -95,14 +88,11 @@ class ShowIngredient(Resource):
         return response, 200
     
 
+@api.route('/showingredients/<string:name1>/<string:name2>')
 @api.route('/showingredients/<string:name1>/<string:name2>/<string:name3>')
 class ShowIngredient(Resource):
     def get(self, name1, name2, name3):
-        # name1 = request.form.get('name')
-        # name2 = request.form.get('name')
-        # name3 = request.form.get('name')
         response = []
-
         if not name1:
             flash('You must be input at least 1 nutrition!', 'error')
             return response, 404

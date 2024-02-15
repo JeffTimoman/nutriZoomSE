@@ -41,6 +41,7 @@ class Ingredient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True)
     description = db.Column(db.String(200))
+    image = db.Column(db.String(200))
     
     @property
     def used_by_length(self):
