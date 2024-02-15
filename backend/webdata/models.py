@@ -51,15 +51,28 @@ class Ingredient(db.Model):
     def nutrition_length(self):
         return len(NutritionDetail.query.filter_by(ingredient_id=self.id).all())
 
+# untuk resep:
+# - image
+# - name
+# - favorites count
+# - cooktime
+# - portion
+# - steps
+# - steps count
+    
+# - ingredients picture
+# - ingredients
+# - ingredientcount
 
 class Recipe(db.Model):
     __tablename__ = 'recipes'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
-    steps = db.Column(db.String(200))
-    portions = db.Column(db.Integer)
-    cooktime = db.Column(db.Integer) #in minutes
     image = db.Column(db.String(200))
+    name = db.Column(db.String(100))
+    steps = db.Column(db.String(300))
+    favorite_count = db.Column(db.Integer)
+    cooktime = db.Column(db.Integer)
+    portion = db.Column(db.Float)
 
 
 class Nutrition(db.Model):
