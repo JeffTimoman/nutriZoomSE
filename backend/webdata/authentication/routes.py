@@ -31,6 +31,14 @@ login = api.model('Login', {
     'password': fields.String
 })
 
+register = api.model('Register', {
+    'name': fields.String,
+    'email': fields.String,
+    'password': fields.String,
+    'username': fields.String,
+    'birth': fields.Date
+})
+
 authorization_header = reqparse.RequestParser()
 authorization_header.add_argument('Authorization', location='headers', required=True, help='Bearer <access_token>')
 
@@ -83,3 +91,17 @@ class Logout(Resource):
         # jwt_redis_blocklist.set(jti, "", ex=timedelta(hours=1))
 
         return {'message': 'Access token revoked succesfully.'}, 200
+    
+@api.route('/register')
+class Register(Resource):
+    @api.expect(register)
+    def post(self):
+        data = request.get_json()
+        name = data['name']
+        email = data['email']
+        password = data['password']
+        username = data['username']
+        birth = data['birth']
+        user = User(name=name, email=email, password=bcrypt.generate_password_hash(password).decode('utf-8'), username=username, birth=birth)
+        user.save()
+        return {'message': 'User created successfully'}, 201
