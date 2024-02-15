@@ -9,7 +9,10 @@ from flask_jwt_extended import get_jwt_identity, get_jwt
 from flask_jwt_extended import jwt_required
 from flask_cors import CORS
 
+from webdata import db
+
 import redis
+import re
 
 #Setup block token
 # jwt_redis_blocklist = redis.StrictRedis(
@@ -99,9 +102,21 @@ class Register(Resource):
         data = request.get_json()
         name = data['name']
         email = data['email']
+        # validate email
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            return {'message': 'Invalid email format'}, 400
+        
+        if User.query.filter_by(email=email).first():
+            return {'message': 'Email already registered'}, 400
+        
+        if User.query.filter_by(username=data['username']).first():
+            return {'message': 'Username already taken'}, 400
+        
         password = data['password']
         username = data['username']
         birth = data['birth']
         user = User(name=name, email=email, password=bcrypt.generate_password_hash(password).decode('utf-8'), username=username, birth=birth)
-        user.save()
+        db.session.add(user)
+        db.session.commit()
+        
         return {'message': 'User created successfully'}, 201
