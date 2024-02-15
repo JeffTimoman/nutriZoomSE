@@ -7,8 +7,6 @@ from flask_jwt_extended import create_access_token, create_refresh_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_cors import CORS
-from flask import request
-from flask import request
 
 
 
@@ -22,11 +20,10 @@ authorization_header.add_argument('Authorization', location='headers',  required
 @api.route('/get_nutrition?page=<int:page>')
 class GetNutrition(Resource):
     # @api.expect(authorization_header, validate=True)
-    # @jwt_required()
+    # @jwt_required()'
     def get(self):
         page = request.args.get('page', default=1, type=int)
-        per_page = request.args.get('per_page', default=3, type=int)
-         
+        per_page = request.args.get('per_page', default=5, type=int)
         nutritions = Nutrition.query.paginate(page=page, per_page=per_page)
         response = dict()
 
@@ -50,10 +47,12 @@ class GetNutrition(Resource):
 @api.route('/showingredients/<string:name1>')
 class ShowIngredient(Resource):
     def get(self, name1):
-        nutritions =  Nutrition.query.all()
-        response = []
         if not name1:
             return {'message': 'Please input at least 1 nutrition!'}, 404
+        nutritions =  Nutrition.query.filter_by(name = name1).all()
+        if not nutritions:
+            return {'message': f'There are no nutritions with name "{name1}" found!'}, 404
+        response = []
         for nutrition in nutritions:
             if nutrition.name.lower() == name1.lower():
                 nutritionDetail = []
@@ -62,7 +61,7 @@ class ShowIngredient(Resource):
                 nutritionDetails = NutritionDetail.query.filter_by(nutrition_id = nutrition.id).all()
 
                 if not nutritionDetails:
-                    return {'message': f'There are no nutrition details with nutrition: {nutrition.name} found!'}, 404
+                    return {'message': f'There are no nutrition details with nutrition "{nutrition.name}" found!'}, 404
 
                 for detail in nutritionDetails:
                     nutritionDetail.append({
@@ -70,22 +69,23 @@ class ShowIngredient(Resource):
                         'amount': detail.amount
                     })
 
-                    ingredients = Ingredient.query.filter_by(id=detail.ingredient_id).order_by(Ingredient.name.desc()).all()
+                    ingredients = Ingredient.query.join(NutritionDetail).filter(NutritionDetail.nutrition_id == nutrition.id, NutritionDetail.amount > 0).order_by(NutritionDetail.amount.desc()).all()
 
-                    if not ingredients:
+                    if not ingredients:  
                         return {'message': f'There are no ingredients with nutrition: {nutrition.name} found!'}, 404
 
-                    for ing in ingredients:
-                        ingredient.append({
-                            'name': ing.name,
-                            'description': ing.description
-                        })
+                for ing in ingredients:
+                    ingredient.append({
+                        'name': ing.name,
+                        'description': ing.description,
+                        'id' : ing.id
+                    })
                 
                 response.append({
                     'name': nutrition.name,
                     'description': nutrition.description,
                     'id': nutrition.id,
-                    'ingredient': [ing['name'] for ing in ingredient],
+                    'ingredient': [{'id': ing['id'], 'name': ing['name']} for ing in ingredient],
                 })
         return response, 200
     
