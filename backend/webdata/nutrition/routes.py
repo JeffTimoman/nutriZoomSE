@@ -53,7 +53,6 @@ class ShowIngredient(Resource):
             return {'message': 'Please input at least 1 nutrition!'}, 404
         for nutrition in nutritions:
             if nutrition.name == name1:
-            # if nutrition.name == name1 or nutrition.name == name2 or nutrition.name == name3:
                 nutritionDetail = []
                 ingredient = []
                 
