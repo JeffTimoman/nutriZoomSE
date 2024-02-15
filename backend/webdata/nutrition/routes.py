@@ -1,4 +1,4 @@
-from flask import request, jsonify, Blueprint
+from flask import request, jsonify, Blueprint, flash
 from flask_restx import Api, Resource, fields, reqparse
 
 from webdata.models import User, Nutrition, NutritionDetail, Ingredient
@@ -44,38 +44,43 @@ class GetNutrition(Resource):
             'total_items': nutritions.total
         }, 200
 
-@api.route('/showingredients?name1=<string:name1>')
-@api.route('/showingredients?name1=<string:name1>&name2=<string:name2>')
-@api.route('/showingredients?name1=<string:name1>&name2=<string:name2>&name3=<string:name3>')
+@api.route('/showingredients/<string:name1>')
+# @api.route('/showingredients?name1=<string:name1>&name2=<string:name2>')
+# @api.route('/showingredients?name1=<string:name1>&name2=<string:name2>&name3=<string:name3>')
 class ShowIngredient(Resource):
     #ini belum di tst karena masih ada problem di admin add ingredient. Kalau ini bisa akan gw ganti ke post
-    def get(self, name1, name2, name3):
+    def get(self, name1):
+        # if not name2:
+        #     name2 = ''
+        # if not name3:
+        #     name3 = ''
         nutritions =  Nutrition.query.all()
         response = []
         if not name1:
             return {'message': 'Please input at least 1 nutrition!'}, 404
         for nutrition in nutritions:
-            if nutrition.name == name1 or nutrition.name == name2 or nutrition.name == name3:
+            if nutrition.name == name1:
+            # if nutrition.name == name1 or nutrition.name == name2 or nutrition.name == name3:
                 nutritionDetail = []
                 ingredient = []
                 
-                tempNutritionDetail = NutritionDetail.query.filter_by(nutrition_id = nutrition.id).all()
+                nutritionDetails = NutritionDetail.query.filter_by(nutrition_id = nutrition.id).all()
 
-                if not tempNutritionDetail:
+                if not nutritionDetails:
                     return {'message': f'There are no nutrition details with nutrition: {nutrition.name} found!'}, 404
 
-                for detail in tempNutritionDetail:
+                for detail in nutritionDetails:
                     nutritionDetail.append({
                         'ingredient_id': detail.ingredient_id,
                         'amount': detail.amount
                     })
 
-                    tempIngredient = Ingredient.query.filter_by(id=detail.ingredient_id).all()
+                    ingredients = Ingredient.query.filter_by(id=detail.ingredient_id).all()
 
-                    if not tempIngredient:
+                    if not ingredients:
                         return {'message': f'There are no ingredients with nutrition: {nutrition.name} found!'}, 404
 
-                    for ing in tempIngredient:
+                    for ing in ingredients:
                         ingredient.append({
                             'name': ing.name,
                             'description': ing.description
@@ -88,4 +93,51 @@ class ShowIngredient(Resource):
                     'ingredient': [ing['name'] for ing in ingredient],
                 })
         return response, 200
+    
+
+@api.route('/showingredients/<string:name1>/<string:name2>/<string:name3>')
+class ShowIngredient(Resource):
+    def get(self, name1, name2, name3):
+        # name1 = request.form.get('name')
+        # name2 = request.form.get('name')
+        # name3 = request.form.get('name')
+        response = []
+
+        if not name1:
+            flash('You must be input at least 1 nutrition!', 'error')
+            return response, 404
+        nutritions = Nutrition.query.all()
+        counter = 1
+        if name2:
+            if name3:
+                counter = counter + 1
+            counter = counter + 1 
+
+        for ntr in nutritions:
+            if ntr.name == name1 or name2 or name3:
+                nutritionDetail = []
+                ingredient = []
+                nutritionDetails = NutritionDetail.query.filter_by(nutrition_id = ntr.id).all()
+                for i in range(counter):
+                    for detail in nutritionDetails:
+                        nutritionDetail.append({
+                            'ingredient_id': detail.ingredient_id,
+                            'amount': detail.amount
+                        })
+
+                        ingredients = Ingredient.query.filter_by(id=detail.ingredient_id).all()
+
+                        for ing in ingredients:
+                            ingredient.append({
+                                'name': ing.name,
+                                'description': ing.description
+                            })
+        response.append({
+            'name': ntr.name,
+            'description': ntr.description,
+            'id': ntr.id,
+            'ingredient': [ing['name'] for ing in ingredient],
+        })
+        return response, 200
+
 
