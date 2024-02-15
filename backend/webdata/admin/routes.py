@@ -8,8 +8,10 @@ from datetime import datetime
 from flask_login import login_user, current_user, logout_user, login_required
 
 import json
+import uuid
 
 admin = Blueprint('admin', __name__)
+
 
 @admin.route('/', methods=['GET', 'POST'])
 @admin.route('/login', methods=['GET', 'POST'])
