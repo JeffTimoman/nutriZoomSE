@@ -58,7 +58,8 @@ class Recipe(db.Model):
     name = db.Column(db.String(100))
     steps = db.Column(db.String(200))
     portions = db.Column(db.Integer)
-    cooktime = db.Column(db.Integer)
+    cooktime = db.Column(db.Integer) #in minutes
+    image = db.Column(db.String(200))
 
 
 class Nutrition(db.Model):
@@ -86,7 +87,7 @@ class RecipeDetail(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'))
     ingredients_id = db.Column(db.Integer, db.ForeignKey('ingredients.id'))
-    ingredientamount = db.Column(db.Float)
+    amount = db.Column(db.Float)
     unit = db.Column(db.String(50))
 
 
