@@ -1,0 +1,40 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Add Nutrition{% endblock title %}
+{% block style %}
+
+{% endblock style%}
+
+{% block body %}
+<!-- Button trigger modal -->
+
+<div class="container-fluid row d-flex justify-content-center align-items-center">
+    <div class="col-md-11 card mt-3">
+
+        <div class="card mt-3 mb-3 ml-2 mr-2">
+            <div class="card-header">
+                    <a href="{{url_for('admin.nutritions')}}" class="btn btn-secondary">Back</a>
+                    <h4 class="text-center mt-2">Edit Nutrition</h4>
+                </div>
+                <div class="card-body">
+                    <form action="" method="post">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" name="name" id="name" class="form-control" value="{{nutrition.name}}" required>
+
+                            <label for="description" class="mt-2">Description</label>
+                            <input type="text" name="description" id="description" class="form-control" value="{{nutrition.description}}">
+
+                            <button type="submit" class="btn btn-primary float-right mt-3">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}
+
+{% block script %}
+
+{% endblock script%}

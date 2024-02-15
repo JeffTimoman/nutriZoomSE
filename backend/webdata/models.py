@@ -39,9 +39,16 @@ class FavoriteRecipe(db.Model):
 class Ingredient(db.Model):
     __tablename__ = 'ingredients'
     id = db.Column(db.Integer, primary_key=True)
-    nutrition_id = db.Column(db.Integer, db.ForeignKey('nutritions.id'))
-    name = db.Column(db.String(100))
+    name = db.Column(db.String(100), unique=True)
     description = db.Column(db.String(200))
+    
+    @property
+    def used_by_length(self):
+        return len(RecipeDetail.query.filter_by(ingredients_id=self.id).all())
+    
+    @property
+    def nutrition_length(self):
+        return len(NutritionDetail.query.filter_by(ingredient_id=self.id).all())
 
 
 class Recipe(db.Model):
@@ -56,15 +63,22 @@ class Recipe(db.Model):
 class Nutrition(db.Model):
     __tablename__ = 'nutritions'
     id = db.Column(db.Integer, primary_key=True)
-    nutritiondetail_id = db.Column(db.Integer, db.ForeignKey('nutritiondetails.id'))
-    nama = db.Column(db.String(100), unique=True)
-
+    name = db.Column(db.String(100), unique=True)
+    description = db.Column(db.String(200))
+    
+    @property
+    def used_by_length(self):
+        return len(NutritionDetail.query.filter_by(nutrition_id=self.id).all())
 
 class NutritionDetail(db.Model):
     __tablename__ = 'nutritiondetails'
-    id = db.Column(db.Integer, primary_key=True)
-    nutritionamount = db.Column(db.Integer)
+    nutrition_id = db.Column(db.Integer, db.ForeignKey('nutritions.id'), primary_key=True)
+    ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredients.id'), primary_key=True)
+    amount = db.Column(db.Integer) #per 100 gr
 
+    @property
+    def info(self):
+        return f'<NutritionDetail: {self.nutrition_id} - {self.ingredient_id}>'
 
 class RecipeDetail(db.Model):
     __tablename__ = 'recipedetails'
@@ -86,8 +100,10 @@ class Article(db.Model):
 
     @property
     def formatted_tanggal_terbit(self):
-        return self.publishdate.strftime("%d%m%Y")
+        return self.publishdate.strftime("%d-%m-%Y %H:%M")
     
     @property
     def created_by_username(self):
-        return User.query.filter_by(id=self.created_by).first().username
+        temp = User.query.filter_by(id=self.created_by).first().username
+        if temp : return temp
+        else : return "N/A"
