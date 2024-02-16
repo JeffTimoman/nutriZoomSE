@@ -67,8 +67,8 @@
                         <td>{{ingredient.nutrition_length}}</td>
                         <td>
                             {% if ingredient.image %}
-                                <a href="{{url_for('admin.view_image', text=ingredient.image)}}" class="border">
-                                    <img src="{{url_for('admin.view_image', text=ingredient.image)}}" style="width: 25px; height: 25px;" alt="" cl>
+                                <a href="{{url_for('admin.view_image', text=ingredient.image)}}" class="border" target="_blank">
+                                    <img src="{{url_for('admin.view_image', text=ingredient.image)}}" style="width: 25px; height: 25px;" alt="">
                                 </a>
                             {% endif %}
                         </td>
