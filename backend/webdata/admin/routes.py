@@ -423,7 +423,10 @@ def delete_ingredient():
         except Exception as e:
             print(e)
             pass
+    nutrition_details = NutritionDetail.query.filter_by(ingredient_id=ingredient.id).all()
     
+    for detail in nutrition_details:
+        db.session.delete(detail)
     db.session.delete(ingredient)
     db.session.commit()
     
