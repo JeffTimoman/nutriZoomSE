@@ -88,7 +88,7 @@ class Nutrition(db.Model):
 class NutritionDetail(db.Model):
     __tablename__ = 'nutritiondetails'
     nutrition_id = db.Column(db.Integer, db.ForeignKey('nutritions.id'), primary_key=True)
-    ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredients.id'), primary_key=True)
+    ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredients.id', ondelete='CASCADE'), primary_key=True)
     amount = db.Column(db.Integer) #per 100 gr
 
     @property
