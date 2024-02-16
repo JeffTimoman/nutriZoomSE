@@ -417,7 +417,12 @@ def delete_ingredient():
         return redirect(url_for('admin.ingredients'))
     
     # delete the image file
-    os.remove(os.path.join(config.UPLOAD_FOLDER, ingredient.image))
+    if ingredient.image :
+        try : 
+            os.remove(os.path.join(config.UPLOAD_FOLDER, ingredient.image))
+        except Exception as e:
+            print(e)
+            pass
     
     db.session.delete(ingredient)
     db.session.commit()
