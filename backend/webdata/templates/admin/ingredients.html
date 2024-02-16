@@ -28,7 +28,7 @@
                 <span>All data regarding this ingredient will also be deleted.</span>
                 <form action="{{url_for('admin.delete_ingredient')}}" method="post">
                     <div class="form-group">
-                        <input type="text" id="ingredientDeleteParse" name="id">
+                        <input type="hidden" id="ingredientDeleteParse" name="id">
                     </div>
             </div>
             <div class="modal-footer">
