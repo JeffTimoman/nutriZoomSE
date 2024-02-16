@@ -434,8 +434,89 @@ def delete_ingredient():
     flash('Ingredient has been deleted', 'success')
     return redirect(url_for('admin.ingredients'))
 
+@admin.route('/edit_ingredient/<int:id>', methods=['GET', 'POST'])
+def edit_ingredient(id):
+    
+    if request.method == 'POST':
+        ingredient = Ingredient.query.filter_by(id=id).first()
+        
+        if not ingredient:
+            flash('Ingredient not found', 'danger')
+            return redirect(url_for('admin.ingredients'))
+        
+        name = request.form.get('name')
+        description = request.form.get('description')
+        
+        nutritions = json.loads(request.form.get('nutritions'))
 
+        if name == '' or description == '':
+            flash('Name and description cannot be empty', 'danger')
+            return redirect(url_for('admin.edit_ingredient', id=id))
+        
+        ingredient.name = name
+        ingredient.description = description
+        
+        if 'image' in request.files:
+            file = request.files['image']
+            if file.filename != '':
+                if not allowed_file(file.filename):
+                    flash('Invalid file type', 'danger')
+                    return redirect(url_for('admin.edit_ingredient', id=id))
+                
+                filename = str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower()
+                file.save(os.path.join(config.UPLOAD_FOLDER, filename))
+                # resize image to 500x500
 
+                from PIL import Image
+
+                image = Image.open(os.path.join(config.UPLOAD_FOLDER, filename))
+                width, height = image.size
+
+                if width > height:
+                    left = (width - height) // 2
+                    right = left + height
+                    top = 0
+                    bottom = height
+                else:
+                    top = (height - width) // 2
+                    bottom = top + width
+                    left = 0
+                    right = width
+
+                image = image.crop((left, top, right, bottom))
+                image = image.resize((500, 500))
+                image.save(os.path.join(config.UPLOAD_FOLDER, filename))
+                # delete old image
+                if ingredient.image:
+                    try : 
+                        os.remove(os.path.join(config.UPLOAD_FOLDER, ingredient.image))
+                    except Exception as e:
+                        print(e)
+                        pass
+                ingredient.image = filename
+        
+        
+        
+        db.session.commit()
+        
+        nutrition_key = list(nutritions.keys())
+        
+        for key in nutrition_key:
+            temp = NutritionDetail.query.filter_by(nutrition_id=int(key), ingredient_id=ingredient.id).first()
+            temp.amount = int(nutritions[key])
+            db.session.commit()
+        
+        flash('Ingredient has been updated', 'success')
+        return redirect(url_for('admin.edit_ingredient', id=id))
+    
+    ingredient = Ingredient.query.filter_by(id=id).first()
+    
+    if not ingredient:
+        flash('Ingredient not found', 'danger')
+        return redirect(url_for('admin.ingredients'))
+    
+    nutritions = NutritionDetail.query.filter_by(ingredient_id=ingredient.id).all()
+    return render_template('admin/edit_ingredient.html', ingredient=ingredient, nutritions=nutritions)
 
 @admin.route('/view_image/<text>')
 def view_image(text):

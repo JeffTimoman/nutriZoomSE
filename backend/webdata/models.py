@@ -94,6 +94,10 @@ class NutritionDetail(db.Model):
     @property
     def info(self):
         return f'<NutritionDetail: {self.nutrition_id} - {self.ingredient_id}>'
+    
+    @property
+    def name(self):
+        return Nutrition.query.filter_by(id=self.nutrition_id).first().name
 
 class RecipeDetail(db.Model):
     __tablename__ = 'recipedetails'
