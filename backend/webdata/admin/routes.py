@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 
-from webdata import db, jwt, bcrypt
+from webdata import db, jwt, bcrypt, config
 from webdata.models import User, Article, Nutrition, Ingredient, NutritionDetail
 
 from datetime import datetime
@@ -8,10 +8,13 @@ from datetime import datetime
 from flask_login import login_user, current_user, logout_user, login_required
 
 import json
+import os
 import uuid
 
 admin = Blueprint('admin', __name__)
 
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in config.ALLOWED_EXTENSIONS
 
 @admin.route('/', methods=['GET', 'POST'])
 @admin.route('/login', methods=['GET', 'POST'])
@@ -326,17 +329,59 @@ def add_ingredient():
         description = request.form.get('description')
         nutritions = json.loads(request.form.get('nutritions'))
         
+        if 'image' not in request.files:
+            flash('No file part', 'danger')
+            return redirect(url_for('admin.add_ingredient'))
+        
+        file = request.files['image']
+        
+        if file.filename == '':
+            flash('No selected file', 'danger')
+            return redirect(url_for('admin.add_ingredient'))
+        
+        if not allowed_file(file.filename):
+            flash('Invalid file type', 'danger')
+            return redirect(url_for('admin.add_ingredient'))
+            
+        
         if name == '' or description == '':
             flash('Name and description cannot be empty', 'danger')
             return redirect(url_for('admin.add_ingredient'))
         
+        
         print(name, description)
         check = Ingredient.query.filter_by(name=name).first()
-        # if check:
-        #     flash('Ingredient already exists', 'danger')
-        #     return redirect(url_for('admin.add_ingredient'))
         
-        ingredient = Ingredient(name=name, description=description)
+        if check:
+            flash('Ingredient already exists', 'danger')
+            return redirect(url_for('admin.add_ingredient'))
+        
+        filename = str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower()
+        file.save(os.path.join(config.UPLOAD_FOLDER, filename))
+        # resize image to 500x500
+        
+        from PIL import Image
+
+        image = Image.open(os.path.join(config.UPLOAD_FOLDER, filename))
+        width, height = image.size
+
+        if width > height:
+            left = (width - height) // 2
+            right = left + height
+            top = 0
+            bottom = height
+        else:
+            top = (height - width) // 2
+            bottom = top + width
+            left = 0
+            right = width
+
+        image = image.crop((left, top, right, bottom))
+        image = image.resize((500, 500))
+        image.save(os.path.join(config.UPLOAD_FOLDER, filename))
+        
+        
+        ingredient = Ingredient(name=name, description=description, image=filename)
         db.session.add(ingredient)
         db.session.commit()
         
@@ -351,10 +396,38 @@ def add_ingredient():
         
         flash('Ingredient has been added', 'success')
         return redirect(url_for('admin.add_ingredient'))
-        
-            
 
     nutritions = Nutrition.query.all()
     return render_template('admin/add_ingredient.html', nutritions=nutritions)
 
 
+
+
+@admin.route('/delete_ingredient', methods=['POST'])
+def delete_ingredient():
+    ingredient_id = request.form.get('id')
+    ingredient = Ingredient.query.filter_by(id=ingredient_id).first()
+    
+    if not ingredient:
+        flash('Ingredient not found', 'danger')
+        return redirect(url_for('admin.ingredients'))
+    
+    if ingredient.used_by_length > 0:
+        flash('Ingredient is currently used by some recipes', 'danger')
+        return redirect(url_for('admin.ingredients'))
+    
+    # delete the image file
+    os.remove(os.path.join(config.UPLOAD_FOLDER, ingredient.image))
+    
+    db.session.delete(ingredient)
+    db.session.commit()
+    
+    flash('Ingredient has been deleted', 'success')
+    return redirect(url_for('admin.ingredients'))
+
+
+
+
+@admin.route('/view_image/<text>')
+def view_image(text):
+    return redirect(url_for('static', filename=f'uploaded_images/{text}'), code=301)

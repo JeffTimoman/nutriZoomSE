@@ -18,16 +18,19 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="" method="POST" id="modalForm">
+            <form action="" method="POST" id="modalForm" enctype="multipart/form-data">
 
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="modalName">Name</label>
                         <input type="text" name="name" id="modalName" class="form-control" name="name" >
-                        
+
                         <label for="modalDescription" class="mt-2">Description</label>
                         <input type="text" name="description" id="modalDescription" class="form-control">
-                        
+
+                        <label for="modalImage" class="mt-2">Image</label>
+                        <input type="file" name="image" id="modalImage" class="form-control" required>
+
                         <div class="nutritionContainer">
                             <label for="text" class="mt-2">NutritionA</label>
                             <input type="number" class="form-control" id="nutritionA" required>
@@ -70,7 +73,7 @@
                     </select>
                     <button type="button" class="btn btn-primary float-right mt-3" data-toggle="modal"
                         data-target="#addIngredientModel">Add</button>
-
+                    <!-- input image -->
                 </div>
             </div>
         </div>
@@ -117,11 +120,14 @@
         $('#modalSubmit').on('click', function () {
             var name = $('#modalName').val();
             var description = $('#modalDescription').val();
+
             var nutrition = {};
 
             selectedNutrition.forEach(function (nutritionId) {
                 nutrition[nutritionId] = $(`input[name="nutrition[${nutritionId}]"]`).val();
             });
+
+
 
             $('#modalNutritionJSON').val(JSON.stringify(nutrition));
 
