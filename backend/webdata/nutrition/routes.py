@@ -18,6 +18,7 @@ authorization_header.add_argument('Authorization', location='headers',  required
 
 @api.route('/get_nutrition')
 @api.route('/get_nutrition?page=<int:page>')
+@api.route('/get_nutrition?page=<int:page>&per_page=<int:per_page>')
 class GetNutrition(Resource):
     # @api.expect(authorization_header, validate=True)
     # @jwt_required()'
@@ -48,7 +49,7 @@ class GetNutrition(Resource):
 class ShowIngredient(Resource):
     def get(self, name1):
         if not name1:
-            return {'message': 'Please input at least 1 nutrition!'}, 404
+            return {'message': 'Please input nutrition!'}, 404
         nutritions =  Nutrition.query.filter_by(name = name1).all()
         if not nutritions:
             return {'message': f'There are no nutritions with name "{name1}" found!'}, 404
