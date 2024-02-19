@@ -30,7 +30,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label for="portions" class="mt-2">Portions | <small>pax/person</small></label>
-                                    <input type="number" name="portions" id="portions" class="form-control" value="{{recipe.portions}}" required>
+                                    <input type="number" name="portions" id="portions" class="form-control" step="0.5" value="{{recipe.portions}}" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="image" class="mt-2">Image | <small><a href="{{url_for('admin.view_image', text=recipe.image)}}" target="_blank">{{recipe.image}}</a></small></label>
@@ -48,7 +48,7 @@
                                 <div class="row mt-2">
                                     <div class="col-md-10">
                                         <label for="{{ingredient.name}}" class="">{{ingredient.name}}</label>
-                                        <input type="number" name="{{ingredient.ingredients_id}}_ingredient" id="{{ingredient.name}}" class="form-control" value="{{ingredient.amount}}" required>
+                                        <input type="number" name="{{ingredient.ingredients_id}}_ingredient" id="{{ingredient.name}}" class="form-control" value="{{ingredient.amount}}" step="0.01" required>
                                     </div>
                                     <div class="col-md-2">
                                         <label for="ok"><small>Unit</small></label>

@@ -401,7 +401,7 @@ def add_ingredient():
         print(nutritions, nutrition_key)
         
         for key in nutrition_key:
-            temp = NutritionDetail(nutrition_id=int(key), ingredient_id=ingredient.id, amount=int(nutritions[key]))
+            temp = NutritionDetail(nutrition_id=key, ingredient_id=ingredient.id, amount=nutritions[key])
             print(temp.info)
             db.session.add(temp)
             db.session.commit()
@@ -517,7 +517,7 @@ def edit_ingredient(id):
         
         for key in nutrition_key:
             temp = NutritionDetail.query.filter_by(nutrition_id=int(key), ingredient_id=ingredient.id).first()
-            temp.amount = int(nutritions[key])
+            temp.amount = nutritions[key]
             db.session.commit()
         
         flash('Ingredient has been updated', 'success')

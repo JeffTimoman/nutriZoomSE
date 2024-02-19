@@ -45,7 +45,7 @@
                             <div class="nutritions-container">
                                 {% for nutrition in nutritions %}
                                     <label for="nutrition[{{nutrition.nutrition_id}}]" class="mt-2">{{nutrition.name}}</label>
-                                    <input type="number" class="form-control" name="{{nutrition.nutrition_id}}" value="{{nutrition.amount}}" required>
+                                    <input type="number" class="form-control" name="{{nutrition.nutrition_id}}" value="{{nutrition.amount}}" step="0.01" required>
                                 {% endfor %}
                             </div>
                             
