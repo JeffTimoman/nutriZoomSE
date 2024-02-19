@@ -1,0 +1,77 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Add Recipe{% endblock title %}
+{% block style %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+{% endblock style%}
+
+{% block body %}
+<!-- Button trigger modal -->
+
+<div class="container-fluid row d-flex justify-content-center align-items-center">
+    <div class="col-md-11 card mt-3">
+
+        <div class="card mt-3 mb-3 ml-2 mr-2">
+            <div class="card-header">
+                    <a href="{{url_for('admin.recipes')}}" class="btn btn-secondary">Back</a>
+                    <h4 class="text-center mt-2">Add Recipe</h4>
+                </div>
+                <div class="card-body">
+                    <form action="" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" name="name" id="name" class="form-control" required>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="cooktime" class="mt-2">Cooktime | <small>minute(s)</small></label>
+                                    <input type="number" name="cooktime" id="cooktime" class="form-control" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="portions" class="mt-2">Portions | <small>pax/person</small></label>
+                                    <input type="number" name="portions" id="portions" class="form-control" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="image" class="mt-2">Image | <small>jpeg, png</small></label>
+                                    <input type="file" name="image" id="image" accept=".jpeg, .jpg, .png" class="form-control" required>
+                                </div>
+    
+    
+                            </div>
+                            
+                            <label for="ingredients" class="mt-2">Ingredients</label>
+                            <select class="form-control" name="ingredients" multiple="multiple" name="ingredients" id="ingredientsSelectForm"class="form-control">
+                                {% for ingredient in ingredients %}
+                                    <option value="{{ingredient.id}}">{{ingredient.name}}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="steps" class="mt-2">Steps</label>
+                            <textarea type="text" name="steps" id="steps" class="form-control"></textarea>
+
+
+
+                          
+                            <button type="submit" class="btn btn-primary float-right mt-3">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function(){ 
+
+        tinymce.init({
+            selector: '#steps'
+        });
+    
+        $('#ingredientsSelectForm').select2();
+    });
+</script>
+{% endblock script%}

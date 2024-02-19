@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 
 from webdata import db, jwt, bcrypt, config
-from webdata.models import User, Article, Nutrition, Ingredient, NutritionDetail
+from webdata.models import User, Article, Nutrition, Ingredient, NutritionDetail, Recipe, RecipeDetail
 
 from datetime import datetime
 
@@ -117,6 +117,7 @@ def edit_user():
     return redirect(url_for('admin.users'))
 
 @admin.route("/reset_user_password", methods=["GET", "POST"])
+@login_required
 def reset_user_password():
     if request.method == "POST":
         id = request.form.get("id")
@@ -138,6 +139,7 @@ def reset_user_password():
     return redirect(url_for("admin.users"))
 
 @admin.route('delete_user', methods=['POST'])
+@login_required
 def delete_user():
     flash('This feature is currently disabled.', 'info')
     return redirect(url_for('admin.users'))
@@ -155,11 +157,13 @@ def delete_user():
     return redirect(url_for('admin.users'))
 
 @admin.route('/articles')
+@login_required
 def articles():
     articles = Article.query.all()
     return render_template('admin/articles.html', articles=articles)
 
 @admin.route('/add_article', methods=['GET', 'POST'])
+@login_required
 def add_article():
     if request.method == 'POST':
         title = request.form.get('title')
@@ -183,6 +187,7 @@ def add_article():
     return render_template('admin/add_article.html')
 
 @admin.route('/edit_article/<int:id>', methods=['GET', 'POST'])
+@login_required
 def edit_article(id):
     
     if request.method == 'POST':
@@ -227,6 +232,7 @@ def edit_article(id):
 
 
 @admin.route('/delete_article', methods=['POST'])
+@login_required
 def delete_article():
     
     article_id = request.form.get('id')
@@ -243,11 +249,13 @@ def delete_article():
     return redirect(url_for('admin.articles'))
 
 @admin.route('/nutritions')
+@login_required
 def nutritions():
     nutritions = Nutrition.query.all()
     return render_template('admin/nutritions.html', nutritions=nutritions)
 
 @admin.route('/add_nutrition', methods=['GET', 'POST'])
+@login_required
 def add_nutrition():
     if request.method == 'POST':
         name = request.form.get('name')
@@ -263,6 +271,7 @@ def add_nutrition():
     return render_template('admin/add_nutrition.html')
 
 @admin.route('/edit_nutrition/<int:id>', methods=['GET', 'POST'])
+@login_required
 def edit_nutrition(id):
     
     if request.method == 'POST':
@@ -296,6 +305,7 @@ def edit_nutrition(id):
     return render_template('admin/edit_nutrition.html', nutrition=nutrition)
 
 @admin.route('/delete_nutrition', methods=['POST'])
+@login_required
 def delete_nutrition():
     nutrition_id = request.form.get('id')
     nutrition = Nutrition.query.filter_by(id=nutrition_id).first()
@@ -315,11 +325,13 @@ def delete_nutrition():
     return redirect(url_for('admin.nutritions'))
 
 @admin.route('/ingredients')
+@login_required
 def ingredients():
     ingredients = Ingredient.query.all()
     return render_template('admin/ingredients.html', ingredients=ingredients)
 
 @admin.route('/add_ingredient', methods=['GET', 'POST'])
+@login_required
 def add_ingredient():
     
     if request.method == "POST":
@@ -404,6 +416,7 @@ def add_ingredient():
 
 
 @admin.route('/delete_ingredient', methods=['POST'])
+@login_required
 def delete_ingredient():
     ingredient_id = request.form.get('id')
     ingredient = Ingredient.query.filter_by(id=ingredient_id).first()
@@ -435,6 +448,7 @@ def delete_ingredient():
     return redirect(url_for('admin.ingredients'))
 
 @admin.route('/edit_ingredient/<int:id>', methods=['GET', 'POST'])
+@login_required
 def edit_ingredient(id):
     
     if request.method == 'POST':
@@ -518,6 +532,102 @@ def edit_ingredient(id):
     nutritions = NutritionDetail.query.filter_by(ingredient_id=ingredient.id).all()
     return render_template('admin/edit_ingredient.html', ingredient=ingredient, nutritions=nutritions)
 
+
+@admin.route('/recipes')
+@login_required
+def recipes():
+    return render_template('admin/recipes.html')
+
+@admin.route('/add_recipe', methods=['GET', 'POST'])
+@login_required
+def add_recipe():
+    
+    if request.method == 'POST':
+        name = request.form.get('name')
+        steps = request.form.get('steps')
+        cooktime = request.form.get('cooktime')
+        portions = request.form.get('portions')
+        ingredients = request.form.getlist('ingredients')
+        
+        if len(ingredients) == 0:
+            flash('Ingredients cannot be empty', 'danger')
+            return redirect(url_for('admin.add_recipe'))
+        
+        if 'image' not in request.files:
+            flash('No file part', 'danger')
+            return redirect(url_for('admin.add_recipe'))
+        
+        file = request.files['image']
+        
+        if file.filename == '':
+            flash('No selected file', 'danger')
+            return redirect(url_for('admin.add_recipe'))
+        
+        if not allowed_file(file.filename):
+            flash('Invalid file type', 'danger')
+            return redirect(url_for('admin.add_recipe'))
+            
+        
+        if name == '' or steps == '' or cooktime == '' or portions == '':
+            flash('Name, steps, cooktime, and portions cannot be empty', 'danger')
+            return redirect(url_for('admin.add_recipe'))
+        
+        
+        filename = str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower()
+        file.save(os.path.join(config.UPLOAD_FOLDER, filename))
+        # resize image to 500x500
+        
+        from PIL import Image
+
+        image = Image.open(os.path.join(config.UPLOAD_FOLDER, filename))
+        width, height = image.size
+
+        if width > height:
+            left = (width - height) // 2
+            right = left + height
+            top = 0
+            bottom = height
+        else:
+            top = (height - width) // 2
+            bottom = top + width
+            left = 0
+            right = width
+
+        image = image.crop((left, top, right, bottom))
+        image = image.resize((500, 500))
+        image.save(os.path.join(config.UPLOAD_FOLDER, filename))
+        
+        recipe = Recipe(name=name, steps=steps, cooktime=cooktime, portions=portions, image=filename)
+        
+        db.session.add(recipe)
+        db.session.commit()
+        
+        for key in ingredients:
+            temp = RecipeDetail(recipe_id=recipe.id, ingredients_id=key, amount=0)
+            db.session.add(temp)
+            db.session.commit()
+
+        flash('Recipe has been added', 'success')
+        return redirect(url_for('admin.edit_recipe', id=recipe.id))
+    ingredients = Ingredient.query.all()
+    return render_template('admin/add_recipe.html', ingredients=ingredients)
+
+@admin.route('/edit_recipe/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_recipe(id):
+    recipe = Recipe.query.filter_by(id=id).first()
+    data = {
+        "data" : recipe
+    }
+    return recipe.image
+    return render_template('admin/edit_recipe.html', recipe=recipe)
+
+
+
+
+
+
 @admin.route('/view_image/<text>')
+@login_required
 def view_image(text):
     return redirect(url_for('static', filename=f'uploaded_images/{text}'), code=301)

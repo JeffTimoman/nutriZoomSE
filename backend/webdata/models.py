@@ -67,12 +67,15 @@ class Ingredient(db.Model):
 class Recipe(db.Model):
     __tablename__ = 'recipes'
     id = db.Column(db.Integer, primary_key=True)
-    image = db.Column(db.String(200))
     name = db.Column(db.String(100))
     steps = db.Column(db.String(300))
-    favorite_count = db.Column(db.Integer)
     cooktime = db.Column(db.Integer)
     portions = db.Column(db.Float)
+    image = db.Column(db.String(200))
+    
+    @property
+    def favorites_count(self):
+        return len(FavoriteRecipe.query.filter_by(recipe_id=self.id).all())
 
 
 class Nutrition(db.Model):
@@ -104,8 +107,8 @@ class RecipeDetail(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'))
     ingredients_id = db.Column(db.Integer, db.ForeignKey('ingredients.id'))
-    amount = db.Column(db.Float)
-    unit = db.Column(db.String(50))
+    amount = db.Column(db.Float, default=0)
+    unit = db.Column(db.String(50), default="gr")
 
 
 class Article(db.Model):
