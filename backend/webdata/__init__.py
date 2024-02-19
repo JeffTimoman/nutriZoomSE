@@ -34,7 +34,9 @@ from webdata.authentication.routes import authenticator
 from webdata.admin.routes import admin
 from webdata.article.routes import article
 from webdata.nutrition.routes import nutrition
+from webdata.recipe.routes import recipe
 app.register_blueprint(authenticator, url_prefix='/api/auth')
 app.register_blueprint(admin, url_prefix='/admin')
-app.register_blueprint(article, url_prefix='/api/articles')
+app.register_blueprint(article, url_prefix='/api/article')
 app.register_blueprint(nutrition, url_prefix='/api/nutrition')
+app.register_blueprint(recipe, url_prefix='/api/recipe')
