@@ -74,9 +74,13 @@ class Recipe(db.Model):
     image = db.Column(db.String(200))
     
     @property
-    def favorites_count(self):
+    def favorited_by(self):
         return len(FavoriteRecipe.query.filter_by(recipe_id=self.id).all())
-
+    
+    @property
+    def total_ingr(self):
+        return len(RecipeDetail.query.filter_by(recipe_id=self.id).all())
+    
 
 class Nutrition(db.Model):
     __tablename__ = 'nutritions'
@@ -101,14 +105,23 @@ class NutritionDetail(db.Model):
     @property
     def name(self):
         return Nutrition.query.filter_by(id=self.nutrition_id).first().name
+    
+
+
 
 class RecipeDetail(db.Model):
     __tablename__ = 'recipedetails'
-    id = db.Column(db.Integer, primary_key=True)
-    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'))
-    ingredients_id = db.Column(db.Integer, db.ForeignKey('ingredients.id'))
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id', ondelete='CASCADE'), primary_key=True)
+    ingredients_id = db.Column(db.Integer, db.ForeignKey('ingredients.id', ondelete='CASCADE'), primary_key=True)
     amount = db.Column(db.Float, default=0)
-    unit = db.Column(db.String(50), default="gr")
+    unit = db.Column(db.String(50), default="g")
+    
+    @property
+    def name(self):
+        return Ingredient.query.filter_by(id=self.ingredients_id).first().name
+    
+
+    
 
 
 class Article(db.Model):

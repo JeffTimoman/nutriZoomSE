@@ -536,7 +536,23 @@ def edit_ingredient(id):
 @admin.route('/recipes')
 @login_required
 def recipes():
-    return render_template('admin/recipes.html')
+    recipes = Recipe.query.all()
+    return render_template('admin/recipes.html', recipes=recipes)
+
+@admin.route('/delete_recipe', methods=['POST'])
+def delete_recipe():
+    recipe_id = request.form.get('id')
+    recipe = Recipe.query.filter_by(id=recipe_id).first()
+    
+    if not recipe:
+        flash('Recipe not found', 'danger')
+        return redirect(url_for('admin.recipes'))
+    
+    db.session.delete(recipe)
+    db.session.commit()
+    
+    flash('Recipe has been deleted', 'success')
+    return redirect(url_for('admin.recipes'))
 
 @admin.route('/add_recipe', methods=['GET', 'POST'])
 @login_required
@@ -615,12 +631,85 @@ def add_recipe():
 @admin.route('/edit_recipe/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_recipe(id):
+    
+    if request.method == 'POST':
+        print(request.form)
+        recipe = Recipe.query.filter_by(id=id).first()
+        ingredients = RecipeDetail.query.filter_by(recipe_id=id).all()
+        if not recipe:
+            flash('Recipe not found', 'danger')
+            return redirect(url_for('admin.recipes'))
+        
+        name = request.form.get('name')
+        steps = request.form.get('steps')
+        cooktime = request.form.get('cooktime')
+        portions = request.form.get('portions')
+        
+        recipe.name = name
+        recipe.steps = steps
+        recipe.cooktime = cooktime
+        recipe.portions = portions
+
+        for ingredient in ingredients:
+            # print(request.form)
+            the_id = ingredient.ingredients_id
+            # print(the_id)
+            amount = request.form.get(f'{ingredient.ingredients_id}_ingredient')
+            unit = request.form.get(f'{ingredient.ingredients_id}_unit')
+            # print(ingredient, amount, unit)
+            ingredient.amount = amount
+            ingredient.unit = unit
+            db.session.commit()
+            
+            
+        if 'image' in request.files:
+            file = request.files['image']
+            if file.filename != '':
+                if not allowed_file(file.filename):
+                    flash('Invalid file type', 'danger')
+                    return redirect(url_for('admin.edit_recipe', id=id))
+                
+                filename = str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower()
+                file.save(os.path.join(config.UPLOAD_FOLDER, filename))
+                # resize image to 500x500
+
+                from PIL import Image
+
+                image = Image.open(os.path.join(config.UPLOAD_FOLDER, filename))
+                width, height = image.size
+
+                if width > height:
+                    left = (width - height) // 2
+                    right = left + height
+                    top = 0
+                    bottom = height
+                else:
+                    top = (height - width) // 2
+                    bottom = top + width
+                    left = 0
+                    right = width
+
+                image = image.crop((left, top, right, bottom))
+                image = image.resize((500, 500))
+                image.save(os.path.join(config.UPLOAD_FOLDER, filename))
+                # delete old image
+                if recipe.image:
+                    try : 
+                        os.remove(os.path.join(config.UPLOAD_FOLDER, recipe.image))
+                    except Exception as e:
+                        print(e)
+                        pass
+                recipe.image = filename
+                
+        db.session.commit()
+        
+        flash('Recipe has been updated', 'success')
+        return redirect(url_for('admin.edit_recipe', id=id))
+    
     recipe = Recipe.query.filter_by(id=id).first()
-    data = {
-        "data" : recipe
-    }
-    return recipe.image
-    return render_template('admin/edit_recipe.html', recipe=recipe)
+    ingredients = RecipeDetail.query.filter_by(recipe_id=id).all()
+    print(ingredients)
+    return render_template('admin/edit_recipe.html', recipe=recipe, ingredients=ingredients)
 
 
 

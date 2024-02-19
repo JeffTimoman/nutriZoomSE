@@ -1,0 +1,87 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Edit Recipe{% endblock title %}
+{% block style %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+{% endblock style%}
+
+{% block body %}
+<!-- Button trigger modal -->
+
+<div class="container-fluid row d-flex justify-content-center align-items-center">
+    <div class="col-md-11 card mt-3">
+
+        <div class="card mt-3 mb-3 ml-2 mr-2">
+            <div class="card-header">
+                    <a href="{{url_for('admin.recipes')}}" class="btn btn-secondary">Back</a>
+                    <h4 class="text-center mt-2">Edit Recipe</h4>
+                </div>
+                <div class="card-body">
+                    <form action="" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" name="name" id="name" class="form-control" value="{{recipe.name}}" required>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="cooktime" class="mt-2">Cooktime | <small>minute(s)</small></label>
+                                    <input type="number" name="cooktime" id="cooktime" class="form-control" value="{{recipe.cooktime }}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="portions" class="mt-2">Portions | <small>pax/person</small></label>
+                                    <input type="number" name="portions" id="portions" class="form-control" value="{{recipe.portions}}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="image" class="mt-2">Image | <small><a href="{{url_for('admin.view_image', text=recipe.image)}}" target="_blank">{{recipe.image}}</a></small></label>
+                                    <input type="file" name="image" id="image" accept=".jpeg, .jpg, .png" class="form-control">
+                                </div>
+                            </div>
+                            
+                            
+
+                            <label for="steps" class="mt-2">Steps</label>
+                            <textarea type="text" name="steps" id="steps" class="form-control">{{recipe.steps}}</textarea>
+                            <div class="ingredients-wrapper">
+                                {% for ingredient in ingredients %}
+
+                                <div class="row mt-2">
+                                    <div class="col-md-10">
+                                        <label for="{{ingredient.name}}" class="">{{ingredient.name}}</label>
+                                        <input type="number" name="{{ingredient.ingredients_id}}_ingredient" id="{{ingredient.name}}" class="form-control" value="{{ingredient.amount}}" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="ok"><small>Unit</small></label>
+                                        <select name="{{ingredient.ingredients_id}}_unit" class="form-control">
+                                            <option value="g" {% if ingredient.unit == 'g' %}selected{% endif %}>g</option>
+                                            <option value="tbsp" {% if ingredient.unit == 'tbsp' %}selected{% endif %}>tbsp</option>
+                                            <option value="tsp" {% if ingredient.unit == 'tsp' %}selected{% endif %}>tsp</option>
+                                            <option value="kg" {% if ingredient.unit == 'kg' %} selected {% endif %}>kg</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+
+                            <button type="submit" class="btn btn-success float-right mt-3">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function(){ 
+
+        tinymce.init({
+            selector: '#steps'
+        });
+    });
+</script>
+{% endblock script%}
