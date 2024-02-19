@@ -1,5 +1,5 @@
+import 'package:bagianjosh/pages/intro_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/intro_screen.dart';
 
 void main() {
   runApp(const MyApp());

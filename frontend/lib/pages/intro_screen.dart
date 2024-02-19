@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/pages/intro_screens/intro_screen_1.dart';
-import 'package:frontend/pages/intro_screens/intro_screen_2.dart';
-import 'package:frontend/pages/intro_screens/intro_screen_3.dart';
+import 'package:bagianjosh/pages/intro_screens/intro_screen_1.dart';
+import 'package:bagianjosh/pages/intro_screens/intro_screen_2.dart';
+import 'package:bagianjosh/pages/intro_screens/intro_screen_3.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:flutter/material.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
-
   @override
   State<IntroScreen> createState() => _IntroScreenState();
 }
