@@ -45,6 +45,7 @@ class GetIngredient(Resource):
             response[ingredient.id] = {
                 'id': ingredient.id,
                 'name': ingredient.name,
+                'representation' : f'Nutrition from {ingredient.name} per 100 gr',
                 'description': ingredient.description,
                 'nutrition': list(nutrition.values())  
             }
@@ -84,6 +85,7 @@ class ShowNutrition(Resource):
                 response[ingredient.id]={
                     'id': ingredient.id,
                     'name': ingredient.name,
+                    'representation' : f'Nutrition from {ingredient.name} per 100 gr',
                     'description': ingredient.description,
                     'nutrition': list(nutrition.values())
                 }
