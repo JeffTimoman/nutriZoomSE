@@ -82,11 +82,14 @@ class Recipe(db.Model):
         return len(RecipeDetail.query.filter_by(recipe_id=self.id).all())
     
 
+        
+    
+
 class Nutrition(db.Model):
     __tablename__ = 'nutritions'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True)
-    description = db.Column(db.String(200))
+    unit = db.Column(db.String(200), default="g")
     
     @property
     def used_by_length(self):
@@ -122,9 +125,17 @@ class RecipeDetail(db.Model):
         return Ingredient.query.filter_by(id=self.ingredients_id).first().name
     
     @property
-    def default_amount(self):
-        # set default amount to 100 gr
-        return self.amount * 100
+    def turn_to_hundred_gram(self):
+        options = {
+            "g" : 1,
+            "ml" : 1,
+            "kg" : 1000,
+            "l" : 1000,
+            "tbsp": 15,
+            "tsp": 5,
+        }
+        
+        return self.amount * options[self.unit]
     
 
 

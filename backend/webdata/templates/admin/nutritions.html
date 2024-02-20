@@ -52,7 +52,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-                        <th>Description</th>
+                        <th>Unit</th>
                         <th>Used By</th>
                         <th>Actions</th>
                     </tr>
@@ -62,7 +62,7 @@
                     <tr>
                         <td>{{nutrition.id}}</td>
                         <td>{{nutrition.name}}</td>
-                        <td>{{nutrition.description}}</td>
+                        <td>{{nutrition.unit}}</td>
                         <td>{{nutrition.used_by_length}}</td>
                         <td>
                             <a href="{{url_for('admin.edit_nutrition', id=nutrition.id)}}" class="btn btn-sm btn-warning">Edit</a>

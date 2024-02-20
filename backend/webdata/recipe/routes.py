@@ -1,4 +1,4 @@
-from flask import request, jsonify, Blueprint, flash
+from flask import request, jsonify, Blueprint, flash, url_for
 from flask_restx import Api, Resource, fields, reqparse
 
 from webdata.models import User, Nutrition, NutritionDetail, Ingredient, Recipe, RecipeDetail, FavoriteRecipe
@@ -70,7 +70,7 @@ class FindRecipe(Resource):
                     'steps' : recipe.steps,
                     'cooktime' : recipe.cooktime,
                     'portions' : recipe.portions,
-                    'image' : recipe.image,
+                    'image' : url_for('main.view_image', filename=recipe.image, _external=True),
                     'ingredients' : ingredient
                 })
         return {

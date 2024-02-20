@@ -20,6 +20,7 @@ app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=config.ACCESS_TOKEN_DUR
 app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=config.REFRESH_TOKEN_DURATION)
 
 app.config['UPLOAD_FOLDER'] = config.UPLOAD_FOLDER
+app.config['FOLDER_UPLOAD_NAME'] = config.FOLDER_UPLOAD_NAME
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -36,9 +37,11 @@ from webdata.article.routes import article
 from webdata.nutrition.routes import nutrition
 from webdata.ingredient.routes import ingredient
 from webdata.recipe.routes import recipe
+from webdata.main.routes import main
 app.register_blueprint(authenticator, url_prefix='/api/auth')
 app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(article, url_prefix='/api/article')
 app.register_blueprint(nutrition, url_prefix='/api/nutrition')
 app.register_blueprint(ingredient, url_prefix='/api/ingredient')
 app.register_blueprint(recipe, url_prefix='/api/recipe')
+app.register_blueprint(main, url_prefix='')

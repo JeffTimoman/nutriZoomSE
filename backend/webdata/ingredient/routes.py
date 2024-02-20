@@ -39,7 +39,7 @@ class GetIngredient(Resource):
                     'id': nutr.id,
                     'name': nutr.name,
                     'amount': nutr_detail.amount,
-                    'description' : nutr.description
+                    'amount' : nutr.amount,
                 }
 
             response[ingredient.id] = {

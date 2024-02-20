@@ -22,8 +22,13 @@
                             <label for="name">Name</label>
                             <input type="text" name="name" id="name" class="form-control" value="{{nutrition.name}}" required>
 
-                            <label for="description" class="mt-2">Description</label>
-                            <input type="text" name="description" id="description" class="form-control" value="{{nutrition.description}}">
+                            <label for="unit" class="mt-2">unit</label>
+                            <select name="unit" id="unit" class="form-control" required>
+                                <option value="g" {% if nutrition.unit == 'g' %}selected{% endif %}>g</option>
+                                <option value="mg" {% if nutrition.unit == 'mg' %}selected{% endif %}>mg</option>
+                                <option value="kcal" {% if nutrition.unit == 'kcal' %}selected{% endif %}>kcal</option>
+                                <option value="cal" {% if nutrition.unit == 'cal' %}selected{% endif %}>cal</option>
+                            </select>
 
                             <button type="submit" class="btn btn-primary float-right mt-3">Save</button>
                         </div>

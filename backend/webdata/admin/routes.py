@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
-
-from webdata import db, jwt, bcrypt, config
+from werkzeug.utils import secure_filename
+from webdata import db, jwt, bcrypt, config, app
 from webdata.models import User, Article, Nutrition, Ingredient, NutritionDetail, Recipe, RecipeDetail
 
 from datetime import datetime
@@ -259,9 +259,9 @@ def nutritions():
 def add_nutrition():
     if request.method == 'POST':
         name = request.form.get('name')
-        description = request.form.get('description')
+        unit = request.form.get('unit')
         
-        nutrition = Nutrition(name=name, description=description)
+        nutrition = Nutrition(name=name, unit=unit)
         
         db.session.add(nutrition)
         db.session.commit()
@@ -283,14 +283,14 @@ def edit_nutrition(id):
             return redirect(url_for('admin.nutritions'))
         
         name = request.form.get('name')
-        description = request.form.get('description')
+        unit = request.form.get('unit')
         
-        if nutrition.name == name and nutrition.description == description:
+        if nutrition.name == name and nutrition.unit == unit:
             flash('No changes has been made', 'info')
             return redirect(url_for('admin.edit_nutrition', id=id))
         
         nutrition.name = name
-        nutrition.description = description
+        nutrition.unit = unit
         
         db.session.commit()
         flash('Nutrition has been updated', 'success')
@@ -367,8 +367,8 @@ def add_ingredient():
         if check:
             flash('Ingredient already exists', 'danger')
             return redirect(url_for('admin.add_ingredient'))
-        
-        filename = str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower()
+
+        filename = secure_filename(str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower())
         file.save(os.path.join(config.UPLOAD_FOLDER, filename))
         # resize image to 500x500
         
@@ -411,8 +411,6 @@ def add_ingredient():
 
     nutritions = Nutrition.query.all()
     return render_template('admin/add_ingredient.html', nutritions=nutritions)
-
-
 
 
 @admin.route('/delete_ingredient', methods=['POST'])
@@ -477,7 +475,7 @@ def edit_ingredient(id):
                     flash('Invalid file type', 'danger')
                     return redirect(url_for('admin.edit_ingredient', id=id))
                 
-                filename = str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower()
+                filename = secure_filename(str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower())
                 file.save(os.path.join(config.UPLOAD_FOLDER, filename))
                 # resize image to 500x500
 
@@ -669,7 +667,7 @@ def edit_recipe(id):
                     flash('Invalid file type', 'danger')
                     return redirect(url_for('admin.edit_recipe', id=id))
                 
-                filename = str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower()
+                filename = secure_filename(str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower())
                 file.save(os.path.join(config.UPLOAD_FOLDER, filename))
                 # resize image to 500x500
 
@@ -717,6 +715,5 @@ def edit_recipe(id):
 
 
 @admin.route('/view_image/<text>')
-@login_required
 def view_image(text):
-    return redirect(url_for('static', filename=f'uploaded_images/{text}'), code=301)
+    return redirect(url_for('static', filename=f'{app.config["FOLDER_UPLOAD_NAME"]}/{text}'), code=301)
