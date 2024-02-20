@@ -159,7 +159,8 @@ class AddFavoriteRecipe(Resource):
         if favorite:
             return {'message': f'You already added this recipe to favorite!'}, 404
         favorite = FavoriteRecipe(user_id = user.id, recipe_id = recipe.id)
-        favorite.save()
+        db.session.add(favorite)
+        db.session.commit()
         return {'message': f'You added {recipe.name} to favorite!'}, 200
 
 #REMOVE FROM FAVORITE RECIPES
