@@ -26,13 +26,24 @@ class GetRecipe(Resource):
         per_page = request.args.get('per_page', default=4, type=int)
         recipes = Recipe.query.paginate(page=page, per_page=per_page)
         response = []
-
+        difficult = ['easy', 'medium', 'hard', 'master', 'nightmare']
         for recipe in recipes.items:
+            temp = 1
+            if recipe.cooktime > 30 and recipe.cooktime <= 45:
+                temp = 2
+            elif recipe.cooktime > 45 and recipe.cooktime <= 90:
+                temp = 3
+            elif recipe.cooktime > 90 and recipe.cooktime <= 120:
+                temp = 4
+            elif recipe.cooktime > 120:
+                temp = 5
+                
             response.append({
                 'id' : recipe.id,
                 'name' : recipe.name,
                 'steps' : recipe.steps,
                 'cooktime' : recipe.cooktime,
+                'difficult' : difficult[temp-1],
                 'portions' : recipe.portions,
             })
 
@@ -58,11 +69,19 @@ class FindRecipe(Resource):
             if recipe.name.lower() == name1.lower():
                 recipeDetail = []
                 ingredient = []
-                for detail in RecipeDetail.query.filter_by(recipe_id = recipe.id).all():
+                nutrition_list = []
+                for nutr in Nutrition.query.all():
+                    nutrition_list.append({nutr.name: 0})
+                for detail in RecipeDetail.query.filter_by(recipe_id=recipe.id).all():     
+                    
+                    # for n in nutrition_list:
+                    #     if detail.
+
                     ingredient.append({
-                        'name' : Ingredient.query.filter_by(id = detail.ingredients_id).first().name,
-                        'amount' : detail.amount,
-                        'unit' : detail.unit
+                        'name': Ingredient.query.filter_by(id=detail.ingredients_id).first().name,
+                        'amount': detail.amount,
+                        'unit': detail.unit,
+                        'nutrition_list' : nutrition_list
                     })
                 response.append({
                     'id' : recipe.id,
