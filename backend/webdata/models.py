@@ -105,6 +105,7 @@ class NutritionDetail(db.Model):
     @property
     def name(self):
         return Nutrition.query.filter_by(id=self.nutrition_id).first().name
+
     
 
 
@@ -120,7 +121,10 @@ class RecipeDetail(db.Model):
     def name(self):
         return Ingredient.query.filter_by(id=self.ingredients_id).first().name
     
-
+    @property
+    def default_amount(self):
+        # set default amount to 100 gr
+        return self.amount * 100
     
 
 

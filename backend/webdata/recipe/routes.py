@@ -162,20 +162,20 @@ class AddFavoriteRecipe(Resource):
         return {'message': f'You added {recipe.name} to favorite!'}, 200
 
 #REMOVE FROM FAVORITE RECIPES
-# @api.route("/remove_from_favourites/<int:id1>")
-# class RemoveFromFavourites(Resource):
-#     @jwt_required()
-#     def delete(self, id1):
-#         current_user = get_jwt_identity()
-#         user = User.query.filter_by(username = current_user).first()
-#         recipe = Recipe.query.filter_by(id = id1).first()
-#         if not recipe:
-#             return {'message': f'There are no recipes with id "{id1}" found!'}, 404
-#         favorite = FavoriteRecipe.query.filter_by(user_id = user.id, recipe_id = recipe.id).first()
-#         if not favorite:
-#             return {'message': f'You have not added this recipe to favorite!'}, 404
-#         favorite.delete()
-#         return {'message': f'You removed {recipe.name} from favorite!'}, 200
+@api.route("/remove_from_favourites/<int:id1>")
+class RemoveFromFavourites(Resource):
+    @jwt_required()
+    def delete(self, id1):
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(username = current_user).first()
+        recipe = Recipe.query.filter_by(id = id1).first()
+        if not recipe:
+            return {'message': f'There are no recipes with id "{id1}" found!'}, 404
+        favorite = FavoriteRecipe.query.filter_by(user_id = user.id, recipe_id = recipe.id).first()
+        if not favorite:
+            return {'message': f'You have not added this recipe to favorite!'}, 404
+        favorite.delete()
+        return {'message': f'You removed {recipe.name} from favorite!'}, 200
 
 #SHOW USER FAVORITE RECIPE
 @api.route('/show_favorite_recipe/<string:current_user>')
