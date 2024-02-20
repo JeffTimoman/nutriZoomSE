@@ -216,41 +216,6 @@ class FindRecipeIngredient(Resource):
         }, 200
 
 
-
-# @api.route('/find_recipe_ingredient/<string:ingredient1>')
-# class FindRecipeIngredient(Resource):
-#     def get(self, ingredient1):
-#         if not ingredient1:
-#             return {'message': 'Please input ingredient!'}, 404
-#         ingredient =  Ingredient.query.filter_by(name = ingredient1).first()
-#         if not ingredient:
-#             return {'message': f'There are no ingredients with name "{ingredient1}" found!'}, 404
-#         response = []
-#         recipeDetail = []
-#         recipeDetails = RecipeDetail.query.filter_by(ingredients_id = ingredient.id).all()
-#         for detail in recipeDetails:
-#             recipe = Recipe.query.filter_by(id = detail.recipe_id).first()
-#             recipeDetail.append({
-#                 'id' : recipe.id,
-#                 'name' : recipe.name,
-#                 'steps' : recipe.steps,
-#                 'cooktime' : recipe.cooktime,
-#                 'portions' : recipe.portions,
-#                 'image' : recipe.image,
-#                 'amount' : detail.amount,
-#                 'unit' : detail.unit
-#             })
-#         response.append({
-#             'name' : ingredient.name,
-#             'description' : ingredient.description,
-#             'image' : ingredient.image,
-#             'recipes' : recipeDetail
-#         })
-#         return {
-#             'data': response
-#         }, 200
-
-
 # INI UNTUK BAGIAN YANG KAITAN AMA USER GA NGERTI< TAPI KURLEB GINI, SOALNYA MAIN JWT, GW GA NGERTI
 #ADD TO FAVORITE RECIPE
 @api.route('/add_favorite_recipe/<int:id1>')
