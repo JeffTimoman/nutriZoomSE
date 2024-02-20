@@ -2,7 +2,7 @@ from flask import request, jsonify, Blueprint, flash
 from flask_restx import Api, Resource, fields, reqparse
 
 from webdata.models import User, Nutrition, NutritionDetail, Ingredient, Recipe, RecipeDetail, FavoriteRecipe
-from webdata import jwt, bcrypt
+from webdata import jwt, bcrypt, db
 from flask_jwt_extended import create_access_token, create_refresh_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
@@ -148,6 +148,7 @@ class FindRecipeIngredient(Resource):
 @api.route('/add_favorite_recipe/<int:id1>')
 class AddFavoriteRecipe(Resource):
     @jwt_required()
+    @api.expect(authorization_header)
     def post(self, id1):
         current_user = get_jwt_identity()
         user = User.query.filter_by(username = current_user).first()
@@ -158,13 +159,16 @@ class AddFavoriteRecipe(Resource):
         if favorite:
             return {'message': f'You already added this recipe to favorite!'}, 404
         favorite = FavoriteRecipe(user_id = user.id, recipe_id = recipe.id)
-        favorite.save()
+        db.session.add(favorite)
+        db.session.commit()
         return {'message': f'You added {recipe.name} to favorite!'}, 200
 
 #REMOVE FROM FAVORITE RECIPES
 @api.route("/remove_from_favourites/<int:id1>")
 class RemoveFromFavourites(Resource):
     @jwt_required()
+    @api.expect(authorization_header)
+
     def delete(self, id1):
         current_user = get_jwt_identity()
         user = User.query.filter_by(username = current_user).first()
@@ -174,30 +178,40 @@ class RemoveFromFavourites(Resource):
         favorite = FavoriteRecipe.query.filter_by(user_id = user.id, recipe_id = recipe.id).first()
         if not favorite:
             return {'message': f'You have not added this recipe to favorite!'}, 404
+
         favorite.delete()
+
+        db.session.delete(favorite)
+        db.session.commit()
+
         return {'message': f'You removed {recipe.name} from favorite!'}, 200
 
 #SHOW USER FAVORITE RECIPE
-@api.route('/show_favorite_recipe/<string:current_user>')
+@api.route('/show_favorite_recipe')
 class ShowFavoriteRecipe(Resource):
-    # @jwt_required()
-    def get(self, current_user):
-        # current_user = get_jwt_identity()
-        user = User.query.filter_by(username = current_user).first()
+    
+    @jwt_required()
+    @api.expect(authorization_header)
+    def get(self):
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(username=current_user).first()
         if not user:
             return {'message': f'There are no user with username "{current_user}" found!'}, 404
-        response = []
-        fav = []
-        favoriterecipe =  FavoriteRecipe.query.filter_by(user_id = user.id).all()
-        for favorite in favoriterecipe:
-            recipe = Recipe.query.filter_by(id = favorite.recipe_id).first()
-            for re in recipe:
-                fav.append({
-                    'id' : re.id,
-                    'name' : re.name
-                })
-            response.append({
-                'id' : fav.id,
-                'name' : fav.name
-            })
-            return response, 200
+        response = dict({})
+        fav = dict({})
+        favorite_recipes = FavoriteRecipe.query.filter_by(user_id = user.id).all()
+        
+        for favorite_recipe in favorite_recipes:
+            recipe = Recipe.query.filter_by(id = favorite_recipe.recipe_id).first()
+            fav[recipe.id] = {
+                'name' : recipe.name,
+                'steps' : recipe.steps,
+                'cooktime' : recipe.cooktime,
+                'portions' : recipe.portions,
+                'image' : recipe.image
+            }
+            
+        response['user'] = user.username
+        response['favorite_recipes'] = fav
+        
+        return response, 200
