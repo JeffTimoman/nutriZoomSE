@@ -168,6 +168,7 @@ class AddFavoriteRecipe(Resource):
 class RemoveFromFavourites(Resource):
     @jwt_required()
     @api.expect(authorization_header)
+
     def delete(self, id1):
         current_user = get_jwt_identity()
         user = User.query.filter_by(username = current_user).first()
@@ -177,8 +178,12 @@ class RemoveFromFavourites(Resource):
         favorite = FavoriteRecipe.query.filter_by(user_id = user.id, recipe_id = recipe.id).first()
         if not favorite:
             return {'message': f'You have not added this recipe to favorite!'}, 404
+
+        favorite.delete()
+
         db.session.delete(favorite)
         db.session.commit()
+
         return {'message': f'You removed {recipe.name} from favorite!'}, 200
 
 #SHOW USER FAVORITE RECIPE
