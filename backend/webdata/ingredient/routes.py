@@ -39,7 +39,7 @@ class GetIngredient(Resource):
                     'id': nutr.id,
                     'name': nutr.name,
                     'amount': nutr_detail.amount,
-                    'amount' : nutr.amount,
+                    'unit' : nutr.unit,
                 }
 
             response[ingredient.id] = {
@@ -80,7 +80,7 @@ class ShowNutrition(Resource):
                         'id': nutr.id,
                         'name': nutr.name,
                         'amount': nutr_detail.amount,
-                        'description': nutr.description
+                        'unit': nutr.unit
                     }
                 response[ingredient.id]={
                     'id': ingredient.id,

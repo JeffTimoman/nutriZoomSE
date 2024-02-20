@@ -37,14 +37,37 @@ class GetRecipe(Resource):
                 temp = 4
             elif recipe.cooktime > 120:
                 temp = 5
-                
+            ingredient = []
+            nutrition_totals = {}
+
+            for nutr in Nutrition.query.all():
+                nutrition_totals[nutr.name] = 0
+
+            for detail in RecipeDetail.query.filter_by(recipe_id=recipe.id).all():
+                ingredient_name = Ingredient.query.filter_by(id=detail.ingredients_id).first().name
+                amount = detail.amount
+
+                for nutr_detail in NutritionDetail.query.filter_by(ingredient_id=detail.ingredients_id).all():
+                    nutr_name = Nutrition.query.filter_by(id=nutr_detail.nutrition_id).first().name
+                    nutrition_totals[nutr_name] += nutr_detail.amount * amount / 100
+
+                ingredient.append({
+                    'name': ingredient_name,
+                    'amount': amount,
+                    'unit': detail.unit,
+                })
+
+            nutrition_list = [{'name': nutr_name, 'amount': nutrition_totals[nutr_name]} for nutr_name in nutrition_totals]
+
             response.append({
-                'id' : recipe.id,
-                'name' : recipe.name,
-                'steps' : recipe.steps,
-                'cooktime' : recipe.cooktime,
-                'difficult' : difficult[temp-1],
-                'portions' : recipe.portions,
+                'id': recipe.id,
+                'name': recipe.name,
+                'steps': recipe.steps,
+                'cooktime': recipe.cooktime,
+                'portions': recipe.portions,
+                'image': url_for('main.view_image', filename=recipe.image, _external=True),
+                'ingredients': ingredient,
+                'nutrition_list': nutrition_list
             })
 
         return {
@@ -61,40 +84,52 @@ class FindRecipe(Resource):
     def get(self, name1):
         if not name1:
             return {'message': 'Please input recipe!'}, 404
-        recipes =  Recipe.query.filter_by(name = name1).all()
+
+        recipes = Recipe.query.filter(Recipe.name.ilike(f"%{name1}%")).all()
+
         if not recipes:
-            return {'message': f'There are no recipes with name "{name1}" found!'}, 404
+            return {'message': f'There are no recipes with name containing "{name1}" found!'}, 404
+
         response = []
         for recipe in recipes:
-            if recipe.name.lower() == name1.lower():
-                recipeDetail = []
-                ingredient = []
-                nutrition_list = []
-                for nutr in Nutrition.query.all():
-                    nutrition_list.append({nutr.name: 0})
-                for detail in RecipeDetail.query.filter_by(recipe_id=recipe.id).all():     
-                    
-                    # for n in nutrition_list:
-                    #     if detail.
+            ingredient = []
+            nutrition_totals = {}  
 
-                    ingredient.append({
-                        'name': Ingredient.query.filter_by(id=detail.ingredients_id).first().name,
-                        'amount': detail.amount,
-                        'unit': detail.unit,
-                        'nutrition_list' : nutrition_list
-                    })
-                response.append({
-                    'id' : recipe.id,
-                    'name' : recipe.name,
-                    'steps' : recipe.steps,
-                    'cooktime' : recipe.cooktime,
-                    'portions' : recipe.portions,
-                    'image' : url_for('main.view_image', filename=recipe.image, _external=True),
-                    'ingredients' : ingredient
+            for nutr in Nutrition.query.all():
+                nutrition_totals[nutr.name] = 0
+
+            for detail in RecipeDetail.query.filter_by(recipe_id=recipe.id).all():
+                ingredient_name = Ingredient.query.filter_by(id=detail.ingredients_id).first().name
+                amount = detail.amount
+
+                for nutr_detail in NutritionDetail.query.filter_by(ingredient_id=detail.ingredients_id).all():
+                    nutr_name = Nutrition.query.filter_by(id=nutr_detail.nutrition_id).first().name
+                    nutrition_totals[nutr_name] += nutr_detail.amount * amount / 100
+
+                ingredient.append({
+                    'name': ingredient_name,
+                    'amount': amount,
+                    'unit': detail.unit,
                 })
+
+            nutrition_list = [{'name': nutr_name, 'amount': nutrition_totals[nutr_name]} for nutr_name in nutrition_totals]
+
+            response.append({
+                'id': recipe.id,
+                'name': recipe.name,
+                'steps': recipe.steps,
+                'cooktime': recipe.cooktime,
+                'portions': recipe.portions,
+                'image': url_for('main.view_image', filename=recipe.image, _external=True),
+                'ingredients': ingredient,
+                'nutrition_list': nutrition_list
+            })
+
         return {
             'data': response
         }, 200
+
+
 
 #FIND RECIPE BY ID
 @api.route('/find_recipe_id/<int:id1>')
@@ -102,30 +137,47 @@ class FindRecipeId(Resource):
     def get(self, id1):
         if not id1:
             return {'message': 'Please input recipe id!'}, 404
-        recipe =  Recipe.query.filter_by(id = id1).first()
+
+        recipe = Recipe.query.filter_by(id=id1).first()
+
         if not recipe:
             return {'message': f'There are no recipes with id "{id1}" found!'}, 404
+
         response = []
-        recipeDetail = []
         ingredient = []
-        for detail in RecipeDetail.query.filter_by(recipe_id = recipe.id).all():
+        nutrition_totals = {} 
+
+        for detail in RecipeDetail.query.filter_by(recipe_id=recipe.id).all():
+            ingredient_name = Ingredient.query.filter_by(id=detail.ingredients_id).first().name
+            amount = detail.amount
+
+            for nutr_detail in NutritionDetail.query.filter_by(ingredient_id=detail.ingredients_id).all():
+                nutr_name = Nutrition.query.filter_by(id=nutr_detail.nutrition_id).first().name
+                nutrition_totals[nutr_name] = nutrition_totals.get(nutr_name, 0) + nutr_detail.amount * amount / 100
+
             ingredient.append({
-                'name' : Ingredient.query.filter_by(id = detail.ingredients_id).first().name,
-                'amount' : detail.amount,
-                'unit' : detail.unit
+                'name': ingredient_name,
+                'amount': amount,
+                'unit': detail.unit
             })
+
+        nutrition_list = [{'name': nutr_name, 'amount': nutrition_totals[nutr_name]} for nutr_name in nutrition_totals]
+
         response.append({
-            'id' : recipe.id,
-            'name' : recipe.name,
-            'steps' : recipe.steps,
-            'cooktime' : recipe.cooktime,
-            'portions' : recipe.portions,
-            'image' : recipe.image,
-            'ingredients' : ingredient
+            'id': recipe.id,
+            'name': recipe.name,
+            'steps': recipe.steps,
+            'cooktime': recipe.cooktime,
+            'portions': recipe.portions,
+            'image':  url_for('main.view_image', filename=recipe.image, _external=True),
+            'ingredients': ingredient,
+            'nutrition_list': nutrition_list
         })
+
         return {
             'data': response
         }, 200
+
     
 #FIND RECIPE BY INGREDIENT
 @api.route('/find_recipe_ingredient/<string:ingredient1>')
@@ -133,33 +185,70 @@ class FindRecipeIngredient(Resource):
     def get(self, ingredient1):
         if not ingredient1:
             return {'message': 'Please input ingredient!'}, 404
-        ingredient =  Ingredient.query.filter_by(name = ingredient1).first()
+
+        ingredient = Ingredient.query.filter_by(name=ingredient1).first()
+
         if not ingredient:
             return {'message': f'There are no ingredients with name "{ingredient1}" found!'}, 404
+
         response = []
-        recipeDetail = []
-        recipeDetails = RecipeDetail.query.filter_by(ingredients_id = ingredient.id).all()
+        recipeDetails = RecipeDetail.query.filter_by(ingredients_id=ingredient.id).all()
+
         for detail in recipeDetails:
-            recipe = Recipe.query.filter_by(id = detail.recipe_id).first()
-            recipeDetail.append({
-                'id' : recipe.id,
-                'name' : recipe.name,
-                'steps' : recipe.steps,
-                'cooktime' : recipe.cooktime,
-                'portions' : recipe.portions,
-                'image' : recipe.image,
-                'amount' : detail.amount,
-                'unit' : detail.unit
+            recipe = Recipe.query.filter_by(id=detail.recipe_id).first()
+
+            for nutr_detail in NutritionDetail.query.filter_by(ingredient_id=ingredient.id).all():
+                nutr_name = Nutrition.query.filter_by(id=nutr_detail.nutrition_id).first().name
+                
+            response.append({
+                'recipe_id': recipe.id,
+                'recipe_name': recipe.name,
+                'steps': recipe.steps,
+                'cooktime': recipe.cooktime,
+                'portions': recipe.portions,
+                'image': url_for('main.view_image', filename=recipe.image, _external=True),
+                'amount': detail.amount,
+                'unit': detail.unit
             })
-        response.append({
-            'name' : ingredient.name,
-            'description' : ingredient.description,
-            'image' : ingredient.image,
-            'recipes' : recipeDetail
-        })
+
         return {
             'data': response
         }, 200
+
+
+
+# @api.route('/find_recipe_ingredient/<string:ingredient1>')
+# class FindRecipeIngredient(Resource):
+#     def get(self, ingredient1):
+#         if not ingredient1:
+#             return {'message': 'Please input ingredient!'}, 404
+#         ingredient =  Ingredient.query.filter_by(name = ingredient1).first()
+#         if not ingredient:
+#             return {'message': f'There are no ingredients with name "{ingredient1}" found!'}, 404
+#         response = []
+#         recipeDetail = []
+#         recipeDetails = RecipeDetail.query.filter_by(ingredients_id = ingredient.id).all()
+#         for detail in recipeDetails:
+#             recipe = Recipe.query.filter_by(id = detail.recipe_id).first()
+#             recipeDetail.append({
+#                 'id' : recipe.id,
+#                 'name' : recipe.name,
+#                 'steps' : recipe.steps,
+#                 'cooktime' : recipe.cooktime,
+#                 'portions' : recipe.portions,
+#                 'image' : recipe.image,
+#                 'amount' : detail.amount,
+#                 'unit' : detail.unit
+#             })
+#         response.append({
+#             'name' : ingredient.name,
+#             'description' : ingredient.description,
+#             'image' : ingredient.image,
+#             'recipes' : recipeDetail
+#         })
+#         return {
+#             'data': response
+#         }, 200
 
 
 # INI UNTUK BAGIAN YANG KAITAN AMA USER GA NGERTI< TAPI KURLEB GINI, SOALNYA MAIN JWT, GW GA NGERTI
