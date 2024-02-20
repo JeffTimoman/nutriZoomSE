@@ -631,7 +631,7 @@ def add_recipe():
 def edit_recipe(id):
     
     if request.method == 'POST':
-        print(request.form)
+        # print(request.form)
         recipe = Recipe.query.filter_by(id=id).first()
         ingredients = RecipeDetail.query.filter_by(recipe_id=id).all()
         if not recipe:
@@ -706,7 +706,7 @@ def edit_recipe(id):
     
     recipe = Recipe.query.filter_by(id=id).first()
     ingredients = RecipeDetail.query.filter_by(recipe_id=id).all()
-    print(ingredients)
+    # print(ingredients)
     return render_template('admin/edit_recipe.html', recipe=recipe, ingredients=ingredients)
 
 
