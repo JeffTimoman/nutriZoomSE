@@ -1,4 +1,4 @@
-from flask import request, jsonify, Blueprint, flash
+from flask import request, jsonify, Blueprint, flash, url_for
 from flask_restx import Api, Resource, fields, reqparse
 
 from webdata.models import User, Nutrition, NutritionDetail, Ingredient
@@ -31,7 +31,7 @@ class GetNutrition(Resource):
         for nutrition in nutritions.items:
             response[nutrition.id]={
                 'name' : nutrition.name,
-                'description' : nutrition.description,
+                'unit' : nutrition.unit,
                 'id' : nutrition.id
             }
 
@@ -80,15 +80,15 @@ class ShowIngredient(Resource):
                         'name': ing.name,
                         'description': ing.description,
                         'id' : ing.id,
-                        'image' : ing.image,
+                        'image' : url_for('main.view_image', filename=ing.image, _external=True),
                         'amount' : [detail['amount'] for detail in nutritionDetail if detail['ingredient_id'] == ing.id][0]
                     })
                 
                 response.append({
                     'name': nutrition.name,
-                    'description': nutrition.description,
+                    'unit': nutrition.unit,
                     'id': nutrition.id,
-                    'ingredient': [{'id': ing['id'], 'name': ing['name'], 'image' : ing['image'], 'amount':ing['amount']} for ing in ingredient]
+                    'ingredient': ingredient
                 })
         return response, 200
     
