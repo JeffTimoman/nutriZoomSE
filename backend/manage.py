@@ -33,7 +33,6 @@ def createsuperuser():
         print('User created successfully')
 
 def runserver():
-
     app.run(debug=True)
 
 if __name__ == '__main__':
