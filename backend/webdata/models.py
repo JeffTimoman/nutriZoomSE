@@ -137,14 +137,13 @@ class RecipeDetail(db.Model):
         
         return self.amount * options[self.unit]
     
-
-
 class Article(db.Model):
     __tablename__ = 'article'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150), unique=True)
     detail = db.Column(db.String(1000))
     author = db.Column(db.String(100))
+    image = db.Column(db.String(200))
     publishdate = db.Column(db.DateTime, default=datetime.now(timezone('Asia/Jakarta')))
     created_by = db.Column(db.Integer, db.ForeignKey("user.id"))
 

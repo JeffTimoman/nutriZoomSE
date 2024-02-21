@@ -54,6 +54,7 @@
                         <th>Title</th>
                         <th>Author</th>
                         <th>Published</th>
+                        <th>Image</th>
                         <th>Created By</th>
                         <th>Actions</th>
                     </tr>
@@ -65,6 +66,11 @@
                             <td>{{ article.title}}</td>
                             <td>{{ article.author}}</td>
                             <td>{{ article.publishdate}}</td>
+                            <td>
+                                <a href="{{url_for('admin.view_image', text=article.image)}}" class="border" target="_blank">
+                                    <img src="{{url_for('admin.view_image', text=article.image)}}" style="width: 25px; height: 25px;" alt="">
+                                </a>
+                            </td>
                             <td>{{ article.created_by_username}}</td>
                             <td>
                                 <a href="{{url_for('admin.edit_article', id=article.id)}}" class="btn btn-sm btn-primary">

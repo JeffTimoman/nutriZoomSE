@@ -15,30 +15,39 @@
                     <h4 class="text-center mt-2">Edit Article</h4>
                 </div>
                 <div class="card-body">
-                    <form action="" method="post">
-                        <div class="form-group">
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label for="title">Title</label>
-                                    <input type="text" class="form-control" name="title" id="title" value={{article.title}} required>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="author">Author</label>
-                                    <input type="text" name="author" id="author" class="form-control" value={{article.author}} required>
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="datetime">Published Date <small> | Today</small> </label>
-                                    <input type="date" name="date" id="date" class="form-control" value="{{ article.publishdate.strftime('%Y-%m-%d') }}">
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="time">Time <small> | Current</small> </label>
-                                    <input type="time" name="time" id="time" class="form-control" value="{{ article.publishdate.strftime('%H:%M') }}">
-                                </div>
+                    <form action="" method="post" enctype="multipart/form-data">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="title">Title</label>
+                                <input type="text" class="form-control" name="title" id="title" value="{{ article.title }}" required>
                             </div>
-                            
-                            <textarea id="mytextarea" name="detail">{{article.detail}}</textarea>
-                            
-                            <button type="submit" class="btn btn-primary mt-2 float-right">Save</button>
+                            <div class="col-md-3">
+                                <label for="image">Image |
+                                    <small>
+                                        <a href="{{url_for('admin.view_image', text=article.image)}}" target="_blank">{{article.image}}</a>
+                                    </small>
+                                </label>
+                                <input type="file" name="image" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="author">Author</label>
+                                <input type="text" name="author" id="author" class="form-control" value="{{ article.author }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="datetime">Published Date <small> | Today</small> </label>
+                                <input type="date" name="date" id="date" class="form-control" value="{{ article.publishdate.strftime('%Y-%m-%d')}}">
+
+                            </div>
+                            <div class="col-md-6">
+                                <label for="time">Time <small> | Current</small> </label>
+                                <input type="time" name="time" id="time" class="form-control"
+                                    value="{{ article.publishdate.strftime('%H:%M') }}">
+                            </div>
+                        </div>
+
+                        <textarea id="mytextarea" name="detail">{{article.detail}}</textarea>
+
+                        <button type="submit" class="btn btn-success mt-2 float-right">Save</button>
                         </div>
                     </form>
                 </div>
@@ -58,3 +67,4 @@
 </script>
 
 {% endblock script%}
+

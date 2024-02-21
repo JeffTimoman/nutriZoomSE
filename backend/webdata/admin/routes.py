@@ -171,15 +171,34 @@ def add_article():
         author = request.form.get('author')
         date = request.form.get('date')
         time = request.form.get('time')
+        filename = ""
+        
+        if 'image' not in request.files:
+            flash('No image included.', 'danger')
+            return redirect(url_for('admin.add_article'))
+        
+        if 'image' in request.files:
+            file = request.files['image']
+            if file.filename != '':
+                if not allowed_file(file.filename):
+                    flash('Invalid file type', 'danger')
+                    return redirect(url_for('admin.add_article'))
+                
+                filename = secure_filename(str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower())
+                file.save(os.path.join(config.UPLOAD_FOLDER, filename))
+
+        
+        
+        
         if time == '':
             time = datetime.now().strftime('%H:%M:%S')
+        
         if date == '':
             date = datetime.now().strftime('%Y-%m-%d')
         
         date = f"{date} {time}"
             
-        article = Article(title=title, detail=detail, author=author, publishdate=date, created_by=current_user.id)
-        
+        article = Article(title=title, detail=detail, author=author, publishdate=date, created_by=current_user.id, image=filename)
         db.session.add(article)
         db.session.commit()
         flash('Article has been added', 'success')
@@ -203,6 +222,25 @@ def edit_article(id):
         author = request.form.get('author')
         date = request.form.get('date')
         time = request.form.get('time')
+        
+        if 'image' in request.files:
+            file = request.files['image']
+            if file.filename != '':
+                if not allowed_file(file.filename):
+                    flash('Invalid file type', 'danger')
+                    return redirect(url_for('admin.edit_article', id=id))
+                
+                filename = secure_filename(str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower())
+                file.save(os.path.join(config.UPLOAD_FOLDER, filename))
+                # delete old image
+                if article.image:
+                    try : 
+                        os.remove(os.path.join(config.UPLOAD_FOLDER, article.image))
+                    except Exception as e:
+                        print(e)
+                        pass
+                article.image = filename
+        
         if time == '':
             time = datetime.now().strftime('%H:%M:%S')
         
