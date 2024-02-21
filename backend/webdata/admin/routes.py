@@ -748,7 +748,5 @@ def edit_recipe(id):
     return render_template('admin/edit_recipe.html', recipe=recipe, ingredients=ingredients)
 
 @admin.route('/view_image/<string:text>')
-def view_image(text):
-    if text == '' or not text:
-        return redirect(url_for('static', filename=f'{app.config["FOLDER_UPLOAD_NAME"]}/default.jpg'), code=301)
+def view_image(text='default.jpg'):
     return redirect(url_for('static', filename=f'{app.config["FOLDER_UPLOAD_NAME"]}/{text}'), code=301)
