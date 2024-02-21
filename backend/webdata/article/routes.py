@@ -1,4 +1,4 @@
-from flask import request, jsonify, Blueprint
+from flask import request, jsonify, Blueprint, url_for
 from flask_restx import Api, Resource, fields, reqparse
 
 from webdata.models import User, Article
@@ -33,7 +33,10 @@ class GetArticles(Resource):
             response[article.id] = {
                 'title': article.title,
                 'content': article.detail,
-                'author': article.author
+                'author': article.author,
+                'publishdate': article.publishdate,
+                'created_by' : article.created_by,
+                'image' : url_for('main.view_image', filename=article.image, _external=True)
             }
         
         return {
@@ -57,5 +60,6 @@ class ShowArticle(Resource):
             'content': article.detail,
             'author': article.author,
             'publishdate': article.formatted_tanggal_terbit,
-            'createdby': article.created_by_username
+            'createdby': article.created_by_username,
+            'image' : url_for('main.view_image', filename=article.image, _external=True)
         }, 200

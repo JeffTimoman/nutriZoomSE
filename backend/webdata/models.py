@@ -110,9 +110,6 @@ class NutritionDetail(db.Model):
         return Nutrition.query.filter_by(id=self.nutrition_id).first().name
 
     
-
-
-
 class RecipeDetail(db.Model):
     __tablename__ = 'recipedetails'
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id', ondelete='CASCADE'), primary_key=True)
