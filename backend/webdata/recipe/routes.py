@@ -215,7 +215,6 @@ class FindRecipeIngredient(Resource):
             'data': response
         }, 200
 
-
 # INI UNTUK BAGIAN YANG KAITAN AMA USER GA NGERTI< TAPI KURLEB GINI, SOALNYA MAIN JWT, GW GA NGERTI
 #ADD TO FAVORITE RECIPE
 @api.route('/add_favorite_recipe/<int:id1>')
