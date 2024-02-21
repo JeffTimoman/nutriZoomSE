@@ -280,7 +280,7 @@ class ShowFavoriteRecipe(Resource):
                 'steps' : recipe.steps,
                 'cooktime' : recipe.cooktime,
                 'portions' : recipe.portions,
-                'image' : recipe.image
+                'image' : url_for('main.view_image', filename=recipe.image, _external=True)
             }
             
         response['user'] = user.username
