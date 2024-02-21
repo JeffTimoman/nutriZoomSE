@@ -67,8 +67,8 @@
                             <td>{{ article.author}}</td>
                             <td>{{ article.publishdate}}</td>
                             <td>
-                                <a href="{{url_for('admin.view_image', text=article.image)}}" class="border" target="_blank">
-                                    <img src="{{url_for('admin.view_image', text=article.image)}}" style="width: 25px; height: 25px;" alt="">
+                                <a href="{{url_for('main.view_image', filename=article.image)}}" class="border" target="_blank">
+                                    <img src="{{url_for('main.view_image', filename=article.image)}}" style="width: 25px; height: 25px;" alt="">
                                 </a>
                             </td>
                             <td>{{ article.created_by_username}}</td>
