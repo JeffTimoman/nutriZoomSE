@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, url_for, redirect
+from flask import Blueprint, request, jsonify, url_for, redirect, render_template
 
 from webdata import app
 from flask import url_for, redirect, request
@@ -13,3 +13,7 @@ def view_image(filename="default.jpg"):
 @main.route('/')
 def index():
     return redirect(url_for('admin.login'))
+
+@main.route('/api_list')
+def api_list():
+    return render_template('api_list.html')
