@@ -1,4 +1,4 @@
-import 'package:bagianjosh/api_data/Models/models.dart';
+import 'package:bagianjosh/api_data/article/models.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;

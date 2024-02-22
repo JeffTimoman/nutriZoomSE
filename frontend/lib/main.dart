@@ -1,4 +1,4 @@
-import 'package:bagianjosh/api_data/View/view.dart';
+import 'package:bagianjosh/api_data/article/view.dart';
 import 'package:bagianjosh/pages/intro_screen.dart';
 import 'package:flutter/material.dart';
 
