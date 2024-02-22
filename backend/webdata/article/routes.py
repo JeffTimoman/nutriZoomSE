@@ -49,7 +49,7 @@ class GetArticles(Resource):
 
 @api.route('/show_article/<int:id>')
 class ShowArticle(Resource):
-    #ini unutk jwt 
+    #ini unutk jwt  
     def get(self, id):
         article = Article.query.get(id)
         if not article:
