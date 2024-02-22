@@ -34,7 +34,7 @@ class GetArticles(Resource):
                 'title': article.title,
                 'content': article.detail,
                 'author': article.author,
-                'publishdate': article.publishdate,
+                'publishdate': article.formatted_tanggal_terbit,
                 'created_by' : article.created_by,
                 'image' : url_for('main.view_image', filename=article.image, _external=True)
             }
