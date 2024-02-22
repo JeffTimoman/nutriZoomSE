@@ -1,5 +1,5 @@
-import 'package:bagianjosh/api_data/Models/models.dart';
-import 'package:bagianjosh/api_data/Services/remoteservices.dart';
+import 'package:bagianjosh/api_data/article/models.dart';
+import 'package:bagianjosh/api_data/article/remoteservices.dart';
 import 'package:get/get.dart';
 
 class ArticleController extends GetxController {
