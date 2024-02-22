@@ -243,7 +243,7 @@ class RemoveFromFavourites(Resource):
 
     def delete(self, id1):
         current_user = get_jwt_identity()
-        user = User.query.filter_by(username = current_user).first()
+        user = User.query.filter_by(id = current_user).first()
         recipe = Recipe.query.filter_by(id = id1).first()
         if not recipe:
             return {'message': f'There are no recipes with id "{id1}" found!'}, 404
@@ -266,9 +266,9 @@ class ShowFavoriteRecipe(Resource):
     @api.expect(authorization_header)
     def get(self):
         current_user = get_jwt_identity()
-        user = User.query.filter_by(username=current_user).first()
+        user = User.query.filter_by(id=current_user).first()
         if not user:
-            return {'message': f'There are no user with username "{current_user}" found!'}, 404
+            return {'message': f'There are no user with id "{current_user}" found!'}, 404
         response = dict({})
         fav = dict({})
         favorite_recipes = FavoriteRecipe.query.filter_by(user_id = user.id).all()
