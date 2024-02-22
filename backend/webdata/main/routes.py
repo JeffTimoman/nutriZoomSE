@@ -5,11 +5,10 @@ from flask import url_for, redirect, request
 
 main = Blueprint('main', __name__)
 
-
+@main.route('/view_image')
 @main.route('/view_image/<filename>')
-def view_image(filename):
-    full_link = request.host_url + url_for('static', filename=f'{app.config["FOLDER_UPLOAD_NAME"]}/{filename}')
-    return redirect(full_link, code=301)
+def view_image(filename="default.jpg"):
+    return redirect(url_for('static', filename=f'{app.config["FOLDER_UPLOAD_NAME"]}/{filename}'), code=301)
 
 @main.route('/')
 def index():
