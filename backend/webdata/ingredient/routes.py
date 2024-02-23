@@ -13,6 +13,8 @@ from flask_cors import CORS
 ingredient = Blueprint('ingredient', __name__)
 api = Api(ingredient, doc = '/docs')
 
+CORS(ingredient, resources={r"/*": {"origins": "*"}})
+
 authorization_header = reqparse.RequestParser()
 authorization_header.add_argument('Authorization', location='headers',  required=True, help='Bearer <access_token>')
 

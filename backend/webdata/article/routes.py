@@ -14,6 +14,8 @@ from flask import request
 article = Blueprint('article', __name__)
 api = Api(article, doc = '/docs')
 
+CORS(article, resources={r"/*": {"origins": "*"}})
+
 authorization_header = reqparse.RequestParser()
 authorization_header.add_argument('Authorization', location='headers',  required=True, help='Bearer <access_token>')
 

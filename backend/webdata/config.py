@@ -24,3 +24,9 @@ class Config():
         
         self.ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
         
+#KEY : 
+#generate random string for SECRET_KEY
+#iniadalahkunciutamabuatsslnutrizoomsekita
+
+#challenge pass
+#inikuncichallenge
