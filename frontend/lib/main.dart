@@ -1,28 +1,16 @@
-import 'package:bagianjosh/api_data/article/view.dart';
 import 'package:bagianjosh/pages/intro_screen.dart';
 import 'package:flutter/material.dart';
+// import 'package:gabunginfrontend/pages/hasil_bahan.dart';
+// import 'package:gabunginfrontend/pages/intro_screen.dart';
+// import 'package:gabunginfrontend/pages/tapBar_search.dart';
+// import 'package:nutrizoom_apps/pages/tapBar_search.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: ArticleView(),
-    );
-  }
-}
-
-class MMyApp extends StatelessWidget {
-  const MMyApp({super.key});
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -34,7 +22,7 @@ class MMyApp extends StatelessWidget {
           //judul page
           headline1: TextStyle(
               fontFamily: 'Montserrat',
-              fontSize: 25,
+              fontSize: 23,
               color: Colors.white,
               fontStyle: FontStyle.normal,
               fontWeight: FontWeight.bold),
@@ -42,7 +30,7 @@ class MMyApp extends StatelessWidget {
           //judul content
           headline2: TextStyle(
               fontFamily: 'Montserrat',
-              fontSize: 20,
+              fontSize: 18,
               color: Colors.black,
               fontStyle: FontStyle.normal,
               fontWeight: FontWeight.w600),
@@ -62,6 +50,39 @@ class MMyApp extends StatelessWidget {
                     offset: Offset(2.0, 2.0))
               ]),
 
+          //judul resep slider
+          headline4: TextStyle(
+            fontFamily: 'Montserrat',
+            fontSize: 16,
+            color: Color(0xff3C6142),
+            fontStyle: FontStyle.normal,
+            fontWeight: FontWeight.w600,
+            shadows: <Shadow>[
+              Shadow(
+                offset: Offset(2.0, 2.0),
+                blurRadius: 3.0,
+                color: Colors.grey,
+              ),
+            ],
+          ),
+
+          //headline judul content biar beda
+          headline5: TextStyle(
+              fontFamily: 'Montserrat',
+              fontSize: 16,
+              color: Colors.black,
+              fontStyle: FontStyle.normal,
+              fontWeight: FontWeight.w600),
+
+          //Khusus informasi gizi
+          headline6: TextStyle(
+              fontFamily: 'Montserrat',
+              fontSize: 20,
+              color: Colors.black,
+              letterSpacing: 2.5,
+              fontStyle: FontStyle.normal,
+              fontWeight: FontWeight.w700),
+
           //profile sub title (email)
           subtitle1: TextStyle(
               fontFamily: 'Montserrat',
@@ -79,10 +100,10 @@ class MMyApp extends StatelessWidget {
           //body
           bodyText1: TextStyle(
               fontFamily: 'Montserrat',
-              fontSize: 16,
+              fontSize: 15,
               color: Colors.black,
               fontStyle: FontStyle.normal,
-              fontWeight: FontWeight.w500),
+              fontWeight: FontWeight.w400),
 
           //button
           button: TextStyle(
@@ -91,7 +112,27 @@ class MMyApp extends StatelessWidget {
               color: Colors.white,
               fontStyle: FontStyle.normal,
               fontWeight: FontWeight.w500),
-        )),
-        home: IntroScreen());
+
+          //info resep
+          bodyText2: TextStyle(
+              fontFamily: 'Montserrat',
+              fontSize: 12,
+              color: Colors.black54,
+              fontStyle: FontStyle.normal,
+              fontWeight: FontWeight.w500),
+
+          // versi bold bodytext1
+          subtitle2: TextStyle(
+              fontFamily: 'Montserrat',
+              fontSize: 15,
+              color: Colors.black,
+              fontStyle: FontStyle.normal,
+              fontWeight: FontWeight.bold),
+
+        )
+        ),
+        // home: HasilBahan(judul_bahan: "Bawang",)
+        home: IntroScreen(),
+        );
   }
 }
