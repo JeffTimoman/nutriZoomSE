@@ -1,13 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:bagianjosh/constants/img_strings.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
-class IntroScreen3 extends StatelessWidget {
-
+class IntroScreen1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xff3C6142),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -18,7 +17,7 @@ class IntroScreen3 extends StatelessWidget {
                 width: 300,
                 height: 100,
                 child: Text(
-                  "Kami solusinya!",
+                  "Ingin tahu pangan bergizi dan cara mengolahnya?",
                   maxLines: 2,
                   overflow: TextOverflow.clip,
                   softWrap: true,
@@ -28,28 +27,24 @@ class IntroScreen3 extends StatelessWidget {
                       fontSize: 20,
                       fontStyle: FontStyle.normal,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black),
+                      color: Colors.white),
                 ),
               ),
-              Image(
-                image: AssetImage(tLogo),
-                width: 200,
-                height: 150,
-                fit: BoxFit.contain,),
-              // Shimmer.fromColors( 
-              //   highlightColor: Colors.transparent,
-              //   baseColor: Colors.black,
-              //   child: Image.asset(
-              //     "assets/Nutri (4) 1.png",
-              //     height: 350,
-              //     width: 350,
-              //     fit: BoxFit.contain,
-              //   ), )
-              
+              Lottie.network(
+                tIntro_1,
+                height: 350,
+                width: 350,
+              ),
             ],
           )
         ],
       ),
     );
+    // return Container(
+    //   color: Color(0xff3C6142),
+    //   child: Center(
+    //     child: Text("Page 1"),
+    //   ),
+    // );
   }
 }
