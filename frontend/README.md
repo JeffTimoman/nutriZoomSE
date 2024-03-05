@@ -1,8 +1,8 @@
 # frontend
 
-A new Flutter project.
+Flutter Project for NutriZoom Software Engineering Final Task
 
-## Getting Started
+## Home
 
 This project is a starting point for a Flutter application.
 
