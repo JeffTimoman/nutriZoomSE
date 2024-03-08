@@ -2,6 +2,7 @@ import 'package:bagianjosh/api_data/article/models.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class RemoteServices extends ChangeNotifier {
   List<Article> _articles = [];
@@ -9,30 +10,40 @@ class RemoteServices extends ChangeNotifier {
     return [..._articles];
   }
 
-  var baseUrl = 'https://65d549733f1ab8c63436ae8e.mockapi.io/api/article';
+  var baseUrl = 'http://nutrizoom.site/api/article';
 
   Future<List<Article>> getArticle() async {
-    var url = Uri.parse('$baseUrl/get_articles/articles');
+    var url = Uri.parse('$baseUrl/get_articles');
+    var headers = {
+      'content-type': 'application/json',
+    };
     try {
-      final response = await http.get(url);
-      final extractedData = json.decode(response.body);
-      print(extractedData);
-      if (extractedData == null) {
+      var response = await http.get(
+        url,
+        headers: headers,
+      );
+      var data = jsonDecode(response.body);
+      if (data['data'] == null) {
         return _articles;
       }
-      final List<Article> loadedArticles = [];
-      extractedData.forEach((data) {
+      List<Article> loadedArticles = [];
+      DateFormat newFormat = DateFormat("dd-MM-yyyy HH:mm");
+      data['data'].forEach((key, value) {
+        // print('Key: $key, Value: $value');
         loadedArticles.add(Article(
-            id: int.parse(data['id']),
-            title: data['title'],
-            content: data['content'],
-            author: data['author']));
+          id: int.parse(key),
+          title: value['title'],
+          content: value['content'],
+          author: value['author'],
+          image: value['image'],
+          publishdate: newFormat.parse(value['publishdate']),
+        ));
       });
-      print(loadedArticles.length);
+      print('panjangnya: ' + loadedArticles.length.toString());
       _articles = loadedArticles;
       notifyListeners();
     } catch (e) {
-      print(e.toString());
+      print('Exception di Remote Services: ' + e.toString());
     }
     return _articles; // Add this line
   }

@@ -21,6 +21,13 @@ class ArticleView extends StatelessWidget {
                 itemBuilder: (context, index) {
                   var article = _controller.articles[index];
                   return ListTile(
+                    leading: Image.network(
+                      article.image,
+                      width: 50, // Set the desired width of the image
+                      height: 50, // Set the desired height of the image
+                      fit: BoxFit
+                          .cover, // Adjust the image to cover the entire space
+                    ),
                     title: Text(article.author),
                     subtitle: Text(article.content),
                   );

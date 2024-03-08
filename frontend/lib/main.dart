@@ -1,4 +1,5 @@
-import 'package:bagianjosh/api_data/article/view.dart';
+// import 'package:bagianjosh/api_data/article/view.dart';
+import 'package:bagianjosh/api_data/test_article/inibuatview.dart';
 import 'package:bagianjosh/pages/intro_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ArticleView(),
+      home: ViewViewVIew(),
     );
   }
 }
