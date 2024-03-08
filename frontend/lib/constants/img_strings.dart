@@ -7,3 +7,6 @@ const String tIntro_2 = "https://lottie.host/f603db21-e30a-4fa8-acb7-9abfb61d512
 
 //Profile
 const String tProfile_Img = "assets/Make Your Day.jpg";
+
+//Tempe orek
+const String Tempe_Img = "assets/tempe_orek.jpeg";
