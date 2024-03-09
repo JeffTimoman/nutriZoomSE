@@ -37,14 +37,14 @@ class GetIngredient(Resource):
                 nutrition_id = nutr_detail.nutrition_id
                 nutr = Nutrition.query.filter_by(id=nutrition_id).first()
                 
-                nutrition[nutr.id] = {
+                nutrition = {
                     'id': nutr.id,
                     'name': nutr.name,
                     'amount': nutr_detail.amount,
                     'unit' : nutr.unit,
                 }
 
-            response[ingredient.id] = {
+            response = {
                 'id': ingredient.id,
                 'name': ingredient.name,
                 'representation' : f'Nutrition from {ingredient.name} per 100 gr',
@@ -78,7 +78,7 @@ class ShowNutrition(Resource):
                 for nutr_detail in nutritionDetails:
                     nutrition_id = nutr_detail.nutrition_id
                     nutr = Nutrition.query.filter_by(id=nutrition_id).first()
-                    nutrition[nutr.id] ={
+                    nutrition ={
                         'id': nutr.id,
                         'name': nutr.name,
                         'amount': nutr_detail.amount,

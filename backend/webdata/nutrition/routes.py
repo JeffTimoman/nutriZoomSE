@@ -31,7 +31,7 @@ class GetNutrition(Resource):
         response = dict()
 
         for nutrition in nutritions.items:
-            response[nutrition.id]={
+            response={
                 'name' : nutrition.name,
                 'unit' : nutrition.unit,
                 'id' : nutrition.id
@@ -78,7 +78,7 @@ class ShowIngredient(Resource):
                         return {'message': f'There are no ingredients with nutrition: {nutrition.name} found!'}, 404
 
                 for ing in ingredients:
-                    ingredient[ing.id] = {
+                    ingredient = {
                         'name': ing.name,
                         'description': ing.description,
                         'id' : ing.id,
