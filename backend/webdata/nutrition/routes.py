@@ -78,7 +78,7 @@ class ShowIngredient(Resource):
                         return {'message': f'There are no ingredients with nutrition: {nutrition.name} found!'}, 404
 
                 for ing in ingredients:
-                    ingredient = {
+                    ingredient[ing.id] = {
                         'name': ing.name,
                         'description': ing.description,
                         'id' : ing.id,
