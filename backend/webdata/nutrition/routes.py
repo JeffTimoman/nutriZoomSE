@@ -31,7 +31,7 @@ class GetNutrition(Resource):
         response = dict()
 
         for nutrition in nutritions.items:
-            response={
+            response[nutrition.id]={
                 'name' : nutrition.name,
                 'unit' : nutrition.unit,
                 'id' : nutrition.id
