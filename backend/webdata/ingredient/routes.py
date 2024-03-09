@@ -58,36 +58,71 @@ class GetIngredient(Resource):
             'total_items': ingredients.total
         }, 200
 
+# @api.route('/shownutrition/<string:name1>')
+# class ShowNutrition(Resource):
+#     def get(self, name1):
+#         if not name1:
+#             return {'message': 'Please input ingredient!'}, 404
+#         ingredients =  Ingredient.query.filter_by(name = name1).all()
+#         if not ingredients:
+#             return {'message': f'There are no ingredients with name "{name1}" found!'}, 404
+#         response = dict()
+#         for ingredient in ingredients:
+#             if ingredient.name.lower() == name1.lower():
+#                 nutritionDetail = []
+#                 nutrition = dict()
+                
+#                 nutritionDetails = NutritionDetail.query.filter_by(ingredient_id = ingredient.id).all()
+#                 for nutr_detail in nutritionDetails:
+#                     nutrition_id = nutr_detail.nutrition_id
+#                     nutr = Nutrition.query.filter_by(id=nutrition_id).first()
+#                     nutrition[nutrition_id] ={
+#                         'id': nutr.id,
+#                         'name': nutr.name,
+#                         'amount': nutr_detail.amount,
+#                         'unit': nutr.unit
+#                     }
+#                 response={
+#                     'id': ingredient.id,
+#                     'name': ingredient.name,
+#                     'representation' : f'Nutrition from {ingredient.name} per 100 gr',
+#                     'description': ingredient.description,
+#                     'nutrition':nutrition
+#                 }
+#         return {'data': response}, 200
+
 @api.route('/shownutrition/<string:name1>')
 class ShowNutrition(Resource):
     def get(self, name1):
         if not name1:
             return {'message': 'Please input ingredient!'}, 404
-        ingredients = Ingredient.query.filter(Ingredient.name.ilike(f'%{name1}%')).all()
-        if not ingredients:
-            return {'message': f'There are no ingredients with name "{name1}" found!'}, 404
-        response = dict()
-        for ingredient in ingredients:
-            if ingredient.name.lower() == name1.lower():
-                nutritionDetail = []
-                nutrition = dict()
-                
-                nutritionDetails = NutritionDetail.query.filter_by(ingredient_id = ingredient.id).all()
-                for nutr_detail in nutritionDetails:
-                    nutrition_id = nutr_detail.nutrition_id
-                    nutr = Nutrition.query.filter_by(id=nutrition_id).first()
-                    nutrition[nutrition_id] ={
-                        'id': nutr.id,
-                        'name': nutr.name,
-                        'amount': nutr_detail.amount,
-                        'unit': nutr.unit
-                    }
-                response={
-                    'id': ingredient.id,
-                    'name': ingredient.name,
-                    'representation' : f'Nutrition from {ingredient.name} per 100 gr',
-                    'description': ingredient.description,
-                    'nutrition':nutrition
-                }
+
+        # Use the 'ilike' operator to search for similar names
+        ingredient = Ingredient.query.filter(Ingredient.name.ilike(f"%{name1}%")).first()
+
+        if not ingredient:
+            return {'message': f'No ingredient with a similar name to "{name1}" found!'}, 404
+
+        nutrition = dict()
+        nutritionDetails = NutritionDetail.query.filter_by(ingredient_id=ingredient.id).all()
+
+        for nutr_detail in nutritionDetails:
+            nutrition_id = nutr_detail.nutrition_id
+            nutr = Nutrition.query.filter_by(id=nutrition_id).first()
+            nutrition[nutrition_id] = {
+                'id': nutr.id,
+                'name': nutr.name,
+                'amount': nutr_detail.amount,
+                'unit': nutr.unit
+            }
+
+        response = {
+            'id': ingredient.id,
+            'name': ingredient.name,
+            'representation': f'Nutrition from {ingredient.name} per 100 gr',
+            'description': ingredient.description,
+            'nutrition': nutrition
+        }
+
         return {'data': response}, 200
     

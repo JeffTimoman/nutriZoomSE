@@ -47,51 +47,85 @@ class GetNutrition(Resource):
     
 
 
-@api.route('/showingredients/<string:name1>')
-class ShowIngredient(Resource):
+# @api.route('/showingredients/<string:name1>')
+# class ShowIngredient(Resource):
+#     def get(self, name1):
+#         if not name1:
+#             return {'message': 'Please input nutrition!'}, 404
+#         nutritions =  Nutrition.query.filter_by(name = name1).all()
+#         if not nutritions:
+#             return {'message': f'There are no nutritions with name "{name1}" found!'}, 404
+#         response = {}
+#         for nutrition in nutritions:
+#             if nutrition.name.lower() == name1.lower():
+#                 nutritionDetail = {}
+#                 ingredient = {}
+                
+#                 nutritionDetails = NutritionDetail.query.filter_by(nutrition_id = nutrition.id).all()
+
+#                 if not nutritionDetails:
+#                     return {'message': f'There are no nutrition details with nutrition "{nutrition.name}" found!'}, 404
+
+#                 for detail in nutritionDetails:
+#                     nutritionDetail[detail.ingredient_id] = {
+#                         'ingredient_id': detail.ingredient_id,
+#                         'amount': detail.amount
+#                     }
+
+#                     ingredients = Ingredient.query.join(NutritionDetail).filter(NutritionDetail.nutrition_id == nutrition.id, NutritionDetail.amount > 0).order_by(NutritionDetail.amount.desc()).all()
+
+#                     if not ingredients:  
+#                         return {'message': f'There are no ingredients with nutrition: {nutrition.name} found!'}, 404
+
+#                 for ing in ingredients:
+#                     ingredient[ing.id] = {
+#                         'name': ing.name,
+#                         'description': ing.description,
+#                         'id' : ing.id,
+#                         'image' : url_for('main.view_image', filename=ing.image, _external=True),
+#                         'amount' : nutritionDetail[ing.id]['amount']
+#                     }
+                
+#                 response = {
+#                     'name': nutrition.name,
+#                     'unit': nutrition.unit,
+#                     'id': nutrition.id,
+#                     'ingredient': ingredient
+#                 }
+                
+#         return response, 200
+    
+@api.route('/shownutrition/<string:name1>')
+class ShowNutrition(Resource):
     def get(self, name1):
         if not name1:
-            return {'message': 'Please input nutrition!'}, 404
-        nutritions =  Nutrition.query.filter_by(name = name1).all()
-        if not nutritions:
-            return {'message': f'There are no nutritions with name "{name1}" found!'}, 404
-        response = {}
-        for nutrition in nutritions:
-            if nutrition.name.lower() == name1.lower():
-                nutritionDetail = {}
-                ingredient = {}
-                
-                nutritionDetails = NutritionDetail.query.filter_by(nutrition_id = nutrition.id).all()
+            return {'message': 'Please input ingredient!'}, 404
 
-                if not nutritionDetails:
-                    return {'message': f'There are no nutrition details with nutrition "{nutrition.name}" found!'}, 404
+        # Use the 'ilike' operator to search for similar names
+        ingredient = Ingredient.query.filter(Ingredient.name.ilike(f"%{name1}%")).first()
 
-                for detail in nutritionDetails:
-                    nutritionDetail[detail.ingredient_id] = {
-                        'ingredient_id': detail.ingredient_id,
-                        'amount': detail.amount
-                    }
+        if not ingredient:
+            return {'message': f'No ingredient with a similar name to "{name1}" found!'}, 404
 
-                    ingredients = Ingredient.query.join(NutritionDetail).filter(NutritionDetail.nutrition_id == nutrition.id, NutritionDetail.amount > 0).order_by(NutritionDetail.amount.desc()).all()
+        nutrition = dict()
+        nutritionDetails = NutritionDetail.query.filter_by(ingredient_id=ingredient.id).all()
 
-                    if not ingredients:  
-                        return {'message': f'There are no ingredients with nutrition: {nutrition.name} found!'}, 404
+        for nutr_detail in nutritionDetails:
+            nutrition_id = nutr_detail.nutrition_id
+            nutr = Nutrition.query.filter_by(id=nutrition_id).first()
+            nutrition[nutrition_id] = {
+                'id': nutr.id,
+                'name': nutr.name,
+                'amount': nutr_detail.amount,
+                'unit': nutr.unit
+            }
 
-                for ing in ingredients:
-                    ingredient[ing.id] = {
-                        'name': ing.name,
-                        'description': ing.description,
-                        'id' : ing.id,
-                        'image' : url_for('main.view_image', filename=ing.image, _external=True),
-                        'amount' : nutritionDetail[ing.id]['amount']
-                    }
-                
-                response = {
-                    'name': nutrition.name,
-                    'unit': nutrition.unit,
-                    'id': nutrition.id,
-                    'ingredient': ingredient
-                }
-                
-        return response, 200
-    
+        response = {
+            'id': ingredient.id,
+            'name': ingredient.name,
+            'representation': f'Nutrition from {ingredient.name} per 100 gr',
+            'description': ingredient.description,
+            'nutrition': nutrition
+        }
+
+        return {'data': response}, 200
