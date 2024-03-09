@@ -84,7 +84,7 @@ class ShowNutrition(Resource):
                         'amount': nutr_detail.amount,
                         'unit': nutr.unit
                     }
-                response[ingredient.id]={
+                response={
                     'id': ingredient.id,
                     'name': ingredient.name,
                     'representation' : f'Nutrition from {ingredient.name} per 100 gr',
