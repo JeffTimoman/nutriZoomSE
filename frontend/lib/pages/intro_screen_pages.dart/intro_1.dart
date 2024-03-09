@@ -1,5 +1,5 @@
-import 'package:bagianjosh/constants/img_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:gabunginfrontend/constants/img_strings.dart';
 import 'package:lottie/lottie.dart';
 
 class IntroScreen1 extends StatelessWidget {

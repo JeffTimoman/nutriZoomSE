@@ -1,8 +1,8 @@
-import 'package:bagianjosh/constants/img_strings.dart';
-import 'package:bagianjosh/pages/components/MyButton.dart';
-import 'package:bagianjosh/pages/register.dart';
-import 'package:bagianjosh/pages/resep.dart';
 import 'package:flutter/material.dart';
+import 'package:gabunginfrontend/constants/img_strings.dart';
+import 'package:gabunginfrontend/pages/components/MyButton.dart';
+import 'package:gabunginfrontend/pages/register.dart';
+import 'package:gabunginfrontend/pages/resep.dart';
 // import 'package:gabunginfrontend/constant/img_string.dart';
 // import 'package:gabunginfrontend/pages/components/MyButton.dart';
 // import 'package:gabunginfrontend/pages/register.dart';

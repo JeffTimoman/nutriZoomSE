@@ -1,5 +1,5 @@
-import 'package:bagianjosh/constants/img_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:gabunginfrontend/constants/img_strings.dart';
 // import 'package:gabunginfrontend/constant/img_string.dart';
 
 class IntroScreen3 extends StatelessWidget {

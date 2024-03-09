@@ -1,13 +1,13 @@
-import 'package:bagianjosh/api_data/article/view.dart';
-import 'package:bagianjosh/pages/intro_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:gabunginfrontend/pages/intro_screen.dart';
+import 'package:gabunginfrontend/pages/profile_page.dart';
 // import 'package:gabunginfrontend/pages/hasil_bahan.dart';
 // import 'package:gabunginfrontend/pages/intro_screen.dart';
 // import 'package:gabunginfrontend/pages/tapBar_search.dart';
 // import 'package:nutrizoom_apps/pages/tapBar_search.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp( MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ArticleView(),
+      home: ProfilePage(),
     );
   }
 }

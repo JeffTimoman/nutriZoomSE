@@ -1,8 +1,8 @@
-import 'package:bagianjosh/pages/intro_screen_pages.dart/intro_1.dart';
-import 'package:bagianjosh/pages/intro_screen_pages.dart/intro_2.dart';
-import 'package:bagianjosh/pages/intro_screen_pages.dart/intro_3.dart';
-import 'package:bagianjosh/pages/login.dart';
 import 'package:flutter/material.dart';
+import 'package:gabunginfrontend/pages/intro_screen_pages.dart/intro_1.dart';
+import 'package:gabunginfrontend/pages/intro_screen_pages.dart/intro_2.dart';
+import 'package:gabunginfrontend/pages/intro_screen_pages.dart/intro_3.dart';
+import 'package:gabunginfrontend/pages/login.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class IntroScreen extends StatefulWidget {

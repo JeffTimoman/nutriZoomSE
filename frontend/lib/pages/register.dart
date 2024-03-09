@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:bagianjosh/constants/img_strings.dart';
-import 'package:bagianjosh/pages/components/MyButton.dart';
 import 'package:flutter/material.dart';
+import 'package:gabunginfrontend/constants/img_strings.dart';
+import 'package:gabunginfrontend/pages/components/MyButton.dart';
 // import 'package:gabunginfrontend/constant/img_string.dart';
 // import 'package:gabunginfrontend/pages/components/MyButton.dart';
 import 'package:intl/intl.dart';

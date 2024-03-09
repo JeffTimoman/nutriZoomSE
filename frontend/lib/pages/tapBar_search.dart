@@ -1,6 +1,6 @@
-import 'package:bagianjosh/pages/searchPages/bahan_search.dart';
-import 'package:bagianjosh/pages/searchPages/nutrisi_search.dart';
 import 'package:flutter/material.dart';
+import 'package:gabunginfrontend/pages/searchPages/bahan_search.dart';
+import 'package:gabunginfrontend/pages/searchPages/nutrisi_search.dart';
 
 class TapBar extends StatefulWidget {
   TapBar({super.key});
