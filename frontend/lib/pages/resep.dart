@@ -1,7 +1,7 @@
-import 'package:bagianjosh/pages/artikel.dart';
-import 'package:bagianjosh/pages/login.dart';
-import 'package:bagianjosh/pages/resepCard.dart';
 import 'package:flutter/material.dart';
+import 'package:gabunginfrontend/pages/artikel.dart';
+import 'package:gabunginfrontend/pages/login.dart';
+import 'package:gabunginfrontend/pages/resepCard.dart';
 // import 'package:gabunginfrontend/pages/artikel.dart';
 // import 'package:gabunginfrontend/pages/login.dart';
 // import 'package:gabunginfrontend/pages/resepCard.dart';

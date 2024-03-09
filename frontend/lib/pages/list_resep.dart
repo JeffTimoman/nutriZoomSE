@@ -1,6 +1,6 @@
-import 'package:bagianjosh/constants/img_strings.dart';
-import 'package:bagianjosh/pages/listResep_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:gabunginfrontend/constants/img_strings.dart';
+import 'package:gabunginfrontend/pages/listResep_tile.dart';
 
 class ListResepPage extends StatelessWidget {
   final String judul_page;

@@ -1,6 +1,6 @@
 import 'dart:ui';
-import 'package:bagianjosh/pages/list_resep.dart';
 import 'package:flutter/material.dart';
+import 'package:gabunginfrontend/pages/list_resep.dart';
 
 class HasilBahan extends StatelessWidget {
   final String judul_bahan;
