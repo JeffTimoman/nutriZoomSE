@@ -26,8 +26,8 @@ class GetRecipe(Resource):
         page = request.args.get('page', default=1, type=int)
         per_page = request.args.get('per_page', default=4, type=int)
         recipes = Recipe.query.paginate(page=page, per_page=per_page)
-        response = []
-        difficult = ['easy', 'medium', 'hard', 'master', 'nightmare']
+        response = dict()
+        difficult = ['easy', 'medium', 'hard', 'expert', 'nightmare']
         for recipe in recipes.items:
             temp = 1
             if recipe.cooktime > 30 and recipe.cooktime <= 45:
@@ -38,38 +38,48 @@ class GetRecipe(Resource):
                 temp = 4
             elif recipe.cooktime > 120:
                 temp = 5
-            ingredient = []
-            nutrition_totals = {}
+            ingredient = dict()
+            nutrition_totals = dict()
 
-            for nutr in Nutrition.query.all():
-                nutrition_totals[nutr.name] = 0
+            # for nutr in Nutrition.query.all():
+            #     nutrition_totals[nutr.id] = 0
+            #ini kalau mau nampilin semua informasi nutrisi (termasuk yang 0 nutrisinya). Aktifin sama comment diatas yang nutr in Nutrition.query.all()
 
             for detail in RecipeDetail.query.filter_by(recipe_id=recipe.id).all():
                 ingredient_name = Ingredient.query.filter_by(id=detail.ingredients_id).first().name
                 amount = detail.amount
 
                 for nutr_detail in NutritionDetail.query.filter_by(ingredient_id=detail.ingredients_id).all():
-                    nutr_name = Nutrition.query.filter_by(id=nutr_detail.nutrition_id).first().name
-                    nutrition_totals[nutr_name] += nutr_detail.amount * amount / 100
+                    nutr_id = Nutrition.query.filter_by(id=nutr_detail.nutrition_id).first().id
 
-                ingredient.append({
+                    # nutrition_totals[nutr_id] += nutr_detail.amount * amount / 100
+                    nutrition_totals[nutr_id] = nutrition_totals.get(nutr_id, 0) + nutr_detail.amount * amount / 100
+
+                ingredient[detail.ingredients_id] = {
                     'name': ingredient_name,
                     'amount': amount,
                     'unit': detail.unit,
-                })
+                }
 
-            nutrition_list = [{'name': nutr_name, 'amount': nutrition_totals[nutr_name]} for nutr_name in nutrition_totals]
+            nutrition_list = dict()
+            for nutr_id in nutrition_totals :
+                nutrition = Nutrition.query.filter_by(id=nutr_id).first()
+                nutrition_list[nutr_id] = {
+                    'name': nutrition.name, 
+                    'amount': nutrition_totals[nutr_id],
+                    'unit': nutrition.unit
+                    }
 
-            response.append({
-                'id': recipe.id,
+            response[recipe.id] = {
                 'name': recipe.name,
                 'steps': recipe.steps,
                 'cooktime': recipe.cooktime,
                 'portions': recipe.portions,
+                'difficulty' : difficult[temp],
                 'image': url_for('main.view_image', filename=recipe.image, _external=True),
                 'ingredients': ingredient,
                 'nutrition_list': nutrition_list
-            })
+            }
 
         return {
             'data': response,
@@ -89,42 +99,63 @@ class FindRecipe(Resource):
         recipes = Recipe.query.filter(Recipe.name.ilike(f"%{name1}%")).all()
 
         if not recipes:
+            
             return {'message': f'There are no recipes with name containing "{name1}" found!'}, 404
-
-        response = []
+        response = dict()
+        difficult = ['easy', 'medium', 'hard', 'expert', 'nightmare']
         for recipe in recipes:
-            ingredient = []
-            nutrition_totals = {}  
+            temp = 1
+            if recipe.cooktime > 30 and recipe.cooktime <= 45:
+                temp = 2
+            elif recipe.cooktime > 45 and recipe.cooktime <= 90:
+                temp = 3
+            elif recipe.cooktime > 90 and recipe.cooktime <= 120:
+                temp = 4
+            elif recipe.cooktime > 120:
+                temp = 5
+            ingredient = dict()
+            nutrition_totals = dict()
 
-            for nutr in Nutrition.query.all():
-                nutrition_totals[nutr.name] = 0
+            # for nutr in Nutrition.query.all():
+            #     nutrition_totals[nutr.id] = 0
 
             for detail in RecipeDetail.query.filter_by(recipe_id=recipe.id).all():
                 ingredient_name = Ingredient.query.filter_by(id=detail.ingredients_id).first().name
                 amount = detail.amount
 
                 for nutr_detail in NutritionDetail.query.filter_by(ingredient_id=detail.ingredients_id).all():
-                    nutr_name = Nutrition.query.filter_by(id=nutr_detail.nutrition_id).first().name
-                    nutrition_totals[nutr_name] += nutr_detail.amount * amount / 100
+                    nutr_id = Nutrition.query.filter_by(id=nutr_detail.nutrition_id).first().id
 
-                ingredient.append({
+                    # nutrition_totals[nutr_id] += nutr_detail.amount * amount / 100
+                    #ini kalau mau nampilin semua informasi nutrisi (termasuk yang 0 nutrisinya). Aktifin sama comment diatas yang nutr in Nutrition.query.all()
+
+                    nutrition_totals[nutr_id] = nutrition_totals.get(nutr_id, 0) + nutr_detail.amount * amount / 100
+
+                ingredient[detail.ingredients_id] = {
                     'name': ingredient_name,
                     'amount': amount,
                     'unit': detail.unit,
-                })
+                }
 
-            nutrition_list = [{'name': nutr_name, 'amount': nutrition_totals[nutr_name]} for nutr_name in nutrition_totals]
+            nutrition_list = dict()
+            for nutr_id in nutrition_totals :
+                nutrition = Nutrition.query.filter_by(id=nutr_id).first()
+                nutrition_list[nutr_id] = {
+                    'name': nutrition.name, 
+                    'amount': nutrition_totals[nutr_id],
+                    'unit': nutrition.unit
+                    }
 
-            response.append({
-                'id': recipe.id,
+            response[recipe.id] = {
                 'name': recipe.name,
                 'steps': recipe.steps,
                 'cooktime': recipe.cooktime,
                 'portions': recipe.portions,
+                'difficulty' : difficult[temp],
                 'image': url_for('main.view_image', filename=recipe.image, _external=True),
                 'ingredients': ingredient,
                 'nutrition_list': nutrition_list
-            })
+            }
 
         return {
             'data': response
@@ -143,37 +174,57 @@ class FindRecipeId(Resource):
 
         if not recipe:
             return {'message': f'There are no recipes with id "{id1}" found!'}, 404
-
-        response = []
-        ingredient = []
-        nutrition_totals = {} 
+        temp = 1
+        if recipe.cooktime > 30 and recipe.cooktime <= 45:
+            temp = 2
+        elif recipe.cooktime > 45 and recipe.cooktime <= 90:
+            temp = 3
+        elif recipe.cooktime > 90 and recipe.cooktime <= 120:
+            temp = 4
+        elif recipe.cooktime > 120:
+            temp = 5
+        difficult = ['easy', 'medium', 'hard', 'expert', 'nightmare']
+        response = dict()
+        ingredient = dict()
+        nutrition_totals = dict()
 
         for detail in RecipeDetail.query.filter_by(recipe_id=recipe.id).all():
             ingredient_name = Ingredient.query.filter_by(id=detail.ingredients_id).first().name
             amount = detail.amount
 
             for nutr_detail in NutritionDetail.query.filter_by(ingredient_id=detail.ingredients_id).all():
-                nutr_name = Nutrition.query.filter_by(id=nutr_detail.nutrition_id).first().name
-                nutrition_totals[nutr_name] = nutrition_totals.get(nutr_name, 0) + nutr_detail.amount * amount / 100
+                nutr_id = Nutrition.query.filter_by(id=nutr_detail.nutrition_id).first().id
 
-            ingredient.append({
+                # nutrition_totals[nutr_id] += nutr_detail.amount * amount / 100
+                #ini kalau mau nampilin semua informasi nutrisi (termasuk yang 0 nutrisinya). Aktifin sama comment diatas yang nutr in Nutrition.query.all()
+
+                nutrition_totals[nutr_id] = nutrition_totals.get(nutr_id, 0) + nutr_detail.amount * amount / 100
+
+            ingredient[detail.ingredients_id] = {
                 'name': ingredient_name,
                 'amount': amount,
-                'unit': detail.unit
-            })
+                'unit': detail.unit,
+            }
 
-        nutrition_list = [{'name': nutr_name, 'amount': nutrition_totals[nutr_name]} for nutr_name in nutrition_totals]
+        nutrition_list = dict()
+        for nutr_id in nutrition_totals :
+            nutrition = Nutrition.query.filter_by(id=nutr_id).first()
+            nutrition_list[nutr_id] = {
+                'name': nutrition.name, 
+                'amount': nutrition_totals[nutr_id],
+                'unit': nutrition.unit
+                }
 
-        response.append({
-            'id': recipe.id,
+        response[recipe.id] = {
             'name': recipe.name,
             'steps': recipe.steps,
             'cooktime': recipe.cooktime,
             'portions': recipe.portions,
-            'image':  url_for('main.view_image', filename=recipe.image, _external=True),
+            'difficulty' : difficult[temp],
+            'image': url_for('main.view_image', filename=recipe.image, _external=True),
             'ingredients': ingredient,
             'nutrition_list': nutrition_list
-        })
+        }
 
         return {
             'data': response
@@ -192,25 +243,36 @@ class FindRecipeIngredient(Resource):
         if not ingredient:
             return {'message': f'There are no ingredients with name "{ingredient1}" found!'}, 404
 
-        response = []
+        response = dict()
         recipeDetails = RecipeDetail.query.filter_by(ingredients_id=ingredient.id).all()
 
         for detail in recipeDetails:
             recipe = Recipe.query.filter_by(id=detail.recipe_id).first()
+            difficult = ['easy', 'medium', 'hard', 'expert', 'nightmare']
+            temp = 1
+            if recipe.cooktime > 30 and recipe.cooktime <= 45:
+                temp = 2
+            elif recipe.cooktime > 45 and recipe.cooktime <= 90:
+                temp = 3
+            elif recipe.cooktime > 90 and recipe.cooktime <= 120:
+                temp = 4
+            elif recipe.cooktime > 120:
+                temp = 5
 
             for nutr_detail in NutritionDetail.query.filter_by(ingredient_id=ingredient.id).all():
                 nutr_name = Nutrition.query.filter_by(id=nutr_detail.nutrition_id).first().name
                 
-            response.append({
+            response[detail.recipe_id] = {
                 'recipe_id': recipe.id,
                 'recipe_name': recipe.name,
                 'steps': recipe.steps,
                 'cooktime': recipe.cooktime,
                 'portions': recipe.portions,
+                'difficulty': difficult[temp], 
                 'image': url_for('main.view_image', filename=recipe.image, _external=True),
                 'amount': detail.amount,
                 'unit': detail.unit
-            })
+            }
 
         return {
             'data': response

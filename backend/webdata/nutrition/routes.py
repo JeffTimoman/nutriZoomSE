@@ -55,11 +55,11 @@ class ShowIngredient(Resource):
         nutritions =  Nutrition.query.filter_by(name = name1).all()
         if not nutritions:
             return {'message': f'There are no nutritions with name "{name1}" found!'}, 404
-        response = []
+        response = {}
         for nutrition in nutritions:
             if nutrition.name.lower() == name1.lower():
-                nutritionDetail = []
-                ingredient = []
+                nutritionDetail = {}
+                ingredient = {}
                 
                 nutritionDetails = NutritionDetail.query.filter_by(nutrition_id = nutrition.id).all()
 
@@ -67,10 +67,10 @@ class ShowIngredient(Resource):
                     return {'message': f'There are no nutrition details with nutrition "{nutrition.name}" found!'}, 404
 
                 for detail in nutritionDetails:
-                    nutritionDetail.append({
+                    nutritionDetail[detail.ingredient_id] = {
                         'ingredient_id': detail.ingredient_id,
                         'amount': detail.amount
-                    })
+                    }
 
                     ingredients = Ingredient.query.join(NutritionDetail).filter(NutritionDetail.nutrition_id == nutrition.id, NutritionDetail.amount > 0).order_by(NutritionDetail.amount.desc()).all()
 
@@ -78,19 +78,20 @@ class ShowIngredient(Resource):
                         return {'message': f'There are no ingredients with nutrition: {nutrition.name} found!'}, 404
 
                 for ing in ingredients:
-                    ingredient.append({
+                    ingredient[ing.id] = {
                         'name': ing.name,
                         'description': ing.description,
                         'id' : ing.id,
                         'image' : url_for('main.view_image', filename=ing.image, _external=True),
-                        'amount' : [detail['amount'] for detail in nutritionDetail if detail['ingredient_id'] == ing.id][0]
-                    })
+                        'amount' : nutritionDetail[ing.id]['amount']
+                    }
                 
-                response.append({
+                response = {
                     'name': nutrition.name,
                     'unit': nutrition.unit,
                     'id': nutrition.id,
                     'ingredient': ingredient
-                })
+                }
+                
         return response, 200
     

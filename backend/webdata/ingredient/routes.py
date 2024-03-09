@@ -49,7 +49,7 @@ class GetIngredient(Resource):
                 'name': ingredient.name,
                 'representation' : f'Nutrition from {ingredient.name} per 100 gr',
                 'description': ingredient.description,
-                'nutrition': list(nutrition.values())  
+                'nutrition': nutrition
             }
 
         return {
@@ -89,7 +89,7 @@ class ShowNutrition(Resource):
                     'name': ingredient.name,
                     'representation' : f'Nutrition from {ingredient.name} per 100 gr',
                     'description': ingredient.description,
-                    'nutrition': list(nutrition.values())
+                    'nutrition':nutrition
                 }
         return {'data': response}, 200
     
