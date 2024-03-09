@@ -1,8 +1,8 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify, send_file, make_response
 from werkzeug.utils import secure_filename
 from webdata import db, jwt, bcrypt, config, app
 from webdata.models import User, Article, Nutrition, Ingredient, NutritionDetail, Recipe, RecipeDetail
-
+from mimetypes import MimeTypes
 from datetime import datetime
 
 from flask_login import login_user, current_user, logout_user, login_required
@@ -753,4 +753,18 @@ def edit_recipe(id):
 @admin.route('/view_image')
 @admin.route('/view_image/<string:text>')
 def view_image(text='default.jpg'):
-    return redirect(url_for('static', filename=f'{app.config["FOLDER_UPLOAD_NAME"]}/{text}'), code=301)
+    image_path = f'static/uploaded_images/{text}'
+    
+    # Get the mime type of the image
+    mime = MimeTypes()
+    mime_type, _ = mime.guess_type(image_path)
+    
+    # Serve the image with appropriate headers
+    response = make_response(send_file(image_path, mimetype=mime_type))
+    
+    # Set headers for Flutter image network
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '-1'
+    
+    return response
