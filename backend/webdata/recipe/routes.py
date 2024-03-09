@@ -215,7 +215,8 @@ class FindRecipeId(Resource):
                 'unit': nutrition.unit
                 }
 
-        response[recipe.id] = {
+        response = {
+            'id': recipe.id,
             'name': recipe.name,
             'steps': recipe.steps,
             'cooktime': recipe.cooktime,
