@@ -8,8 +8,6 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_cors import CORS
 
-
-
 ingredient = Blueprint('ingredient', __name__)
 api = Api(ingredient, doc = '/docs')
 
@@ -65,7 +63,7 @@ class ShowNutrition(Resource):
     def get(self, name1):
         if not name1:
             return {'message': 'Please input ingredient!'}, 404
-        ingredients =  Ingredient.query.filter_by(name = name1).all()
+        ingredients = Ingredient.query.filter(Ingredient.name.ilike(f'%{name1}%')).all()
         if not ingredients:
             return {'message': f'There are no ingredients with name "{name1}" found!'}, 404
         response = dict()
