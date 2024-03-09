@@ -204,6 +204,7 @@ class FindRecipeId(Resource):
                 'name': ingredient_name,
                 'amount': amount,
                 'unit': detail.unit,
+                'id': detail.ingredients_id,
             }
 
         nutrition_list = dict()
@@ -212,7 +213,8 @@ class FindRecipeId(Resource):
             nutrition_list[nutr_id] = {
                 'name': nutrition.name, 
                 'amount': nutrition_totals[nutr_id],
-                'unit': nutrition.unit
+                'unit': nutrition.unit,
+                'id': nutrition.id,
                 }
 
         response = {
