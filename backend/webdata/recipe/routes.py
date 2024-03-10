@@ -105,6 +105,7 @@ class FindRecipe(Resource):
         difficult = ['easy', 'medium', 'hard', 'expert', 'nightmare']
         for recipe in recipes:
             temp = 1
+            total_calory = 0
             if recipe.cooktime > 30 and recipe.cooktime <= 45:
                 temp = 2
             elif recipe.cooktime > 45 and recipe.cooktime <= 90:
@@ -136,6 +137,7 @@ class FindRecipe(Resource):
                     'amount': amount,
                     'unit': detail.unit,
                 }
+                
 
             nutrition_list = dict()
             for nutr_id in nutrition_totals :
@@ -203,6 +205,7 @@ class FindRecipeId(Resource):
             ingredient[detail.ingredients_id] = {
                 'name': ingredient_name,
                 'amount': amount,
+                'image': url_for('main.view_image', filename=Ingredient.query.filter_by(id=detail.ingredients_id).first().image, _external=True),
                 'unit': detail.unit,
                 'id': detail.ingredients_id,
             }
@@ -240,9 +243,9 @@ class FindRecipeIngredient(Resource):
     def get(self, ingredient1):
         if not ingredient1:
             return {'message': 'Please input ingredient!'}, 404
-
-        ingredient = Ingredient.query.filter_by(name=ingredient1).first()
-
+    
+        ingredient = Ingredient.query.filter(Ingredient.name.ilike(f"%{ingredient1}%")).first()
+        total_calory = 0
         if not ingredient:
             return {'message': f'There are no ingredients with name "{ingredient1}" found!'}, 404
 
@@ -261,20 +264,38 @@ class FindRecipeIngredient(Resource):
                 temp = 4
             elif recipe.cooktime > 120:
                 temp = 5
+            
+            all_recipe_detail = RecipeDetail.query.filter_by(recipe_id=recipe.id).all()
+            for detail in all_recipe_detail:
+                omg = NutritionDetail.query.filter_by(ingredient_id=detail.ingredients_id).all()
+                for nutr_detail in omg:
+                    # print(nutr_detail.id)
+                    nutr = Nutrition.query.filter_by(id=nutr_detail.nutrition_id).first()
+                    if nutr.name.lower() != 'kalori':
+                        continue
+                    if nutr.unit == 'kcal':
+                        print(nutr.name)
+                        total_calory += detail.turn_to_hundred_gram * nutr_detail.amount * detail.amount * 100
+                        continue
+                    if nutr.unit == 'cal':
+                        print(nutr.name, detail.turn_to_hundred_gram, nutr_detail.amount, detail.amount)
+                        total_calory += detail.turn_to_hundred_gram * nutr_detail.amount * detail.amount
+                        continue
+                    
 
             for nutr_detail in NutritionDetail.query.filter_by(ingredient_id=ingredient.id).all():
                 nutr_name = Nutrition.query.filter_by(id=nutr_detail.nutrition_id).first().name
-                
             response[detail.recipe_id] = {
                 'recipe_id': recipe.id,
                 'recipe_name': recipe.name,
-                'steps': recipe.steps,
                 'cooktime': recipe.cooktime,
+                'steps': len(recipe.steps.split('\n')),
                 'portions': recipe.portions,
                 'difficulty': difficult[temp], 
                 'image': url_for('main.view_image', filename=recipe.image, _external=True),
                 'amount': detail.amount,
-                'unit': detail.unit
+                'unit': detail.unit,
+                'total_calory': total_calory
             }
 
         return {

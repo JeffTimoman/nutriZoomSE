@@ -129,3 +129,4 @@ class ShowNutrition(Resource):
         }
 
         return {'data': response}, 200
+    

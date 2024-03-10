@@ -50,6 +50,8 @@ class Ingredient(db.Model):
     @property
     def nutrition_length(self):
         return len(NutritionDetail.query.filter_by(ingredient_id=self.id).all())
+    
+
 
 # untuk resep:
 # - image
@@ -80,9 +82,6 @@ class Recipe(db.Model):
     @property
     def total_ingr(self):
         return len(RecipeDetail.query.filter_by(recipe_id=self.id).all())
-    
-
-        
     
 
 class Nutrition(db.Model):

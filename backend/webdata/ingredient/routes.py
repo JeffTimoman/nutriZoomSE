@@ -1,4 +1,4 @@
-from flask import request, jsonify, Blueprint, flash
+from flask import request, jsonify, Blueprint, flash, url_for
 from flask_restx import Api, Resource, fields, reqparse
 
 from webdata.models import User, Nutrition, NutritionDetail, Ingredient
@@ -119,6 +119,7 @@ class ShowNutrition(Resource):
         response = {
             'id': ingredient.id,
             'name': ingredient.name,
+            'image' : url_for('main.view_image', filename=ingredient.image, _external=True),
             'representation': f'Nutrition from {ingredient.name} per 100 gr',
             'description': ingredient.description,
             'nutrition': nutrition
