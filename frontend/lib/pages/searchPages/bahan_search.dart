@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gabunginfrontend/pages/Search_bahan/searchBahanAPI.dart';
 import 'package:gabunginfrontend/pages/searchPages/textfield_search.dart';
+
 
 class search_bahan extends StatefulWidget {
   search_bahan({super.key});
@@ -10,7 +12,10 @@ class search_bahan extends StatefulWidget {
 }
 
 class _search_bahanState extends State<search_bahan> {
-  TextEditingController searchController = TextEditingController();
+  NutritionApiData? nutritionApiData;
+  final controller = Controller();
+  final searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -134,6 +139,18 @@ class _search_bahanState extends State<search_bahan> {
       ),
     );
   }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future getDataFromSearch(String name) async {
+    final result = await controller.fetchApiNutrition(name);
+    setState(() {
+      nutritionApiData = result;
+    });
+  }
 }
 
 searchSuggestionItem(String suggestText){
@@ -153,3 +170,5 @@ searchSuggestionItem(String suggestText){
     ),
   );
 }
+
+

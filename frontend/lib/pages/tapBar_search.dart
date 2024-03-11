@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gabunginfrontend/pages/searchPages/bahan_search.dart';
 import 'package:gabunginfrontend/pages/searchPages/nutrisi_search.dart';
 
+
 class TapBar extends StatefulWidget {
   TapBar({super.key});
   static List previousSearchs = [];
@@ -42,11 +43,14 @@ class _TapBarState extends State<TapBar>
                 bottomRight: Radius.circular(20))),
         leading: Container(
           margin: EdgeInsets.all(18),
-          child: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.white,
-            size: 20,
-            weight: 10,
+          child: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+              size: 20,
+              weight: 10,
+            ),
           ),
         ),
       ),

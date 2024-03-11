@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gabunginfrontend/pages/Recipe_Details/AddedToFavoAPI.dart';
+import 'package:gabunginfrontend/pages/Recipe_Details/recipe_detailsAPI.dart';
 
 class DetailsRec extends StatefulWidget {
   const DetailsRec({super.key});
@@ -11,16 +13,21 @@ class DetailsRec extends StatefulWidget {
 }
 
 class _DetailsRecState extends State<DetailsRec> {
+  late HasilRecipeApi hasilRecipeApi = HasilRecipeApi(id: 0, name: "", steps: [], cooktime: 0, portions: 0, difficulty: "", image: "", ingredients: [], nutritionList: []);
+
+  final controller = Controller();
+  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Stack(
           children: [
+            hasilRecipeApi.image.isEmpty ? const Center(child: CircularProgressIndicator(),) :
             SizedBox(
               height: 350,
               child: Image.network(
-                'https://asset.kompas.com/crops/pG57GVX8vbZ8LKSnAiuWFh3gU6o=/89x0:934x563/750x500/data/photo/2020/11/12/5fac977441952.jpg',
+                hasilRecipeApi.image,
                 fit: BoxFit.cover,
               ),
             ),
@@ -43,6 +50,19 @@ class _DetailsRecState extends State<DetailsRec> {
         ),
       )
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getRecipe(2);
+  }
+
+  Future<void> getRecipe(int id) async {
+    final hasil = await controller.fetchHasilRecipeApi(id);
+    setState(() {
+      hasilRecipeApi = hasil;
+    });
   }
 
   buttonArrow(BuildContext context){
@@ -115,21 +135,25 @@ class _DetailsRecState extends State<DetailsRec> {
                     ],
                   ),
                 ),
+
                 // Nama Resep
-                Text("Tempe Orek"),
+                Text(hasilRecipeApi.name,
+                  style: Theme.of(context).textTheme.headline2,
+                  textAlign: TextAlign.center,
+                ),
                 SizedBox(height: 10,),
                 
                 // Jumlah like
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(Icons.favorite,
-                    color: Colors.red,),
-                    // Spacer(),
-                    Text("120 Likes"),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   crossAxisAlignment: CrossAxisAlignment.center,
+                //   children: [
+                //     Icon(Icons.favorite,
+                //     color: Colors.red,),
+                //     // Spacer(),
+                //     Text("120 Likes"),
+                //   ],
+                // ),
                 
                 // Preparasi dan Porsi
                 SizedBox(height: 10,),
@@ -158,7 +182,7 @@ class _DetailsRecState extends State<DetailsRec> {
                           child: Row(
                             children: [
                               Icon(Icons.timer_rounded),
-                              Text("20 menit")
+                              Text("${hasilRecipeApi.cooktime} Menit", style: TextStyle(color: Colors.black),)
                             ],
                           ),
                         ),
@@ -172,19 +196,11 @@ class _DetailsRecState extends State<DetailsRec> {
                         decoration: BoxDecoration(
                           color: Color(0xffB8E4B4).withOpacity(0.6),
                           borderRadius: BorderRadius.circular(10),
-                          // boxShadow: [
-                          //   BoxShadow(
-                          //     // blurRadius:,
-                          //     color: Color(0xff3C6142).withOpacity(0.3),
-                          //     offset: Offset(2, 3),
-                          //     spreadRadius: 1
-                          //   )
-                          // ]
                         ),
                         child: Row(
                           children: [
                             Icon(Icons.people_alt_rounded),
-                              Text("4 porsi", style: TextStyle(color: Colors.black),)
+                              Text("${hasilRecipeApi.portions.toInt().toString()} Porsi", style: TextStyle(color: Colors.black),)
                           ],
                         ),
                       )
@@ -196,32 +212,18 @@ class _DetailsRecState extends State<DetailsRec> {
                 ),
 
                 // Bahan
-                Text("Bahan"),
+                Text("Bahan", style: Theme.of(context).textTheme.bodyText1,),
                 SizedBox(height: 10,),
-                layoutIngredients(context,
-                  "https://static.promediateknologi.id/crop/0x0:0x0/0x0/webp/photo/jakartaakurat/2023/03/IMG_20230314_105758.jpg", 
-                  "Tempe", "2 buah"),
-                layoutIngredients(context,
-                  "https://asset-2.tstatic.net/belitung/foto/bank/images/20220716-manfaat-bawang-putih-12.jpg", 
-                  "Bawang Putih", "2 siung"),
-                layoutIngredients(context,
-                  "https://sesa.id/cdn/shop/products/bawang-merah-250g-1_460x@2x.jpg?v=1672116950", 
-                  "Bawang Merah", "5 siung"),
-                layoutIngredients(context,
-                  "https://akcdn.detik.net.id/visual/2023/04/12/942985058_43.jpeg?w=720&q=90", 
-                  "Kecap Manis", "5 sdm"),
-                layoutIngredients(context,
-                  "https://s1.bukalapak.com/attachment/668332/jenis-jenis_cabe_main_image.jpg", 
-                  "Cabe Merah", "Secukupnya"),
-              
+                // List Bahan
+                layoutIngredientsList(context, hasilRecipeApi.ingredients),
+            
                 SizedBox(height: 10,),
                 
                 // Steps
-                Text("Langkah Memasak"),
-                layoutSteps(context, 0, 'Panaskan minyak, tumis bawang putih, lengkuas, dan daun salam hingga harum.'),
-                layoutSteps(context, 1, 'Masukkan tempe, Royco Kaldu Ayam, Bango Kecap Manis Pedas, dan air. Aduk rata.'),
-                layoutSteps(context, 2, 'Masak hingga bumbu meresap dan air mengering.'),
-                layoutSteps(context, 3, 'Angkat dan sajikan.')
+                Text("Langkah Memasak", style: Theme.of(context).textTheme.bodyText1,),
+                SizedBox(height: 10,),
+                // List Steps
+                layoutStepsList(context, hasilRecipeApi.steps),
               ]),
             ),
           ),
@@ -230,57 +232,71 @@ class _DetailsRecState extends State<DetailsRec> {
     );
   }
   
-  // Template Bahan
-  layoutIngredients(BuildContext context, String urlImage, String namaBahan, String jumlahBahan) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        children: [
-          Row(
+  Widget layoutIngredientsList(BuildContext context, List<Ingredient> ingredients) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: ingredients.map((ingredient) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
             children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundImage: NetworkImage(urlImage),
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundImage: NetworkImage(ingredient.image),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text(ingredient.name, style: Theme.of(context).textTheme.bodyText2,),
+                  ),
+                  Spacer(),
+                  Text(ingredient.amount.toString(), style: Theme.of(context).textTheme.bodyText2,),
+                  SizedBox(width: 10,),
+                  // Spacer(),
+                  Text(ingredient.unit, style: Theme.of(context).textTheme.bodyText2,)
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                  child: Text(namaBahan),
+              Divider(
+                height: 15,
               ),
-              Spacer(),
-              Text(jumlahBahan)
-            ],    
+              SizedBox(height: 5),
+            ],
           ),
-          Divider(
-            height: 15,),
-          SizedBox(height: 5,)
-        ],
-      ),
+        );
+      }).toList(),
     );
   }
-  
-  // Template Step
-  layoutSteps(BuildContext context, int index, String step) {
-    return Container(
-      // width: 350,
-      padding: EdgeInsets.only(left: 20),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: Color(0xff3C6142),
-            radius: 12,
-            child: Text("${index + 1}", style: TextStyle(color: Colors.white, fontSize: 12),),
+
+  Widget layoutStepsList(BuildContext context, List<String> steps) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: steps.map((step) {
+        return Container(
+          padding: EdgeInsets.only(left: 20),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Color(0xff3C6142),
+                    radius: 12,
+                    child: Text("${steps.indexOf(step) + 1}", style: TextStyle(color: Colors.white, fontSize: 12)),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      step,
+                      softWrap: true,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 5,)
+            ],
           ),
-          SizedBox(width: 10,),
-          Expanded(
-            // height: 200,
-            child: Text(
-              step,
-              softWrap: true,
-              // overflow: TextOverflow.ellipsis,
-            ),
-          )
-        ],
-      ),
+        );
+      }).toList(),
     );
   }
 }
@@ -294,14 +310,48 @@ class favoriteButton extends StatefulWidget {
 }
 
 class _favoriteButtonState extends State<favoriteButton> {
+  Controller1 controller = Controller1();
   bool isFavorite = false;
+
+  Future <void> clickFavorite(int id, String bearerToken) async{
+    // if (isFavorite){
+    //   var result = await controller.removeRecipeToFavorites(id, bearerToken);
+    //   if (result == 200){
+    //     setState(() => isFavorite = !isFavorite);
+    //   }
+    // } else {
+    //   var result = await controller.addRecipeToFavorites(id, bearerToken);
+    //   if (result == 200){
+    //     setState(() => isFavorite = !isFavorite);
+    //   }
+    // }
+    var result = await controller.addRecipeToFavorites(id, bearerToken);
+    if (result == 200){
+      setState(() => isFavorite = !isFavorite);
+      return;
+    }else{
+      result = await controller.removeRecipeToFavorites(id, bearerToken);
+      setState(() => isFavorite = !isFavorite);
+    }
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    setUpIsFav();  
+  }
+
+  void setUpIsFav() async {
+    isFavorite = await controller.isFavorited(2, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMDE2NDA5OSwianRpIjoiY2YzZDFkMDktZmJjOS00ZDcyLWJlZTYtNjkwOGFhNGEwMGU2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNzEwMTY0MDk5LCJjc3JmIjoiYWFlMzg3MGMtMjA3Mi00YjE2LTlmNDctNmIxOTM0ZGEwYjY4IiwiZXhwIjoxNzQxNzAwMDk5fQ.IAlxhJSdoNLa9BXNxdHeD70LD-3Zvuw9CW0C2eRLxNQ");  
+  }
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
         setState(() {
-          isFavorite = !isFavorite;
+          clickFavorite(2, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMDE2NDA5OSwianRpIjoiY2YzZDFkMDktZmJjOS00ZDcyLWJlZTYtNjkwOGFhNGEwMGU2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNzEwMTY0MDk5LCJjc3JmIjoiYWFlMzg3MGMtMjA3Mi00YjE2LTlmNDctNmIxOTM0ZGEwYjY4IiwiZXhwIjoxNzQxNzAwMDk5fQ.IAlxhJSdoNLa9BXNxdHeD70LD-3Zvuw9CW0C2eRLxNQ");
         });
 
         if (isFavorite){
@@ -322,9 +372,9 @@ class _favoriteButtonState extends State<favoriteButton> {
                     Container(height: 10),
                     SizedBox(
                       height: 180,
-                      child: Image.asset('assets/image/popup_fav.png')),
+                      child: Image.asset('assets/popup_fav.png')),
                     SizedBox(
-                      height: 30,
+                      height: 40,
                     ),
                     Container(
                       width: 200,
@@ -332,20 +382,21 @@ class _favoriteButtonState extends State<favoriteButton> {
                         "Resep berhasil ditambahkan ke favorit!",
                         softWrap: true,
                         maxLines: 3,
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: Theme.of(context).textTheme.headline2,
+                        // TextStyle(
+                        //   fontSize: 22,
+                        //   fontWeight: FontWeight.w600,
+                        // ),
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    SizedBox(height: 10,),
+                    SizedBox(height: 40,),
                     Container(
                       // padding: EdgeInsets.only(top: 20),
                       height: 40,
                       width: 100,
                       decoration: BoxDecoration(
-                        color: Color(0xff3C6142).withOpacity(0.5),
+                        color: Color(0xff3C6142),
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: TextButton(
@@ -353,10 +404,8 @@ class _favoriteButtonState extends State<favoriteButton> {
                           Navigator.pop(context);
                         }, 
                         child: Text("Close",
-                        style: TextStyle(
-                          color: Colors.black
-                        ),),
-
+                          style: Theme.of(context).textTheme.button ,
+                        ),
                       ),
                     )
                   ],
@@ -368,13 +417,14 @@ class _favoriteButtonState extends State<favoriteButton> {
         };
       }, 
       icon: Icon(
-        isFavorite ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
-        color: isFavorite ? Colors.red : null,
+        !isFavorite ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
+        color: !isFavorite ? Colors.red : null,
         // Icons.favorite_outline_rounded
       ),
 
     );
   }
+
 }
 
 

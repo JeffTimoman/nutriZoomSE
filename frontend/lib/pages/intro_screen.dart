@@ -3,6 +3,7 @@ import 'package:gabunginfrontend/pages/intro_screen_pages.dart/intro_1.dart';
 import 'package:gabunginfrontend/pages/intro_screen_pages.dart/intro_2.dart';
 import 'package:gabunginfrontend/pages/intro_screen_pages.dart/intro_3.dart';
 import 'package:gabunginfrontend/pages/login.dart';
+import 'package:gabunginfrontend/pages/profile_page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -54,6 +55,7 @@ class _IntroScreenState extends State<IntroScreen> {
                         Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => loginpage()), // TOMBOL SEMENTARA
+                        // MaterialPageRoute(builder: (context) => ProfilePage()), // TOMBOL SEMENTARA
                         );
                       },
                   child: Text("Skip"),

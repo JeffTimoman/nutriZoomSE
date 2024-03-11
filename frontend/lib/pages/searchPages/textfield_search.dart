@@ -14,8 +14,8 @@ class CostomTextFormFild extends StatelessWidget {
       this.controller,
       required this.prefixIcon,
       this.filled = false,
-      this.enabled = true,
-      this.initialValue})
+      this.enabled = true,      
+      this.initialValue,})
       : super(key: key);
   String hint;
   IconData prefixIcon;
@@ -66,7 +66,7 @@ class CostomTextFormFild extends StatelessWidget {
           ),
           hintText: hint,
           hintStyle: const TextStyle(
-            fontFamily: "Inter",
+            fontFamily: "Montserray",
             fontSize: 15,
             fontWeight: FontWeight.w500,
           ),

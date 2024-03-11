@@ -1,12 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gabunginfrontend/constants/img_strings.dart';
-import 'package:gabunginfrontend/pages/components/MyButton.dart';
-// import 'package:gabunginfrontend/constant/img_string.dart';
-// import 'package:gabunginfrontend/pages/components/MyButton.dart';
+import 'package:gabunginfrontend/pages/login.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -29,27 +26,49 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController passwordController = TextEditingController();
 
   Future<void> registerData() async {
-    final url = Uri.parse('http://nutrizoom.site/api/auth/register'); // Ganti dengan URL API Anda
+  print('Tanggal Lahir: ${tanggalLahirController.text}');
+
+  try {
+    final url = Uri.parse('http://nutrizoom.site/api/auth/register');
     final response = await http.post(
       url,
       body: jsonEncode({
-        'email': emailController.text,
         'name': nameController.text,
-        'tanggal_lahir': formatDate(DateTime.parse(tanggalLahirController.text)),
-        'username': usernameController.text,
+        'email': emailController.text,
         'password': passwordController.text,
+        'username': usernameController.text,
+        'birth': tanggalLahirController.text,
       }),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
+    print('debugggggggg\n\n\n');
 
-    if (response.statusCode == 200) {
-      print('Registrasi berhasil!');
+    if (response.statusCode == 201) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Registrasi berhasil!'),
+          duration: Duration(seconds: 2), // Adjust the duration as needed
+        ),
+      );
+
+      // Navigate to the login page after showing the Snackbar
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => loginpage()));
     } else {
       print('Gagal melakukan registrasi. Kesalahan: ${response.statusCode}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal Melakukan Registrasi.'),
+          duration: Duration(seconds: 2), // Adjust the duration as needed
+        ),
+      );
     }
+  } catch (e) {
+    print('Exception during registration: $e');
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +178,20 @@ class _RegisterPageState extends State<RegisterPage> {
                     obscureText: true,
                   ),
                   const SizedBox(height: 50),
-                  MyButton(onTap: registerData),
+                  Container(
+                    width: 154,
+                    height: 42,
+                    decoration: BoxDecoration(color: Color(0xff3C6142), borderRadius: BorderRadius.circular(20)),
+                    child: TextButton(
+                      onPressed: registerData, // Call registerData function on button press
+                      child: Text(
+                        "MASUK",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold
+                        )),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -184,3 +216,4 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 }
+
