@@ -1,53 +1,70 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:gabunginfrontend/pages/Article_Home/article_homelist.dart';
+// import 'package:gabunginfrontend/pages/Mirzha/Article_Home/article_homelist.dart';
 
-class DummyData {
-  static List<Map<String, dynamic>> generateDummyArticles() {
-    return [
-      {
-        'image': 'assets/image/kentang.jpg',
-        'author': 'John Doe',
-        'publishDate': 'January 15, 2024',
-        'title': 'LOREM IPSUM DOLOR SIT AMET',
-        'description' : 'Apa pentingnya nutrisi bagi tubuh manusia, termasuk Anda kaum wanita? Kebanyakan orang pasti tahu jawabannya. Ya betul, keberadaan nutrisi ini dalam tubuh manusia tidak disangsikan lagi memiliki'
-      },
-      {
-        'image': 'assets/image/kentang.jpg',
-        'author': 'Jane Smith',
-        'publishDate': 'February 5, 2024',
-        'title': 'Consectetur Adipiscing Elit',
-        'description' : 'Kentang (Solanum tuberosum L.) adalah salah satu jenis tumbuhan yang bagian akarnya biasanya dimakan sebagai sayuran.'
-      },
-      {
-        'image': 'assets/image/kentang.jpg',
-        'author': 'Bob Johnson',
-        'publishDate': 'March 20, 2024',
-        'title': 'Sed Do Eiusmod Tempor Incididunt Lorem Ipsum Bla Bla Blla',
-        'description' : 'Kentang (Solanum tuberosum L.) adalah salah satu jenis tumbuhan yang bagian akarnya biasanya dimakan sebagai sayuran.'
-      },
-      {
-        'image': 'assets/image/kentang.jpg',
-        'author': 'Alice Williams',
-        'publishDate': 'April 10, 2024',
-        'title': 'Ut Labore Et Dolore Magna Aliqua',
-        'description' : 'Apa pentingnya nutrisi bagi tubuh manusia, termasuk Anda kaum wanita? Kebanyakan orang pasti tahu jawabannya. Ya betul, keberadaan nutrisi ini dalam tubuh manusia tidak disangsikan lagi memiliki'
-      },
-      {
-        'image': 'assets/image/kentang.jpg',
-        'author': 'Charlie Brown',
-        'publishDate': 'May 25, 2024',
-        'title': 'Enim Ad Minim Veniam',
-        'description' : 'Apa pentingnya nutrisi bagi tubuh manusia, termasuk Anda kaum wanita? Kebanyakan orang pasti tahu jawabannya. Ya betul, keberadaan nutrisi ini dalam tubuh manusia tidak disangsikan lagi memiliki'
-      },
-    ];
-  }
+// class DummyData {
+//   static List<Map<String, dynamic>> generateDummyArticles() {
+//     return [
+//       {
+//         'image': 'assets/image/kentang.jpg',
+//         'author': 'John Doe',
+//         'publishDate': 'January 15, 2024',
+//         'title': 'LOREM IPSUM DOLOR SIT AMET',
+//         'description' : 'Apa pentingnya nutrisi bagi tubuh manusia, termasuk Anda kaum wanita? Kebanyakan orang pasti tahu jawabannya. Ya betul, keberadaan nutrisi ini dalam tubuh manusia tidak disangsikan lagi memiliki'
+//       },
+//       {
+//         'image': 'assets/image/kentang.jpg',
+//         'author': 'Jane Smith',
+//         'publishDate': 'February 5, 2024',
+//         'title': 'Consectetur Adipiscing Elit',
+//         'description' : 'Kentang (Solanum tuberosum L.) adalah salah satu jenis tumbuhan yang bagian akarnya biasanya dimakan sebagai sayuran.'
+//       },
+//       {
+//         'image': 'assets/image/kentang.jpg',
+//         'author': 'Bob Johnson',
+//         'publishDate': 'March 20, 2024',
+//         'title': 'Sed Do Eiusmod Tempor Incididunt Lorem Ipsum Bla Bla Blla',
+//         'description' : 'Kentang (Solanum tuberosum L.) adalah salah satu jenis tumbuhan yang bagian akarnya biasanya dimakan sebagai sayuran.'
+//       },
+//       {
+//         'image': 'assets/image/kentang.jpg',
+//         'author': 'Alice Williams',
+//         'publishDate': 'April 10, 2024',
+//         'title': 'Ut Labore Et Dolore Magna Aliqua',
+//         'description' : 'Apa pentingnya nutrisi bagi tubuh manusia, termasuk Anda kaum wanita? Kebanyakan orang pasti tahu jawabannya. Ya betul, keberadaan nutrisi ini dalam tubuh manusia tidak disangsikan lagi memiliki'
+//       },
+//       {
+//         'image': 'assets/image/kentang.jpg',
+//         'author': 'Charlie Brown',
+//         'publishDate': 'May 25, 2024',
+//         'title': 'Enim Ad Minim Veniam',
+//         'description' : 'Apa pentingnya nutrisi bagi tubuh manusia, termasuk Anda kaum wanita? Kebanyakan orang pasti tahu jawabannya. Ya betul, keberadaan nutrisi ini dalam tubuh manusia tidak disangsikan lagi memiliki'
+//       },
+//     ];
+//   }
+// }
+class ArticleWidget extends StatefulWidget {
+  ArticleWidget({Key? key}) : super(key: key);
+
+  @override
+  State<ArticleWidget> createState() => _ArticleWidgetState();
 }
 
-class ArticleWidget extends StatelessWidget {
-  final List<Map<String, dynamic>> articles;
+class _ArticleWidgetState extends State<ArticleWidget> {
+  // final List<Map<String, dynamic>> articles;
 
-  ArticleWidget({required this.articles});
+  // ArticleWidget({required this.articles});
+
+  late HasilArticleApi articleState = HasilArticleApi(
+    total_pages: 0,
+    current_page: 0,
+    per_page: 0,
+    total_items: 0,
+    articles: [],
+  );
+
+  final controller = Controller();
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +72,7 @@ class ArticleWidget extends StatelessWidget {
         appBar: AppBar(
           backgroundColor:  Color(0xff3C6142) ,
           title: Text("Artikel",
-          style: TextStyle(
-            color: Colors.white),
+          style: Theme.of(context).textTheme.headline1,
           ),
           centerTitle: true,
           shape: const RoundedRectangleBorder(
@@ -68,9 +84,8 @@ class ArticleWidget extends StatelessWidget {
           leading: Container(
             margin: EdgeInsets.all(18),
             // alignment: Alignment.center,
-            child: SvgPicture.asset(
-              'assets/icons/arrow-left.svg',
-              height: 3, width: 3,
+            child: Icon(Icons.arrow_back_ios_new_outlined,
+              size: 20,
               color:Colors.white,
             ),
           ),
@@ -87,6 +102,7 @@ class ArticleWidget extends StatelessWidget {
                     child: Text(
                       "Artikel Terfavorit Minggu Ini",
                       style: TextStyle(
+                        fontFamily: "Montserrat",
                         color: Colors.black,
                         fontWeight: FontWeight.w600,
                         fontSize: 17,
@@ -94,17 +110,24 @@ class ArticleWidget extends StatelessWidget {
                       textAlign: TextAlign.left,
                     ),
                 ),
-                CarouselSlider(
-                  items: articles.map((article){
-                    return ArticleSlider(
-                      image: article['image'], 
-                      author: article['author'], 
-                      publishDate: article['publishDate'], 
-                      title: article['title']
+                articleState.articles.isEmpty ? const Center(child: CircularProgressIndicator()):
+                CarouselSlider.builder(
+                  itemCount: articleState.articles.length,
+                  itemBuilder: (BuildContext context, int index, int realIndex) {
+                    final article = articleState.articles[index];
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return ArticleSlider(
+                          image: article.image,
+                          author: article.author,
+                          publishDate: article.publishdate,
+                          title: article.title, 
+                        );
+                      },
                     );
-                  }).toList(),
+                  },
                   options: CarouselOptions(
-                    height: 200,
+                    aspectRatio: 2.0,
                     autoPlay: false,
                     enlargeCenterPage: true
                   )
@@ -112,9 +135,7 @@ class ArticleWidget extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 25, bottom: 8, left: 2),
                   child: Text('Seputar Nutrisi',
-                    style: TextStyle(
-                      fontSize: 14,
-                    ),
+                    style: Theme.of(context).textTheme.bodyText1,
                   ),
                 ),
                 Container(
@@ -122,15 +143,15 @@ class ArticleWidget extends StatelessWidget {
                   child: ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: articles.length,
+                    itemCount: articleState.articles.length,
                     itemBuilder: (context, index) {  
-                      var article = articles[index];
+                      var article = articleState.articles[index];
                       return ArticleCard(
-                        image: article['image'], 
-                        author: article['author'], 
-                        publishDate: article['publishDate'], 
-                        title: article['title'],
-                        description: article['description'],
+                        image: article.image,
+                        author: article.author, 
+                        publishDate: article.publishdate, 
+                        title: article.title,
+                        description: article.content,
                       );
                     },
                     // padding: EdgeInsets.only(bottom: 20),
@@ -142,6 +163,25 @@ class ArticleWidget extends StatelessWidget {
         ),
     );
   }
+
+  @override
+  initState() {
+    super.initState();
+    getArticle();
+  }
+
+  Future getArticle() async {
+    try {
+      final article = await controller.fetchHasilArticleApi(1);
+      setState(() {
+        articleState = article;
+      });
+    } catch (e) {
+      // Handle error
+      print('Error fetching articles: $e');
+    }
+  }
+  
 }
 
 // Content Slider
@@ -164,14 +204,6 @@ class ArticleSlider extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.grey.withOpacity(0.2),
         borderRadius: BorderRadius.circular(15),
-        // boxShadow: [
-        //   BoxShadow(
-        //     color: Colors.grey.withOpacity(0.7),
-        //     // spreadRadius: 1,
-        //     // blurRadius: 1,
-        //     // // offset: Offset(0, 3),
-        //   )
-        // ]
       ),
 
       // Content
@@ -184,15 +216,15 @@ class ArticleSlider extends StatelessWidget {
               child: Container(
                 height: 110,
                 width: 300,
-                child: Image.asset(image, fit:  BoxFit.cover),
+                child: Image.network(image, fit:  BoxFit.cover),
                 // width: MediaQuery.of(context).size.width,
               ),
             ),
             Container(
               height: 20,
-              padding: EdgeInsets.only(top: 5, left: 10, right: 10),
+              padding: EdgeInsets.only(top: 5, left: 10),
               child: Text(author, 
-                style: TextStyle(color: Color(0xff1A5D1A), fontWeight: FontWeight.w700, fontSize: 12),
+                style: TextStyle(fontFamily: "Montserrat", color: Color(0xff1A5D1A), fontWeight: FontWeight.w700, fontSize: 12),
                 maxLines: 1,
               ),
             ),
@@ -200,25 +232,26 @@ class ArticleSlider extends StatelessWidget {
               height: 20,
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Text(title,
-                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+                style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, fontSize: 15),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
             // Content Tanggal dan Icon
             Container(
-              padding: EdgeInsets.only(top: 5, left: 10, right: 10),
+              padding: EdgeInsets.only(left: 10,),
               height: 20,
               child: Row(
                 children: [
                   SizedBox(
-                    width: 30,
+                    // height: 0,
+                    // width: 30,
                     child: Icon(
                       Icons.date_range
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 5),
+                    padding: EdgeInsets.only(left: 5, top: 5),
                     width: 180,
                     child: Text('$publishDate',
                       style: TextStyle(
@@ -228,11 +261,9 @@ class ArticleSlider extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 5),
+                    padding: EdgeInsets.only(top: 5, left: 5),
                     child: Text('Lihat >>',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall,
                       textAlign: TextAlign.right,
                     ),
                   )
@@ -281,7 +312,7 @@ class ArticleCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-              child: Image.asset(
+              child: Image.network(
                 image,
                 height: 190,
                 fit: BoxFit.cover,
@@ -294,7 +325,7 @@ class ArticleCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 20,
+                    // height: 20,
                     child: Text(
                       title,
                       style: TextStyle(

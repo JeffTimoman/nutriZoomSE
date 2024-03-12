@@ -1,6 +1,9 @@
 // import 'package:bagianjosh/constants/img_strings.dart';
 import 'package:flutter/material.dart';
+// import 'package:gabunginfrontend/Alen/profile_page/controller.dart';
+// import 'package:gabunginfrontend/constant/img_string.dart';
 import 'package:gabunginfrontend/constants/img_strings.dart';
+import 'package:gabunginfrontend/pages/profile_page/controller.dart';
 // import 'package:gabunginfrontend/constant/img_string.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -11,6 +14,23 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  User? user;
+  final controller = Controller();
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData(
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMDA4NTg5OSwianRpIjoiMjY0YjExMDItYzczNi00ZWQ5LTkwYWUtMDlhZmY1YWZkZDM3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNzEwMDg1ODk5LCJjc3JmIjoiZDViYjQ5YTAtYjNkZC00ZTU4LWE1YjEtOWI3ZjRjZDRmMGEwIiwiZXhwIjoxNzEwMDg5NDk5fQ.O-V_s-8BSu5Z_eQeHD5Mr1IZlifwJNNIs0_fA5lcDz8");
+  }
+
+  Future<void> getUserData(String bearerToken) async {
+    var result = await controller.getUserData(bearerToken);
+    setState(() {
+      user = result;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -31,23 +51,36 @@ class _ProfilePageState extends State<ProfilePage> {
           //atas
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Icon(
-                    Icons.help_outline_rounded,
-                    color: Colors.white,
-                    size: 27,
-                  ),
-                  Container(
-                    child: Icon(
-                      Icons.settings,
+              Padding(
+                padding: const EdgeInsets.only(left: 10, top: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(
+                      Icons.arrow_back_ios,
                       color: Colors.white,
-                      size: 27,
+                      size: 20,
+                      weight: 10,
                     ),
-                    margin: EdgeInsets.all(7.0),
-                  ),
-                ],
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.help_outline_rounded,
+                          color: Colors.white,
+                          size: 27,
+                        ),
+                        Container(
+                          child: Icon(
+                            Icons.settings,
+                            color: Colors.white,
+                            size: 27,
+                          ),
+                          margin: EdgeInsets.all(7.0),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               Column(
                 // crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,7 +100,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     backgroundColor: Colors.white,
                     child: CircleAvatar(
                       radius: 65,
-                      backgroundImage: NetworkImage("https://i.pinimg.com/564x/35/04/d5/3504d58d12e46855f9bc0ff191331f8c.jpg"),
+                      backgroundImage: NetworkImage(
+                          "https://i.pinimg.com/564x/35/04/d5/3504d58d12e46855f9bc0ff191331f8c.jpg"),
                     ),
                   ),
 
@@ -75,13 +109,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 20,
                   ),
                   Text(
-                    "Clarensia Novia",
+                    user?.name ?? "Unknown",
                     style: Theme.of(context).textTheme.headline3,
                     textAlign: TextAlign.justify,
                   ),
                   // SizedBox(height: 5,),
                   Text(
-                    "@bygum_masak",
+                    user?.username ?? "@unknown_user",
                     style: Theme.of(context).textTheme.subtitle1,
                   )
                 ],
@@ -123,8 +157,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   child: Text(
                                     "Akun",
                                     style:
-                                        Theme.of(context
-                                        ).textTheme.headline2,
+                                        Theme.of(context).textTheme.headline2,
                                   ),
                                   padding: EdgeInsets.only(left: 20),
                                 ),
@@ -201,7 +234,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Container(
                                   height: 50,
                                   width: 150,
-                                  padding: EdgeInsets.symmetric(horizontal: 100.0),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 100.0),
                                   // decoration: BoxDecoration(
                                   //     color: Color(0xff3C6142),
                                   //     borderRadius: BorderRadius.circular(100)),
@@ -220,18 +254,28 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
 
-                                SizedBox(height: 80,),
+                                SizedBox(
+                                  height: 80,
+                                ),
 
                                 Container(
-                                  // width: 100,
-                                  height: 100,
-                                  child: Image(image: AssetImage(tLogo))),
+                                    // width: 100,
+                                    height: 100,
+                                    child: Image(image: AssetImage(tLogo))),
 
-                                SizedBox(height: 10,),
+                                SizedBox(
+                                  height: 10,
+                                ),
 
-                                Text("v.10 beta", style: Theme.of(context).textTheme.bodyText1, textAlign: TextAlign.center,),
+                                Text(
+                                  "v.10 beta",
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                  textAlign: TextAlign.center,
+                                ),
 
-                                SizedBox(height: 30,),
+                                SizedBox(
+                                  height: 30,
+                                ),
                               ],
                             ),
                           ),

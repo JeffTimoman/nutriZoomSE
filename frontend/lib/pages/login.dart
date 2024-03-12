@@ -1,38 +1,84 @@
 import 'package:flutter/material.dart';
 import 'package:gabunginfrontend/constants/img_strings.dart';
 import 'package:gabunginfrontend/pages/components/MyButton.dart';
+import 'package:gabunginfrontend/pages/profile_page.dart';
 import 'package:gabunginfrontend/pages/register.dart';
 import 'package:gabunginfrontend/pages/resep.dart';
-// import 'package:gabunginfrontend/constant/img_string.dart';
-// import 'package:gabunginfrontend/pages/components/MyButton.dart';
-// import 'package:gabunginfrontend/pages/register.dart';
-// import 'package:gabunginfrontend/pages/resep.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 
-class loginpage extends StatelessWidget {
+class loginpage extends StatefulWidget {
+  loginpage({Key? key}) : super(key: key);
+
+  @override
+  State<loginpage> createState() => _loginpageState();
+}
+
+
+class _loginpageState extends State<loginpage> {
   // Text editing controllers
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   // Function to handle sign in
   Future<void> signInUser(BuildContext context) async {
-    if (usernameController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-      var response = await http.post(
-        Uri.parse("http://nutrizoom.site/api/auth/login"),
-        body: {
+    print('This works');
+    final String apiUrl = 'http://nutrizoom.site/api/auth/login';
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          // 'accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
           "email": usernameController.text,
           "password": passwordController.text,
-        },
+        }),
       );
+
       if (response.statusCode == 200) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => resepPage()));  // ke RESEP KARENA BELUM ADA HOMENYA
+        // Successful login
+        final token = jsonDecode(response.body)['access_token'];
+        // final userData = jsonDecode(response.body);
+        // final username = jsonDecode(response.body)['access_token'];
+        // final usernameA = userData['username'];
+        // final nameA = userData['name'];
+        // print(usernameA);
+        // print(nameA);
+
+
+        // Store the token using SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('token', token);
+        print('Cek Token: $token');
+        // prefs.setString('username', usernameA); // Store the username
+        // prefs.setString('name', nameA); // Store the name
+      // prefs.setString('name', usernameController);
+      // prefs.setString('username', username);
+        
+        // Navigate to ProfilePage after successful login
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => ProfilePage()),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Wrong Email or Password.")));
       }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please Insert Email and Password.")));
+    } catch (e) {
+      // Handle errors
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("An error occurred. Please try again later.")));
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    SharedPreferences.setMockInitialValues({});
   }
 
   @override
@@ -129,7 +175,28 @@ class loginpage extends StatelessWidget {
                   ),
                   const SizedBox(height: 30),
                   // Login Button
-                  MyButton(onTap: () => signInUser(context)),
+                  InkWell(
+                    onTap: () => signInUser(context),
+                    child: Container(
+                      width: 154,
+                      height: 42,
+                      decoration: BoxDecoration(
+                        color: Color(0xff3C6142),
+                        borderRadius: BorderRadius.circular(20)
+                      ),
+                      child: Center(
+                        child: Text(
+                          "MASUK",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // MyButton(onTap: () => signInUser(context)),
                 ],
               ),
             ),

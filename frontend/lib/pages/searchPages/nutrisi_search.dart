@@ -2,6 +2,7 @@
 // import 'package:bagianjosh/pages/tapBar_search.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:gabunginfrontend/pages/nutrisi_search/controller.dart';
 import 'package:gabunginfrontend/pages/tapBar_search.dart';
 // import 'package:gabunginfrontend/pages/tapBar_search.dart';
 // import 'package:http/http.dart' as http;
@@ -14,25 +15,8 @@ class SearchNutrisi extends StatefulWidget {
 }
 
 class _SearchNutrisiState extends State<SearchNutrisi> {
-
-  // GetNutrisi getNutrisi = null;
-  Map<String, dynamic> data = {};
-  int val = 1;
-
-  // GetNutrisi.getNutrisi(page)
-
-  // getData() async{
-  //   final res = await http.get(Uri.parse("http://203.194.114.98/api/nutrition/get_nutrition?page=1"));
-  //   if(res.statusCode == 200){
-  //     setState(() {
-  //       data = jsonDecode(res.body);
-  //     });
-  //   }
-    
-  //   // setState(() {
-      
-  //   // });
-  // }
+  DropDownApi? dropDownApi;
+  final controller = Controller();
 
   var selectedItem = null;
   @override
@@ -60,53 +44,60 @@ class _SearchNutrisiState extends State<SearchNutrisi> {
         
         //Search Bar
 
-        // DropdownButton(
-        //   items: data.map((e) {
-        //     return DropdownMenuItem(child: Text(e["nama"]), value:e["id"] ,);
-        //   }).toList(), 
-        //   value: val,
-        //   onChanged: (v){
-        //     val = v as int;
-        //     setState(() {
-        //       selectedItem = v.toString();
-        //       TapBar.previousSearchs.add(selectedItem);
-        //     });
-
-        //   },),]
+        dropDownApi == null
+          ? const CircularProgressIndicator()
+          : DropdownButton<Nutrition>(
+              isExpanded: true,
+              hint: Text("Pilih nutrisimu!"),
+              items: dropDownApi!.nutritionList
+                  .map((e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(e.name, style: Theme.of(context).textTheme.bodyText1,),
+                      ))
+                  .toList(),
+              onChanged: (Nutrition? value) {
+                setState(() {
+                selectedItem = value?.name.toString();
+                TapBar.previousSearchs.add(selectedItem.toString());
+              });
+              },
+            ),
 
     
 
-        DropdownSearch<String>(
-          popupProps: PopupProps.menu(
-            showSelectedItems: true,
-            showSearchBox: true,
-          ),
-          items: nutritions,
-          dropdownButtonProps: DropdownButtonProps(color: Color(0xff3C6142)),
-          dropdownDecoratorProps: DropDownDecoratorProps(
-            dropdownSearchDecoration: InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xff3C6142)),
-                borderRadius: BorderRadius.circular(10)
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xff3C6142)),
-                borderRadius: BorderRadius.circular(10)
-              ),
-              prefixIcon: Icon(Icons.search),
-              hintText: "Pilih nutrisimu!"
-            ),
-          ),
-          onChanged: (value){
-            // val = value as int;
-            setState(() {
-              selectedItem = value.toString();
-              TapBar.previousSearchs.add(selectedItem);
-            });
-          },
-          selectedItem: selectedItem,
+        // DropdownSearch<String>(
+        //   popupProps: PopupProps.menu(
+        //     showSelectedItems: true,
+        //     showSearchBox: true,
+        //   ),
+        //   items: dropDownApi!.nutritionList.map((e) => DropdownMenuItem(
+        //     value: e,
+        //     child: Text(e.name),)).toList(),
+        //   dropdownButtonProps: DropdownButtonProps(color: Color(0xff3C6142)),
+        //   dropdownDecoratorProps: DropDownDecoratorProps(
+        //     dropdownSearchDecoration: InputDecoration(
+        //       enabledBorder: OutlineInputBorder(
+        //         borderSide: BorderSide(color: Color(0xff3C6142)),
+        //         borderRadius: BorderRadius.circular(10)
+        //       ),
+        //       focusedBorder: OutlineInputBorder(
+        //         borderSide: BorderSide(color: Color(0xff3C6142)),
+        //         borderRadius: BorderRadius.circular(10)
+        //       ),
+        //       prefixIcon: Icon(Icons.search),
+        //       hintText: "Pilih nutrisimu!"
+        //     ),
+        //   ),
+        //   onChanged: (value){
+        //     // val = value as int;
+        //     setState(() {
+        //       selectedItem = value.toString();
+        //       TapBar.previousSearchs.add(selectedItem);
+        //     });
+        //   },
+        //   selectedItem: selectedItem,
           
-        ),
+        // ),
         SizedBox(
           height: 20,
         ),
@@ -134,20 +125,24 @@ class _SearchNutrisiState extends State<SearchNutrisi> {
               Text("Sugesti Pencarian", style: Theme.of(context).textTheme.bodyText1),
               const SizedBox(height: 20,),
               Wrap(
-                
-                children: [
-                  searchSuggestionItem("test test"),
-                  searchSuggestionItem("test testttt"),
-                  searchSuggestionItem("test"),
-                  searchSuggestionItem("test"),
-                  searchSuggestionItem("test"),
-                  searchSuggestionItem("test"),
-                ],
-              )
+                spacing: 10,
+                children: dropDownApi != null ? dropDownApi!.nutritionList.map<Widget>((e){
+                  return searchSuggestionItem(e.name);
+                }).toList() : []
+
+              ),
               ],
           ),
         ),
-
+                // ListView.builder(
+                  //   shrinkWrap: true,
+                  //   physics: NeverScrollableScrollPhysics(),
+                  //   itemCount: dropDownApi?.nutritionList.length,
+                  //   itemBuilder: (context, index){
+                  //     Nutrition nutrition = dropDownApi!.nutritionList[index];
+                  //     return searchSuggestionItem('${nutrition.name}');
+                  //   }
+                  // ),
         SizedBox(
           height: 20,
         ),
@@ -155,6 +150,19 @@ class _SearchNutrisiState extends State<SearchNutrisi> {
       ],
     ));
   }
+  @override
+  void initState() {
+    super.initState();
+    getDropDownData();
+  }
+
+  Future<void> getDropDownData() async {
+    var hasil = await controller.fetchApiDropDown();
+    setState(() {
+      dropDownApi = hasil;
+    });
+  }
+
 }
 
 String selectNutri = "";
@@ -203,7 +211,8 @@ previousSearchItem(int index){
 
 searchSuggestionItem(String suggestText){
   return Container(
-    margin: EdgeInsets.only(right: 15, bottom: 15),
+    // width: double.infinity,
+    margin: EdgeInsets.only(bottom: 15),
     padding: EdgeInsets.symmetric(vertical: 5, horizontal: 30),
     decoration: BoxDecoration(
       color: Colors.grey.shade200,

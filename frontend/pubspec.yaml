@@ -43,6 +43,8 @@ dependencies:
   dropdown_search: ^5.0.6
   flutter_svg: ^2.0.9
   carousel_slider: ^4.2.1
+  shared_preferences: ^2.0.6
+  another_carousel_pro: ^1.0.2
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +72,9 @@ flutter:
   assets:
     - assets/Nutri (4) 1.png
     - assets/tempe_orek.jpeg
+    - assets/popup_fav.png
+    - assets/1.jpg
+    - assets/2.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
