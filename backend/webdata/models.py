@@ -148,6 +148,10 @@ class Article(db.Model):
         return self.publishdate.strftime("%d-%m-%Y %H:%M")
     
     @property
+    def formatted_tanggal_terbit_2(self):
+        return self.publishdate.strftime("%d %b %Y")
+    
+    @property
     def created_by_username(self):
         temp = User.query.filter_by(id=self.created_by).first().username
         if temp : return temp

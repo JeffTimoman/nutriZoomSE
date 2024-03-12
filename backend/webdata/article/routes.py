@@ -61,7 +61,7 @@ class ShowArticle(Resource):
             'title': article.title,
             'content': article.detail,
             'author': article.author,
-            'publishdate': article.formatted_tanggal_terbit,
+            'publishdate': article.formatted_tanggal_terbit_2,
             'createdby': article.created_by_username,
             'image' : url_for('main.view_image', filename=article.image, _external=True)
         }, 200

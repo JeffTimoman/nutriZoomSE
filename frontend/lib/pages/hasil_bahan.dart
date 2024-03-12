@@ -1,12 +1,14 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:gabunginfrontend/pages/bahan_search.dart';
 import 'package:gabunginfrontend/pages/hasil_bahan/controller.dart';
 // import 'package:gabunginfrontend/Alen/hasil_bahan/controller.dart';
 import 'package:gabunginfrontend/pages/list_resep.dart';
 
 class HasilBahan extends StatefulWidget {
-  // final String judul_bahan;
-  HasilBahan({super.key});
+  final String searchText;
+
+  HasilBahan({Key? key, required this.searchText}) : super(key: key);
 
   @override
   State<HasilBahan> createState() => _HasilBahanState();
@@ -14,8 +16,9 @@ class HasilBahan extends StatefulWidget {
 
 class _HasilBahanState extends State<HasilBahan> {
   late HasilBahanApi ingredientState = HasilBahanApi(
-      id: 1, name: "", representation: "", description: "", nutrition: [], image: '');
+      id: 1, name: "", representation: "", description: "", nutrition: [], image: "https://www.astronauts.id/blog/wp-content/uploads/2022/11/Manfaat-Bawang-Putih-Untuk-Kulit-yang-Tidak-Banyak-Tahu-1024x683.jpg");
   final controller = Controller();
+  
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +31,6 @@ class _HasilBahanState extends State<HasilBahan> {
             height: 350,
             child: Image.network(
               ingredientState.image,
-              // "https://www.astronauts.id/blog/wp-content/uploads/2022/11/Manfaat-Bawang-Putih-Untuk-Kulit-yang-Tidak-Banyak-Tahu-1024x683.jpg",
               // "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2023/05/26053515/Murah-dan-Bergizi-Ini-7-Manfaat-Tempe-yang-Masih-Jarang-Diketahui-.jpg.webp",
               fit: BoxFit.cover,
             ),
@@ -286,11 +288,20 @@ class _HasilBahanState extends State<HasilBahan> {
   }
 
   Future<void> getHasilBahan() async {
-    final result = await Controller.fetchHasilNutrisiApi("tempe");
-    setState(() {
-      ingredientState = result;
-    });
+  final result = await Controller.fetchHasilNutrisiApi(widget.searchText);
+  setState(() {
+    ingredientState = result;
+  });
+  
+  if (ingredientState.description == "") {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => search_bahan(),
+      ),
+    );
   }
+}
 
   Widget ringkasan(Nutrition nutrition) {
     if(nutrition.name == "Kalori" ||

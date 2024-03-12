@@ -41,7 +41,7 @@ class Nutrition{
   factory Nutrition.fromJson(Map<String, dynamic> json){
     return Nutrition(
       id: json['id'],
-      amount: json['amount'].toInt(),
+      amount: json['amount'],
       name: json['name'],
       unit: json['unit'],
     );
