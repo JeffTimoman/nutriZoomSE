@@ -45,6 +45,7 @@ dependencies:
   carousel_slider: ^4.2.1
   shared_preferences: ^2.0.6
   another_carousel_pro: ^1.0.2
+  pretty_gauge: 1.0.0
 
 dev_dependencies:
   flutter_test:

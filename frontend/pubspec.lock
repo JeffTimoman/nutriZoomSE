@@ -312,6 +312,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.7.4"
+  pretty_gauge:
+    dependency: "direct main"
+    description:
+      name: pretty_gauge
+      sha256: "11c02b90e3824bed47b9b460ff641cbafd801887833973f2b40b30c5d7f132b8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   shared_preferences:
     dependency: "direct main"
     description:
