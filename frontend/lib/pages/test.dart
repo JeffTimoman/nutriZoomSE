@@ -9,14 +9,14 @@ import 'package:gabunginfrontend/pages/tapBar_search.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class Home2 extends StatefulWidget {
+  const Home2({super.key});
 
   @override
-  State<Home> createState() => _MyWidgetState();
+  State<Home2> createState() => _Home();
 }
 
-class _MyWidgetState extends State<Home> {
+class _Home extends State<Home2> {
   User? user;
   final controller = Controller();
   final controller2 = Controller2();

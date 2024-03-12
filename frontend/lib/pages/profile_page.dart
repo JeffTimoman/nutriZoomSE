@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 // import 'package:gabunginfrontend/Alen/profile_page/controller.dart';
 // import 'package:gabunginfrontend/constant/img_string.dart';
 import 'package:gabunginfrontend/constants/img_strings.dart';
+import 'package:gabunginfrontend/pages/change_password.dart';
+import 'package:gabunginfrontend/pages/change_profile.dart';
+import 'package:gabunginfrontend/pages/login.dart';
 import 'package:gabunginfrontend/pages/profile_page/controller.dart';
+import 'package:gabunginfrontend/pages/pusat_bantuan.dart';
 // import 'package:gabunginfrontend/constant/img_string.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -164,35 +168,30 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                AkunOption(context, "Ubah Profil"),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => change_profile()));
+                                  },
+                                  child: AkunOption(context, "Ubah Profil"),
+                                ),
                                 Divider(
                                   height: 20,
                                   thickness: 1,
                                   indent: 20,
                                   endIndent: 20,
                                 ),
-                                AkunOption(context, "Ubah Password"),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => change_password()));
+                                  },
+                                  child: AkunOption(context, "Ubah Password")),
                                 Divider(
                                   height: 20,
                                   thickness: 1,
                                   indent: 20,
                                   endIndent: 20,
                                 ),
-                                AkunOption(context, "Riwayat Resep"),
-                                Divider(
-                                  height: 20,
-                                  thickness: 1,
-                                  indent: 20,
-                                  endIndent: 20,
-                                ),
-                                AkunOption(context, "Resep Favorit"),
-                                Divider(
-                                  height: 20,
-                                  thickness: 1,
-                                  indent: 20,
-                                  endIndent: 20,
-                                ),
-                                AkunOption(context, "Ubah Nutrisi Harian"),
+                                AkunOption(context, "Hitung Nutrisi Harian"),
                                 Divider(
                                   height: 20,
                                   thickness: 1,
@@ -210,17 +209,21 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                AkunOption(context, "Tentang"),
-                                Divider(
-                                  height: 20,
-                                  thickness: 1,
-                                  indent: 20,
-                                  endIndent: 20,
-                                ),
+                                // AkunOption(context, "Tentang"),
+                                // Divider(
+                                //   height: 20,
+                                //   thickness: 1,
+                                //   indent: 20,
+                                //   endIndent: 20,
+                                // ),
                                 SizedBox(
                                   height: 10,
                                 ),
-                                AkunOption(context, "Pusat Bantuan"),
+                                InkWell(
+                                  onTap: (){
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => pusatBantuan()));
+                                  },
+                                  child: AkunOption(context, "Pusat Bantuan")),
                                 Divider(
                                   height: 20,
                                   thickness: 1,
@@ -243,7 +246,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                   //   onPressed: () {},
                                   //   child: Text("KELUAR", style: Theme.of(context).textTheme.button,)),
                                   child: ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => loginpage()));
+                                    },
                                     child: Text(
                                       "KELUAR",
                                       style: Theme.of(context).textTheme.button,

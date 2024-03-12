@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:gabunginfrontend/pages/artikel_page.dart';
+import 'package:gabunginfrontend/pages/bmi_page.dart';
 import 'package:gabunginfrontend/pages/change_password.dart';
 import 'package:gabunginfrontend/pages/change_profile.dart';
+import 'package:gabunginfrontend/pages/home.dart';
+import 'package:gabunginfrontend/pages/nutrisi_page.dart';
+import 'package:gabunginfrontend/pages/profile_page.dart';
 import 'package:gabunginfrontend/pages/recipe_details.dart';
 import 'package:gabunginfrontend/pages/tapBar_search.dart';
 
@@ -14,10 +19,10 @@ class NavBar extends StatefulWidget {
 class _NavBarState extends State<NavBar> {
   int _currentIndex = 0;
   List<Widget> body = [
-    TapBar(),
-    DetailsRec(),
-    change_password(),
-    change_profile()
+    Home(),
+    BmiCalc(),
+    ArticleWidget(),
+    ProfilePage()
   ];
   @override
   Widget build(BuildContext context) {

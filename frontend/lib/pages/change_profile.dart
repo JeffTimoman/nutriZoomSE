@@ -225,6 +225,11 @@ class _change_profileState extends State<change_profile> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                             InkWell(
+                              onTap: (){
+                                Navigator.pop(context);
+                              },
+                              child: Icon(Icons.arrow_back_ios_new_sharp, color: Colors.white,)),
                             Icon(
                               Icons.arrow_back_ios_new_sharp,
                               color: Colors.white,

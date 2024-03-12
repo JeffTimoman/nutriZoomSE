@@ -82,6 +82,7 @@ class Controller{
     var response = await http.get(url,
       headers: {
         "accept": "application/json",
+        "Content-Type": "application/json",
         "Authorization" : "Bearer $bearerToken"
       });
 

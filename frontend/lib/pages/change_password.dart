@@ -166,7 +166,11 @@ class _change_passwordState extends State<change_password> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                             Icon(Icons.arrow_back_ios_new_sharp, color: Colors.white,),
+                             InkWell(
+                              onTap: (){
+                                Navigator.pop(context);
+                              },
+                              child: Icon(Icons.arrow_back_ios_new_sharp, color: Colors.white,)),
                           ],
                         )
                       ),
