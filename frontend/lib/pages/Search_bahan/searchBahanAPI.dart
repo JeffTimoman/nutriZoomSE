@@ -1,5 +1,29 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+/*
+{
+  "data": {
+    "id": 8,
+    "name": "Dada sapi",
+    "representation": "Nutrition from Dada sapi per 100 gr",
+    "description": "ololo",
+    "nutrition": {
+      "1": {
+        "id": 1,
+        "name": "Protein",
+        "amount": 15,
+        "unit": "g"
+      },
+      "3": {
+        "id": 3,
+        "name": "Kalori",
+        "amount": 15,
+        "unit": "kcal"
+      }
+    }
+  }
+}
+*/
 
 class Nutrition{
   final int id;
