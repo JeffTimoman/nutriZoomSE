@@ -310,8 +310,9 @@ class AddFavoriteRecipe(Resource):
     @api.expect(authorization_header)
     def post(self, id1):
         current_user = get_jwt_identity()
-        user = User.query.filter_by(username = current_user).first()
+        user = User.query.filter_by(id = current_user).first()
         recipe = Recipe.query.filter_by(id = id1).first()
+        # return {'message': f'{user} {recipe}'}, 200
         if not recipe:
             return {'message': f'There are no recipes with id "{id1}" found!'}, 404
         favorite = FavoriteRecipe.query.filter_by(user_id = user.id, recipe_id = recipe.id).first()
@@ -328,7 +329,7 @@ class RemoveFromFavourites(Resource):
     @jwt_required()
     @api.expect(authorization_header)
 
-    def delete(self, id1):
+    def post(self, id1):
         current_user = get_jwt_identity()
         user = User.query.filter_by(id = current_user).first()
         recipe = Recipe.query.filter_by(id = id1).first()
@@ -337,8 +338,6 @@ class RemoveFromFavourites(Resource):
         favorite = FavoriteRecipe.query.filter_by(user_id = user.id, recipe_id = recipe.id).first()
         if not favorite:
             return {'message': f'You have not added this recipe to favorite!'}, 404
-
-        favorite.delete()
 
         db.session.delete(favorite)
         db.session.commit()
@@ -352,25 +351,70 @@ class ShowFavoriteRecipe(Resource):
     @jwt_required()
     @api.expect(authorization_header)
     def get(self):
+        favorite_recipes = FavoriteRecipe.query.filter_by(user_id = get_jwt_identity()).all()
+        response = dict()
+        
+        for favorite in favorite_recipes:
+            recipe = Recipe.query.filter_by(id = favorite.recipe_id).first()
+            total_calory = 0
+            temp = 1
+            if recipe.cooktime > 30 and recipe.cooktime <= 45:
+                temp = 2
+            elif recipe.cooktime > 45 and recipe.cooktime <= 90:
+                temp = 3
+            elif recipe.cooktime > 90 and recipe.cooktime <= 120:
+                temp = 4
+            elif recipe.cooktime > 120:
+                temp = 5
+            
+            all_recipe_detail = RecipeDetail.query.filter_by(recipe_id=recipe.id).all()
+            for detail in all_recipe_detail:
+                omg = NutritionDetail.query.filter_by(ingredient_id=detail.ingredients_id).all()
+                for nutr_detail in omg:
+                    # print(nutr_detail.id)
+                    nutr = Nutrition.query.filter_by(id=nutr_detail.nutrition_id).first()
+                    if nutr.name.lower() != 'kalori':
+                        continue
+                    if nutr.unit == 'kcal':
+                        print(nutr.name)
+                        total_calory += detail.turn_to_hundred_gram * nutr_detail.amount * detail.amount * 100
+                        continue
+                    if nutr.unit == 'cal':
+                        print(nutr.name, detail.turn_to_hundred_gram, nutr_detail.amount, detail.amount)
+                        total_calory += detail.turn_to_hundred_gram * nutr_detail.amount * detail.amount
+                        continue
+                
+            
+            response[recipe.id] = {
+                'recipe_id': recipe.id,
+                'recipe_name': recipe.name,
+                'cooktime': recipe.cooktime,
+                'steps': len(recipe.steps.split('\n')),
+                'portions': recipe.portions,
+                'difficulty': temp, 
+                'image': url_for('main.view_image', filename=recipe.image, _external=True),
+                'amount': detail.amount,
+                'unit': detail.unit,
+                'total_calory': total_calory
+            }
+            
+        return {
+            'data': response
+        }, 200
+
+@api.route('/is_favorite/<int:id1>')
+class IsFavorite(Resource):
+    @jwt_required()
+    @api.expect(authorization_header)
+    def get(self, id1):
         current_user = get_jwt_identity()
         user = User.query.filter_by(id=current_user).first()
         if not user:
             return {'message': f'There are no user with id "{current_user}" found!'}, 404
-        response = dict({})
-        fav = dict({})
-        favorite_recipes = FavoriteRecipe.query.filter_by(user_id = user.id).all()
-        
-        for favorite_recipe in favorite_recipes:
-            recipe = Recipe.query.filter_by(id = favorite_recipe.recipe_id).first()
-            fav[recipe.id] = {
-                'name' : recipe.name,
-                'steps' : recipe.steps,
-                'cooktime' : recipe.cooktime,
-                'portions' : recipe.portions,
-                'image' : url_for('main.view_image', filename=recipe.image, _external=True)
-            }
-            
-        response['user'] = user.username
-        response['favorite_recipes'] = fav
-        
-        return response, 200
+        recipe = Recipe.query.filter_by(id=id1).first()
+        if not recipe:
+            return {'message': f'There are no recipes with id "{id1}" found!'}, 404
+        favorite = FavoriteRecipe.query.filter_by(user_id = user.id, recipe_id = recipe.id).first()
+        if favorite:
+            return {'message': f'You have added this recipe to favorite!'}, 200
+        return {'message': f'You have not added this recipe to favorite!'}, 404

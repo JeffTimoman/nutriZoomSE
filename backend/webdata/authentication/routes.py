@@ -1,6 +1,6 @@
 from flask import request, jsonify, Blueprint
 from flask_restx import Api, Resource, fields, reqparse
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from webdata.models import User 
 from webdata import jwt, bcrypt
@@ -13,6 +13,10 @@ from webdata import db
 
 import redis
 import re
+from flask import request
+from flask_restx import Resource
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from werkzeug.security import generate_password_hash, check_password_hash
 
 #Setup block token
 # jwt_redis_blocklist = redis.StrictRedis(
@@ -42,13 +46,31 @@ register = api.model('Register', {
     'birth': fields.Date
 })
 
+
+
 authorization_header = reqparse.RequestParser()
 authorization_header.add_argument('Authorization', location='headers', required=True, help='Bearer <access_token>')
 
+change_password = reqparse.RequestParser()
+change_password.add_argument('Authorization', location='headers', required=True, help='Bearer <access_token>')
+change_password.add_argument('old_password', location='json', required=True, help='Old password')
+change_password.add_argument('password', location='json', required=True, help='New password')
 
+update_user_data = reqparse.RequestParser()
+update_user_data.add_argument('Authorization', location='headers', required=True, help='Bearer <access_token>')
+update_user_data.add_argument('name', location='json', required=False, help='New name')
+update_user_data.add_argument('email', location='json', required=False, help='New email')
+update_user_data.add_argument('username', location='json', required=False, help='New username')
+update_user_data.add_argument('birth', location='json', required=False, help='New birth')
+
+
+login_model = api.model('Login', {
+    'email': fields.String(required=True, description='User email address'),
+    'password': fields.String(required=True, description='User password')
+})
 @api.route('/login')
 class Login(Resource):
-    @api.expect(login)
+    @api.expect(login_model)
     def post(self):
         data = request.get_json()
         email = data['email']
@@ -115,8 +137,88 @@ class Register(Resource):
         password = data['password']
         username = data['username']
         birth = data['birth']
+        print(birth)
         user = User(name=name, email=email, password=bcrypt.generate_password_hash(password).decode('utf-8'), username=username, birth=birth)
         db.session.add(user)
         db.session.commit()
         
         return {'message': 'User created successfully'}, 201
+    
+@api.route('/get_user_data')
+class GetUserData(Resource):
+    @api.expect(authorization_header, validate=True)
+    @jwt_required()
+    def get(self):
+        user_id = get_jwt_identity()
+        user = User.query.filter_by(id=user_id).first()
+        return {
+            'name': user.name,
+            'email': user.email,
+            'username': user.username,
+            'birth': datetime.strftime(user.birth, '%Y-%m-%d')
+        }, 200
+        
+@api.route('/update_user_data')
+class UpdateUserData(Resource):
+    @api.expect(update_user_data)
+    @jwt_required()
+    def post(self):
+        user_id = get_jwt_identity()
+        user = User.query.filter_by(id=user_id).first()
+        data = request.get_json()
+        name = data['name']
+        email = data['email']
+        username = data['username']
+        birth = data['birth']
+        
+        if re.match(r"[^@]+@[^@]+\.[^@]+", email) == None and email != '' and email != None:
+            return {'message': 'Invalid email format'}, 400
+        
+        if User.query.filter_by(email=email).first() and email != user.email and email != '' and email != None:
+            return {'message': 'Failed to change email.'}, 400
+        
+        if User.query.filter_by(username=username).first() and username != user.username and username != '' and username != None:
+            return {'message': 'Failed to change username.'}, 400
+        
+        if username != '':
+            user.username = username
+        
+        if email != '':
+            user.email = email
+        
+        if name != '':
+            user.name = name
+        
+        if birth != '':
+            user.birth = birth
+            
+        print(username, email, name, birth)
+        
+        db.session.commit()
+        return {'message': 'User data updated successfully'}, 200
+    
+@api.route('/change_password')
+class UpdatePassword(Resource):
+    
+    @api.expect(change_password)
+    @jwt_required()
+    def post(self):
+        user_id = get_jwt_identity()
+        user = User.query.filter_by(id=user_id).first()
+        data = request.get_json()
+        old_password = data['old_password']
+        new_password = data['password']
+        
+        if not bcrypt.check_password_hash(user.password, old_password):
+            return {'message': 'Failed to change password.'}, 400
+        
+        user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+        db.session.commit()
+        return {'message': 'Password updated successfully'}, 200
+    
+@api.route('/is_logged')
+class IsLogged(Resource):
+    @api.expect(authorization_header, validate=True)
+    @jwt_required()
+    def get(self):
+        return {'message': 'User is logged in'}, 200

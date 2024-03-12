@@ -16,7 +16,8 @@ app.config['SECRET_KEY'] = config.SECRET_KEY
 app.config['SQLALCHEMY_DATABASE_URI'] = config.DB_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = config.SECRET_KEY
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=config.ACCESS_TOKEN_DURATION)
+# set to permanent
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=365)
 app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=config.REFRESH_TOKEN_DURATION)
 
 app.config['UPLOAD_FOLDER'] = config.UPLOAD_FOLDER
