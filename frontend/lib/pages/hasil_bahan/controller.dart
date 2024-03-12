@@ -103,7 +103,7 @@ class HasilBahanApi {
 }
 
 class Controller {
-  static Future<HasilBahanApi> fetchHasilNutrisiApi(String name) async {
+  static Future fetchHasilNutrisiApi(String name) async {
     var url = "http://nutrizoom.site/api/ingredient/shownutrition/$name";
     var uri = Uri.parse(url);
     var response = await http.get(uri);
@@ -111,7 +111,8 @@ class Controller {
       var hasilNutrisiApi = HasilBahanApi.fromJson(json.decode(response.body));
       return hasilNutrisiApi;
     } else {
-      throw Exception('Failed to load hasilNutrisiApi');
+      return HasilBahanApi(
+      id: 1, name: "", representation: "", description: "", nutrition: [], image: "https://www.astronauts.id/blog/wp-content/uploads/2022/11/Manfaat-Bawang-Putih-Untuk-Kulit-yang-Tidak-Banyak-Tahu-1024x683.jpg");
     }
   }
 }
