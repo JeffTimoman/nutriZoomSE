@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gabunginfrontend/pages/bahan_search.dart';
+import 'package:gabunginfrontend/pages/bottom_nav.dart';
 import 'package:gabunginfrontend/pages/home.dart';
 import 'package:gabunginfrontend/pages/searchPages/nutrisi_search.dart';
 
@@ -47,7 +48,7 @@ class _TapBarState extends State<TapBar>
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => NavBar()),
               );
             },
             icon: Icon(

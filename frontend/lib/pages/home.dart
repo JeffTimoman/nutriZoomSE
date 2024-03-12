@@ -6,6 +6,7 @@ import 'package:gabunginfrontend/pages/profile_page/controller.dart';
 // import 'package:gabunginfrontend/Alen/profile_page/controller.dart';
 // import 'package:gabunginfrontend/pages/Alen/profile_page.dart/controller.dart';
 import 'package:gabunginfrontend/pages/tapBar_search.dart';
+import 'package:gabunginfrontend/pages/utility/sharedPreferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -20,7 +21,8 @@ class _MyWidgetState extends State<Home> {
   User? user;
   final controller = Controller();
   final controller2 = Controller2();
-  var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMDE3MzQ3MCwianRpIjoiMGIwMDE1MzQtMzQ4Zi00M2NlLTk4NjgtYTE3OWI4NDBlY2Y1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNzEwMTczNDcwLCJjc3JmIjoiNTVhYWU4NDUtOTg4Zi00NmNjLWFkNmUtZDFkODhlZjJmMjM0IiwiZXhwIjoxNzQxNzA5NDcwfQ.DIvB3DmFa0U-KiHqEXJf_b4Kr1M978YGPdFhg5t4Pwg";
+  var _token = "";
+  // var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMDE3MzQ3MCwianRpIjoiMGIwMDE1MzQtMzQ4Zi00M2NlLTk4NjgtYTE3OWI4NDBlY2Y1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNzEwMTczNDcwLCJjc3JmIjoiNTVhYWU4NDUtOTg4Zi00NmNjLWFkNmUtZDFkODhlZjJmMjM0IiwiZXhwIjoxNzQxNzA5NDcwfQ.DIvB3DmFa0U-KiHqEXJf_b4Kr1M978YGPdFhg5t4Pwg";
   late Future<HasilRecipeApi> favoriteRecipes;
 
   ControllerAr.HasilArticleApi articleState = ControllerAr.HasilArticleApi(
@@ -36,15 +38,29 @@ class _MyWidgetState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    getUserData(token);
+    checkLoginStatus(context).then((token) {
+      print('Ini Token: $token');
+      if (token != null) {
+        setState(() {
+          _token = token;
+        });
+        getUserData(_token!);
+      }
+    });
     getFavoriteRecipe();
     getArticle();
   }
+  // void initState() {
+  //   super.initState();
+  //   // getUserData(token);
+  //   getFavoriteRecipe();
+  //   getArticle();
+  // }
 
   Future <void> getFavoriteRecipe() async {
     // var result = await controller2.fetchFavoriteRecipe(bearerToken);
     setState(() {
-      favoriteRecipes = controller2.fetchFavoriteRecipe(token);
+      favoriteRecipes = controller2.fetchFavoriteRecipe(_token);
     });
   }
 
