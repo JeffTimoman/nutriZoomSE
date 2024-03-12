@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gabunginfrontend/pages/searchPages/bahan_search.dart';
+import 'package:gabunginfrontend/pages/bahan_search.dart';
 import 'package:gabunginfrontend/pages/searchPages/nutrisi_search.dart';
 
 
