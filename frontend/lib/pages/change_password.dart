@@ -1,6 +1,75 @@
 import 'package:flutter/material.dart';
 import 'package:gabunginfrontend/pages/layout_textfield.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
+
+class User{
+  final String name, email, username, birth;
+
+  User({required this.name, required this.email, required this.username, required this.birth});
+
+}
+
+class Controller{
+  Future changePassword(String oldPassword, String newPassword, String bearerToken) async {
+    /*
+    curl -X 'POST' \
+  'http://nutrizoom.site/api/auth/change_password' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMDA4MDA3NywianRpIjoiYWRiMmI2YzQtODk0Yy00MDBlLWEzMWQtNzZkYjIyZjE3OWU2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6OSwibmJmIjoxNzEwMDgwMDc3LCJjc3JmIjoiZmY3ZDI0ODctYTIxNS00OTRhLTliZTItNGJkMDgzMjZjN2IwIiwiZXhwIjoxNzEwMDgzNjc3fQ.qtWC65D6vrQVSmi1L5BpDuR52H5Fhkop370jWsSe8Js' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "old_password": "admin",
+  "password": "admin123"
+}'
+    */
+    var url = Uri.parse('http://nutrizoom.site/api/auth/change_password');
+
+    var response = await http.post(url,
+      headers: {
+        "accept": "application/json",
+        "Authorization" : "Bearer $bearerToken",
+        "Content-Type": "application/json"
+      },
+      body: jsonEncode({
+        "old_password": oldPassword,
+        "password": newPassword
+      })
+    );
+
+    return response.statusCode;
+  }
+
+  Future getUserData(String bearerToken) async{
+    /*
+      curl -X 'GET' \
+  'http://nutrizoom.site/api/auth/get_user_data' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMDA4MDA3NywianRpIjoiYWRiMmI2YzQtODk0Yy00MDBlLWEzMWQtNzZkYjIyZjE3OWU2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6OSwibmJmIjoxNzEwMDgwMDc3LCJjc3JmIjoiZmY3ZDI0ODctYTIxNS00OTRhLTliZTItNGJkMDgzMjZjN2IwIiwiZXhwIjoxNzEwMDgzNjc3fQ.qtWC65D6vrQVSmi1L5BpDuR52H5Fhkop370jWsSe8Js'
+    */
+    var url = Uri.parse('http://nutrizoom.site/api/auth/get_user_data');
+    
+    var response = await http.get(url,
+      headers: {
+        "accept": "application/json",
+        "Authorization" : "Bearer $bearerToken"
+      });
+
+    if (response.statusCode == 200){
+      var data = jsonDecode(response.body);
+      return User(
+        name: data['name'],
+        email: data['email'],
+        username: data['username'],
+        birth: data['birth']
+      );
+    } else {
+      return null;
+    }
+  }
+
+}
 class change_password extends StatefulWidget {
   const change_password({super.key});
 
@@ -9,6 +78,74 @@ class change_password extends StatefulWidget {
 }
 
 class _change_passwordState extends State<change_password> {
+
+  final _oldPasswordController = TextEditingController();
+  final _newPasswordController = TextEditingController();
+  var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMDI0MDAzNSwianRpIjoiZDBhNDM5MGItMWIwNS00ZGY4LWI0NGQtOGExNDFjMjEyYWFlIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MTYsIm5iZiI6MTcxMDI0MDAzNSwiY3NyZiI6IjY0NzQyZjgxLTM0YWQtNGI2MC1hYjRiLTAyNjQ3YWJiY2Y5OSIsImV4cCI6MTc0MTc3NjAzNX0.cL_oakN2EQTBgXVunq78YDgFvOACO9KsXTbZ7VGEMyQ";
+  var controller = Controller();
+  var user = User(name: "", email: "", username: "", birth: "");
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData();
+  }
+
+  Future <void> getUserData() async{
+    var response = await controller.getUserData(token);
+
+    if (response != null){
+      setState(() {
+        user = response;
+      });
+    }
+    
+  }
+
+  Future <void> _changePasswordApi(String bearerToken)async{
+    var oldPassword = _oldPasswordController.text;
+    var newPassword = _newPasswordController.text;
+    var response = await controller.changePassword(oldPassword, newPassword, bearerToken);
+    if (response == 200){
+      print("Password berhasil diubah");
+      // show dialog box
+      showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text("Password berhasil diubah"),
+            actions: [
+              TextButton(
+                onPressed: (){
+                  Navigator.pop(context);
+                }, 
+                child: Text("OK")
+              )
+            ],
+          );
+        }
+      );
+    } else {
+      print("Password gagal diubah");
+      // show dialog box
+      showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text("Password gagal diubah"),
+            actions: [
+              TextButton(
+                onPressed: (){
+                  Navigator.pop(context);
+                }, 
+                child: Text("OK")
+              )
+            ],
+          );
+        }
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -61,6 +198,9 @@ class _change_passwordState extends State<change_password> {
                         child: Text(
                           "Ubah Password",
                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold
                            ),
                         ),
                       ),
@@ -74,11 +214,22 @@ class _change_passwordState extends State<change_password> {
                       ),
                       SizedBox(height: 20,),
                       Text(
-                        "Clarensia Novia",
+                        "${user.name}",
                         textAlign: TextAlign.justify,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold
+                        ),
                       ),
                       Text(
-                        "@bygum_masak",
+                        "@${user.username}",
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold
+                        ),
                       ),
                     ],
                   ),
@@ -114,10 +265,36 @@ class _change_passwordState extends State<change_password> {
                               padding: EdgeInsets.symmetric(horizontal: 20),
                               child: ListView(
                                 children: [
-                                  layoutTextField(context, "Password Lama", "Masukkan password lamamu di sini"),
-                                  layoutTextField(context, "Password Baru", "Masukkan password barumu di sini"),                              ],
+                                  Text("Password Lama"),
+                                  TextFormField(
+                                    controller: _oldPasswordController,
+                                    decoration: InputDecoration(
+                                      hintText: "Masukkan password lama",
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(
+                                          color: Color(0xff3C6142),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 20,),
+                                  Text("Password Baru"),
+                                  TextFormField(
+                                    controller: _newPasswordController,
+                                    decoration: InputDecoration(
+                                      hintText: "Masukkan password baru",
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(
+                                          color: Color(0xff3C6142),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            )
+                            ),
                           ),
 
                           // Button
@@ -130,7 +307,9 @@ class _change_passwordState extends State<change_password> {
                             ),
                             width: 150,
                             child: TextButton(
-                              onPressed: () {}, 
+                              onPressed: () {
+                                _changePasswordApi(token);
+                              }, 
                               child: Text("SIMPAN",
                                 style: TextStyle(
                                   color: Colors.white

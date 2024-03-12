@@ -1,5 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:gabunginfrontend/pages/layout_textfield.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class User{
+  final String name, email, username, birth;
+
+  User({required this.name, required this.email, required this.username, required this.birth});
+
+}
+
+
+class Controller{
+
+  Future changeUserData(String name, String email, String username, String birth, String bearerToken) async{
+    /*
+      curl -X 'POST' \
+  'http://nutrizoom.site/api/auth/update_user_data' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMDA4MDA3NywianRpIjoiYWRiMmI2YzQtODk0Yy00MDBlLWEzMWQtNzZkYjIyZjE3OWU2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6OSwibmJmIjoxNzEwMDgwMDc3LCJjc3JmIjoiZmY3ZDI0ODctYTIxNS00OTRhLTliZTItNGJkMDgzMjZjN2IwIiwiZXhwIjoxNzEwMDgzNjc3fQ.qtWC65D6vrQVSmi1L5BpDuR52H5Fhkop370jWsSe8Js' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "name": "",
+  "email": "",
+  "username": "",
+  "birth": ""
+}'
+    */
+    var url = Uri.parse('http://nutrizoom.site/api/auth/update_user_data');
+
+    var response = await http.post(url,
+      headers: {
+        "accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization" : "Bearer $bearerToken"
+      },
+      body: jsonEncode({
+        "name": name,
+        "email": email,
+        "username": username,
+        "birth": birth
+      })
+    );
+
+    return response.statusCode;
+  }
+ 
+  Future getUserData(String bearerToken) async{
+    /*
+      curl -X 'GET' \
+  'http://nutrizoom.site/api/auth/get_user_data' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMDA4MDA3NywianRpIjoiYWRiMmI2YzQtODk0Yy00MDBlLWEzMWQtNzZkYjIyZjE3OWU2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6OSwibmJmIjoxNzEwMDgwMDc3LCJjc3JmIjoiZmY3ZDI0ODctYTIxNS00OTRhLTliZTItNGJkMDgzMjZjN2IwIiwiZXhwIjoxNzEwMDgzNjc3fQ.qtWC65D6vrQVSmi1L5BpDuR52H5Fhkop370jWsSe8Js'
+    */
+    var url = Uri.parse('http://nutrizoom.site/api/auth/get_user_data');
+    
+    var response = await http.get(url,
+      headers: {
+        "accept": "application/json",
+        "Authorization" : "Bearer $bearerToken",
+        "Content-Type": "application/json",
+      });
+
+    if (response.statusCode == 200){
+      var data = jsonDecode(response.body);
+      print(data);
+      return User(
+        name: data['name'],
+        email: data['email'],
+        username: data['username'],
+        birth: data['birth']
+      );
+    } else {
+      return null;
+    }
+  }
+}
 
 class change_profile extends StatefulWidget {
   const change_profile({super.key});
@@ -9,6 +85,127 @@ class change_profile extends StatefulWidget {
 }
 
 class _change_profileState extends State<change_profile> {
+  var user = User(name: "", email: "", username: "", birth: "");
+  TextEditingController fullNameController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMDI0MDAzNSwianRpIjoiZDBhNDM5MGItMWIwNS00ZGY4LWI0NGQtOGExNDFjMjEyYWFlIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MTYsIm5iZiI6MTcxMDI0MDAzNSwiY3NyZiI6IjY0NzQyZjgxLTM0YWQtNGI2MC1hYjRiLTAyNjQ3YWJiY2Y5OSIsImV4cCI6MTc0MTc3NjAzNX0.cL_oakN2EQTBgXVunq78YDgFvOACO9KsXTbZ7VGEMyQ";
+
+  var controller = Controller();
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData();
+  }
+
+  Future <void> getUserData() async{
+    var response = await controller.getUserData(token);
+
+    if (response != null){
+      setState(() {
+        user = response;
+        fullNameController.text = user.name;
+        usernameController.text = user.username;
+        emailController.text = user.email;
+      });
+    }
+    
+  }
+  
+  Future <void> changeUserData() async{
+    var name = fullNameController.text;
+    var username = usernameController.text;
+    var email = emailController.text;
+    var birth = "";
+    if (name == "" && username == "" && email == ""){
+      print("Data tidak boleh kosong");
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Gagal"),
+            content: Text("Data tidak boleh kosong"),
+            actions: [
+              TextButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
+    if (name == user.name && username == user.username && email == user.email){
+      print("Data tidak berubah");
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Gagal"),
+            content: Text("Data tidak berubah"),
+            actions: [
+              TextButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
+    var response = await controller.changeUserData(name, email, username, birth, token);
+    if (response == 200){
+      print("Data berhasil diubah");
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Berhasil"),
+              content: Text("Data berhasil diubah"),
+              actions: [
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        
+        getUserData();
+    } else {
+      print("Data gagal diubah");
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Gagal"),
+            content: Text("Data gagal diubah"),
+            actions: [
+              TextButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -16,9 +213,8 @@ class _change_profileState extends State<change_profile> {
         body: Stack(
           children: [
             Container(
-              // height: 350,
               decoration: BoxDecoration(
-                color: Color(0xff3C6142)
+                color: Color(0xff3C6142),
               ),
               child: Column(
                 children: [
@@ -29,16 +225,19 @@ class _change_profileState extends State<change_profile> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                             Icon(Icons.arrow_back_ios_new_sharp, color: Colors.white,),
+                            Icon(
+                              Icons.arrow_back_ios_new_sharp,
+                              color: Colors.white,
+                            ),
                           ],
-                        )
+                        ),
                       ),
-                        
                       Expanded(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Icon(Icons.help_outline_rounded,
+                            Icon(
+                              Icons.help_outline_rounded,
                               color: Colors.white,
                               size: 27,
                             ),
@@ -60,8 +259,7 @@ class _change_profileState extends State<change_profile> {
                       Container(
                         child: Text(
                           "Ubah Profil",
-                           style: TextStyle(
-                           ),
+                          style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
                       CircleAvatar(
@@ -69,79 +267,100 @@ class _change_profileState extends State<change_profile> {
                         backgroundColor: Colors.white,
                         child: CircleAvatar(
                           radius: 65,
-                          backgroundImage: NetworkImage("https://i.pinimg.com/564x/35/04/d5/3504d58d12e46855f9bc0ff191331f8c.jpg"),
+                          backgroundImage: NetworkImage(
+                              "https://i.pinimg.com/564x/35/04/d5/3504d58d12e46855f9bc0ff191331f8c.jpg"),
                         ),
                       ),
-                      SizedBox(height: 20,),
+                      SizedBox(height: 20),
                       Text(
-                        "Clarensia Novia",
+                        "${user.name}",
                         textAlign: TextAlign.justify,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Text(
-                        "@bygum_masak",
+                        "@${user.username}",
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 40,),
+                  SizedBox(height: 40),
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20)
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.shade500,
-                            offset: Offset(5, 5),
-                            blurRadius: 20,
-                            spreadRadius: 1,
-                          ),
-                          BoxShadow(
-                            color: Colors.black45,
-                            offset: Offset(1, 1),
-                            blurRadius: 5,
-                            spreadRadius: 1
-                          )
-                        ]
-                      ),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade500,
+                              offset: Offset(5, 5),
+                              blurRadius: 20,
+                              spreadRadius: 1,
+                            ),
+                            BoxShadow(
+                                color: Colors.black45,
+                                offset: Offset(1, 1),
+                                blurRadius: 5,
+                                spreadRadius: 1),
+                          ]),
                       child: Column(
-                        children: [
-                          SizedBox(height: 40,),
-                          Expanded(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 20),
-                              child: ListView(
-                                children: [
-                                  layoutTextField(context, "Nama", "Masukkan namamu di sini"),
-                                  layoutTextField(context, "Email", "Masukkan emailmu di sini"),                              ],
-                              ),
-                            )
-                          ),
-
-                          // Button
-                          Container(
-                            height: 40,
-                            margin: EdgeInsets.only(top: 20),
-                            decoration: BoxDecoration(
-                              color: Color(0xff3C6142),
-                              borderRadius: BorderRadius.circular(100)
-                            ),
-                            width: 150,
-                            child: TextButton(
-                              onPressed: () {}, 
-                              child: Text("SIMPAN",
-                                style: TextStyle(
-                                  color: Colors.white
+                          children: [
+                            SizedBox(height: 40),
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: ListView(
+                                  children: [
+                                    Text("Nama Lengkap"),
+                                    TextFormField(
+                                      controller: fullNameController,
+                                    ), // Nama
+                                    SizedBox(height: 20),
+                                    Text("Username"),
+                                    TextFormField(
+                                      controller: usernameController,
+                                    ), // Username
+                                    //email
+                                    SizedBox(height: 20),
+                                    Text("Email"),
+                                    TextFormField(
+                                      controller: emailController,
+                                    ), // Email
+                                  ],
                                 ),
-                              )
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 30,)
-                        ]
-                      ),
-                    )
+
+                            // Button
+                            Container(
+                              height: 40,
+                              margin: EdgeInsets.only(top: 20),
+                              decoration: BoxDecoration(
+                                  color: Color(0xff3C6142),
+                                  borderRadius: BorderRadius.circular(100)),
+                              width: 150,
+                              child: TextButton(
+                                  onPressed: () {
+                                    changeUserData();
+                                  },
+                                  child: Text(
+                                    "Simpan",
+                                    style: TextStyle(color: Colors.white),
+                                  )),
+                            ),
+                            SizedBox(height: 30),
+                          ]),
+                    ),
                   )
                 ],
               ),
@@ -152,3 +371,4 @@ class _change_profileState extends State<change_profile> {
     );
   }
 }
+
