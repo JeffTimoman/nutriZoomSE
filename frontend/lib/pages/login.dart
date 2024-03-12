@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:gabunginfrontend/constants/img_strings.dart';
-import 'package:gabunginfrontend/pages/components/MyButton.dart';
-import 'package:gabunginfrontend/pages/profile_page.dart';
+import 'package:gabunginfrontend/pages/home.dart';
 import 'package:gabunginfrontend/pages/register.dart';
-import 'package:gabunginfrontend/pages/resep.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 
-class loginpage extends StatefulWidget {
-  loginpage({Key? key}) : super(key: key);
+class loginPage extends StatefulWidget {
+  loginPage({Key? key}) : super(key: key);
 
   @override
-  State<loginpage> createState() => _loginpageState();
+  State<loginPage> createState() => _loginPageState();
 }
 
 
-class _loginpageState extends State<loginpage> {
+class _loginPageState extends State<loginPage> {
   // Text editing controllers
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -62,7 +60,7 @@ class _loginpageState extends State<loginpage> {
         // Navigate to ProfilePage after successful login
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => ProfilePage()),
+          MaterialPageRoute(builder: (context) => Home()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Wrong Email or Password.")));
@@ -159,7 +157,7 @@ class _loginpageState extends State<loginpage> {
                   // Register
                   InkWell(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => registerPage()));
                     },
                     child: Text.rich(
                       TextSpan(

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gabunginfrontend/pages/artikel.dart';
 import 'package:gabunginfrontend/pages/login.dart';
 import 'package:gabunginfrontend/pages/resepCard.dart';
-// import 'package:gabunginfrontend/pages/artikel.dart';
-// import 'package:gabunginfrontend/pages/login.dart';
-// import 'package:gabunginfrontend/pages/resepCard.dart';
+import 'package:gabunginfrontend/pages/tapBar_search.dart';
 
 class resepPage extends StatelessWidget {
   const resepPage({super.key});
@@ -36,7 +34,7 @@ class resepPage extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => loginpage()),
+              MaterialPageRoute(builder: (context) => TapBar()),
             );
           },
         ),

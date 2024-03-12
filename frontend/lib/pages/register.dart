@@ -5,11 +5,11 @@ import 'package:gabunginfrontend/pages/login.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+class registerPage extends StatefulWidget {
+  const registerPage({Key? key}) : super(key: key);
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _registerPageState createState() => _registerPageState();
 }
 
 String formatDate(DateTime date) {
@@ -18,7 +18,7 @@ String formatDate(DateTime date) {
   return formattedDate;
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _registerPageState extends State<registerPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController tanggalLahirController = TextEditingController();
@@ -54,7 +54,7 @@ class _RegisterPageState extends State<RegisterPage> {
       );
 
       // Navigate to the login page after showing the Snackbar
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => loginpage()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => loginPage()));
     } else {
       print('Gagal melakukan registrasi. Kesalahan: ${response.statusCode}');
       ScaffoldMessenger.of(context).showSnackBar(

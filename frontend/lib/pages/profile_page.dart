@@ -347,7 +347,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   //   child: Text("KELUAR", style: Theme.of(context).textTheme.button,)),
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => loginpage()));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => loginPage()));
                                     },
                                     child: Text(
                                       "KELUAR",

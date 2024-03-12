@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gabunginfrontend/pages/bahan_search.dart';
+import 'package:gabunginfrontend/pages/home.dart';
 import 'package:gabunginfrontend/pages/searchPages/nutrisi_search.dart';
-
 
 class TapBar extends StatefulWidget {
   TapBar({super.key});
@@ -44,7 +44,12 @@ class _TapBarState extends State<TapBar>
         leading: Container(
           margin: EdgeInsets.all(18),
           child: IconButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Home()),
+              );
+            },
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
