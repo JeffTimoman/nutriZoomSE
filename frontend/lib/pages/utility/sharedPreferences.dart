@@ -9,8 +9,10 @@ Future<String?> checkLoginStatus(BuildContext context) async{
   if (token != null) {
     return token;
   } else {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => loginpage()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => loginPage()));
     return null;
     
   }
+
+
 }

@@ -172,6 +172,7 @@ class MMyApp extends StatelessWidget {
       )),
       // home: HasilBahan(judul_bahan: "Bawang",)
       home: NavBar(),
+      // home: IntroScreen(),
     );
   }
 }

@@ -1,11 +1,9 @@
-// import 'dart:convert';
-// import 'package:bagianjosh/pages/tapBar_search.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:gabunginfrontend/pages/HasilIngredientDariNutritionName/hasilNutrisi.dart';
 import 'package:gabunginfrontend/pages/nutrisi_search/controller.dart';
+import 'package:gabunginfrontend/pages/resep.dart';
 import 'package:gabunginfrontend/pages/tapBar_search.dart';
-// import 'package:gabunginfrontend/pages/tapBar_search.dart';
-// import 'package:http/http.dart' as http;
 
 class SearchNutrisi extends StatefulWidget {
   const SearchNutrisi({super.key});
@@ -57,47 +55,19 @@ class _SearchNutrisiState extends State<SearchNutrisi> {
                   .toList(),
               onChanged: (Nutrition? value) {
                 setState(() {
-                selectedItem = value?.name.toString();
-                TapBar.previousSearchs.add(selectedItem.toString());
-              });
+                  selectedItem = value?.name.toString();
+                  TapBar.previousSearchs.add(selectedItem.toString());
+                });
+                // Navigate to resep() screen passing the selected item
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => hasilNutrisi(selectedItem: selectedItem,)),
+                  // MaterialPageRoute(builder: (context) => resepPage()),  ResepPage(selectedItem: selectedItem)
+
+                );
               },
+
             ),
-
-    
-
-        // DropdownSearch<String>(
-        //   popupProps: PopupProps.menu(
-        //     showSelectedItems: true,
-        //     showSearchBox: true,
-        //   ),
-        //   items: dropDownApi!.nutritionList.map((e) => DropdownMenuItem(
-        //     value: e,
-        //     child: Text(e.name),)).toList(),
-        //   dropdownButtonProps: DropdownButtonProps(color: Color(0xff3C6142)),
-        //   dropdownDecoratorProps: DropDownDecoratorProps(
-        //     dropdownSearchDecoration: InputDecoration(
-        //       enabledBorder: OutlineInputBorder(
-        //         borderSide: BorderSide(color: Color(0xff3C6142)),
-        //         borderRadius: BorderRadius.circular(10)
-        //       ),
-        //       focusedBorder: OutlineInputBorder(
-        //         borderSide: BorderSide(color: Color(0xff3C6142)),
-        //         borderRadius: BorderRadius.circular(10)
-        //       ),
-        //       prefixIcon: Icon(Icons.search),
-        //       hintText: "Pilih nutrisimu!"
-        //     ),
-        //   ),
-        //   onChanged: (value){
-        //     // val = value as int;
-        //     setState(() {
-        //       selectedItem = value.toString();
-        //       TapBar.previousSearchs.add(selectedItem);
-        //     });
-        //   },
-        //   selectedItem: selectedItem,
-          
-        // ),
         SizedBox(
           height: 20,
         ),

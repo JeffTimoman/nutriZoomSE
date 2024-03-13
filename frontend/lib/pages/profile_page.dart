@@ -8,6 +8,7 @@ import 'package:gabunginfrontend/pages/change_profile.dart';
 import 'package:gabunginfrontend/pages/login.dart';
 // import 'package:gabunginfrontend/pages/profile_page/controller.dart';
 import 'package:gabunginfrontend/pages/pusat_bantuan.dart';
+import 'package:gabunginfrontend/pages/utility/sharedPreferences.dart';
 // import 'package:gabunginfrontend/constant/img_string.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -120,12 +121,20 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   User? user;
   final controller = Controller();
+  var _token = "";
 
   @override
   void initState() {
     super.initState();
-    getUserData(
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMDA4NTg5OSwianRpIjoiMjY0YjExMDItYzczNi00ZWQ5LTkwYWUtMDlhZmY1YWZkZDM3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNzEwMDg1ODk5LCJjc3JmIjoiZDViYjQ5YTAtYjNkZC00ZTU4LWE1YjEtOWI3ZjRjZDRmMGEwIiwiZXhwIjoxNzEwMDg5NDk5fQ.O-V_s-8BSu5Z_eQeHD5Mr1IZlifwJNNIs0_fA5lcDz8");
+    checkLoginStatus(context).then((token) {
+      print('Ini Token: $token');
+      if (token != null) {
+        setState(() {
+          _token = token;
+        });
+        getUserData(_token!);
+      }
+    });
   }
 
   Future<void> getUserData(String bearerToken) async {
@@ -347,7 +356,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   //   child: Text("KELUAR", style: Theme.of(context).textTheme.button,)),
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => loginpage()));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => loginPage()));
                                     },
                                     child: Text(
                                       "KELUAR",
