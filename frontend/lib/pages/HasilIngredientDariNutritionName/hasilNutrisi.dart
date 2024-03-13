@@ -60,7 +60,7 @@ class _hasilNutrisiState extends State<hasilNutrisi> {
         child: Container(
           color: Color(0xffF4FBF3),
           child: Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.only(top: 0, left: 15, right: 15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -90,114 +90,168 @@ class _hasilNutrisiState extends State<hasilNutrisi> {
                     ],
                   ),
                 ),
+
                 // Garis
-                Container(
-                  height: 2,
-                  color: Colors.grey,
-                  margin: EdgeInsets.symmetric(vertical: 20),
-                ),
+              //   Container(
+              //     height: 2,
+              //     color: Colors.grey,
+              //     margin: EdgeInsets.symmetric(vertical: 20),
+              //   ),
+              //   Expanded(
+              //     child: ListView.builder(
+              //       itemCount: articlestate.ingredient.length,
+              //       itemBuilder: (context, index) {
+              //         return Container(
+              //           margin: EdgeInsets.symmetric(horizontal: 22, vertical: 10),
+              //           width: MediaQuery.of(context).size.width,
+              //           height: 60,
+              //           decoration: BoxDecoration(
+              //             color: Colors.white,
+              //             borderRadius: BorderRadius.circular(15),
+              //             boxShadow: [
+              //               BoxShadow(
+              //                 color: Colors.black.withOpacity(0.6),
+              //                 offset: Offset(
+              //                   0.0,
+              //                   10.0,
+              //                 ),
+              //                 blurRadius: 10.0,
+              //                 spreadRadius: -6.0,
+              //               ),
+              //             ],
+              //           ),
+              //           child: Stack(
+              //             children: [
+              //               Positioned(
+              //                 left: 10,
+              //                 top: 10,
+              //                 bottom: 10,
+              //                 right: 310,
+              //                 child: Container(
+              //                   width: 210, // Atur lebar gambar sesuai kebutuhan
+              //                   decoration: BoxDecoration(
+              //                     borderRadius: BorderRadius.all(Radius.circular(5)),
+              //                     image: DecorationImage(
+              //                       image: NetworkImage(articlestate.ingredient[index].image),
+              //                       fit: BoxFit.cover,
+              //                     ),
+              //                   ),
+              //                 ),
+              //               ),
+              //               Positioned(
+              //                 left: 80, // Atur jarak antara gambar dan teks
+              //                 top: 0,
+              //                 bottom: 0,
+              //                 right: 0,
+              //                 child: Align(
+              //                   alignment: Alignment.centerLeft,
+              //                   child: Padding(
+              //                     padding: EdgeInsets.symmetric(horizontal: 5.0),
+              //                     child: Text(
+              //                       articlestate.ingredient[index].name,
+              //                       style: TextStyle(
+              //                         fontWeight: FontWeight.w600,
+              //                         fontSize: 17,
+              //                       ),
+              //                       overflow: TextOverflow.ellipsis,
+              //                       maxLines: 2,
+              //                       textAlign: TextAlign.center,
+              //                     ),
+              //                   ),
+              //                 ),
+              //               ),
+              //               Align(
+              //                 child: Row(
+              //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //                   children: [
+              //                     Container(
+              //                       padding: EdgeInsets.all(5),
+              //                       margin: EdgeInsets.all(10),
+              //                       decoration: BoxDecoration(
+              //                         color: Colors.black.withOpacity(0.4),
+              //                         borderRadius: BorderRadius.circular(15),
+              //                       ),
+              //                       child: Row(
+              //                         children: [
+              //                           SizedBox(width: 7),
+              //                           Text(
+              //                             articlestate.ingredient[index].amount.toString() + ' gram',
+              //                             style: TextStyle(
+              //                               color: Colors.white,
+              //                             ),
+              //                           ),
+              //                         ],
+              //                       ),
+              //                     )
+              //                   ],
+              //                 ),
+              //                 alignment: Alignment.bottomLeft,
+              //               ),
+              //             ],
+              //           ),
+              //         );
+              //       },
+              //     ),
+              //   ),
+                SizedBox(height: 5,),
+                // Garis
                 Expanded(
                   child: ListView.builder(
                     itemCount: articlestate.ingredient.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-                        width: MediaQuery.of(context).size.width,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.6),
-                              offset: Offset(
-                                0.0,
-                                10.0,
-                              ),
-                              blurRadius: 10.0,
-                              spreadRadius: -6.0,
-                            ),
-                          ],
-                        ),
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              left: 10,
-                              top: 10,
-                              bottom: 10,
-                              right: 310,
-                              child: Container(
-                                width: 210, // Atur lebar gambar sesuai kebutuhan
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                                  image: DecorationImage(
-                                    image: NetworkImage(articlestate.ingredient[index].image),
-                                    fit: BoxFit.cover,
-                                  ),
+                    itemBuilder: (context, index){
+                      return Column(
+                        children: [
+                          Container(
+                            width: 340,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.6),
+                                  offset: Offset(0, 10),
+                                  blurRadius: 10,
+                                  spreadRadius: -6
                                 ),
-                              ),
+                              ]
                             ),
-                            Positioned(
-                              left: 80, // Atur jarak antara gambar dan teks
-                              top: 0,
-                              bottom: 0,
-                              right: 0,
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 5.0),
-                                  child: Text(
-                                    articlestate.ingredient[index].name,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 17,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Align(
+                          
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Container(
-                                    padding: EdgeInsets.all(5),
-                                    margin: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.4),
-                                      borderRadius: BorderRadius.circular(15),
+                                  CircleAvatar(
+                                    radius: 20,
+                                    backgroundImage: NetworkImage(articlestate.ingredient[index].image),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 20),
+                                    child: Text(
+                                      articlestate.ingredient[index].name,
+                                      style: Theme.of(context).textTheme.bodyText2,
                                     ),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(width: 7),
-                                        Text(
-                                          articlestate.ingredient[index].amount.toString() + ' gram',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    articlestate.ingredient[index].amount.toString() + ' gram',
+                                    style: Theme.of(context).textTheme.bodyText2,
+                                  ),
+                                ]
                               ),
-                              alignment: Alignment.bottomLeft,
                             ),
-                          ],
-                        ),
+                          ),
+                          SizedBox(height: 10,)
+                        ],
                       );
-                    },
-                  ),
-                ),
+                    }
+                  )
+                )
               ],
             ),
           ),
         ),
       ),
-
     );
   }
 
