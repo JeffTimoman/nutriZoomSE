@@ -61,7 +61,7 @@ class _loginPageState extends State<loginPage> {
         // Navigate to ProfilePage after successful login
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => NavBar()),
+          MaterialPageRoute(builder: (context) => NavBar(currentIndex: 0,)),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Wrong Email or Password.")));

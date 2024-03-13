@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gabunginfrontend/constants/img_strings.dart';
 import 'package:gabunginfrontend/pages/change_password.dart';
 import 'package:gabunginfrontend/pages/change_profile.dart';
+import 'package:gabunginfrontend/pages/dataKalkulasiNutrisi.dart';
 import 'package:gabunginfrontend/pages/login.dart';
 // import 'package:gabunginfrontend/pages/profile_page/controller.dart';
 import 'package:gabunginfrontend/pages/pusat_bantuan.dart';
@@ -299,7 +300,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                   indent: 20,
                                   endIndent: 20,
                                 ),
-                                AkunOption(context, "Hitung Nutrisi Harian"),
+                                InkWell(
+                                  onTap: (){
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => nutritionPage()));
+                                  },
+                                  child: AkunOption(context, "Hitung Nutrisi Harian")),
                                 Divider(
                                   height: 20,
                                   thickness: 1,

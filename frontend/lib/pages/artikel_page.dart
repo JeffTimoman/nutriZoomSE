@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:gabunginfrontend/pages/Article_Home/article_homelist.dart';
+import 'package:gabunginfrontend/pages/artikel.dart';
+import 'package:gabunginfrontend/pages/fromArtikelPage/artikel.dart';
 // import 'package:gabunginfrontend/pages/Mirzha/Article_Home/article_homelist.dart';
 
 // class DummyData {
@@ -64,7 +66,7 @@ class _ArticleWidgetState extends State<ArticleWidget> {
     articles: [],
   );
 
-  final controller = Controller();
+  final controller = ControllerArt();
 
   @override
   Widget build(BuildContext context) {
@@ -117,11 +119,21 @@ class _ArticleWidgetState extends State<ArticleWidget> {
                     final article = articleState.articles[index];
                     return Builder(
                       builder: (BuildContext context) {
-                        return ArticleSlider(
-                          image: article.image,
-                          author: article.author,
-                          publishDate: article.publishdate,
-                          title: article.title, 
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ArtikelPagePage(articleId: article.id),
+                              ),
+                            );
+                          },
+                          child: ArticleSlider(
+                            image: article.image,
+                            author: article.author,
+                            publishDate: article.publishdate,
+                            title: article.title,
+                          ),
                         );
                       },
                     );
@@ -129,8 +141,8 @@ class _ArticleWidgetState extends State<ArticleWidget> {
                   options: CarouselOptions(
                     aspectRatio: 2.0,
                     autoPlay: false,
-                    enlargeCenterPage: true
-                  )
+                    enlargeCenterPage: true,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 25, bottom: 8, left: 2),
@@ -139,24 +151,32 @@ class _ArticleWidgetState extends State<ArticleWidget> {
                   ),
                 ),
                 Container(
-                  // padding: EdgeInsets.only(bottom: 20),
                   child: ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: articleState.articles.length,
                     itemBuilder: (context, index) {  
                       var article = articleState.articles[index];
-                      return ArticleCard(
-                        image: article.image,
-                        author: article.author, 
-                        publishDate: article.publishdate, 
-                        title: article.title,
-                        description: article.content,
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ArtikelPagePage(articleId: article.id),
+                            ),
+                          );
+                        },
+                        child: ArticleCard(
+                          image: article.image,
+                          author: article.author, 
+                          publishDate: article.publishdate, 
+                          title: article.title,
+                          description: article.content,
+                        ),
                       );
                     },
-                    // padding: EdgeInsets.only(bottom: 20),
                   ),
-                )
+                ),
               ],
             ),
           ),

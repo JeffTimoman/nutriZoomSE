@@ -24,7 +24,9 @@ class Article {
     return Article(
       id: json['id'],
       title: json['title'],
-      content: json['content'],
+      content: json['content'].replaceAll('<p>', '')
+          .replaceAll('</p>', '\n')
+          .replaceAll('&nbsp;', ' '),
       author: json['author'],
       created_by: json['created_by'],
       publishdate: json['publishdate'],
@@ -75,7 +77,7 @@ class HasilArticleApi {
 }
 
 
-class Controller {
+class ControllerArt {
    Future<HasilArticleApi> fetchHasilArticleApi(int page) async {
     var url = "http://nutrizoom.site/api/article/get_articles?page=$page";
     var uri = Uri.parse(url);

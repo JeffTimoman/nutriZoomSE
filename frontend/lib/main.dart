@@ -171,8 +171,8 @@ class MMyApp extends StatelessWidget {
             fontWeight: FontWeight.bold),
       )),
       // home: HasilBahan(judul_bahan: "Bawang",)
-      home: NavBar(),
-      // home: IntroScreen(),
+      // home: NavBar(),
+      home: IntroScreen(),
     );
   }
 }

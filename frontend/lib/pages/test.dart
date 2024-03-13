@@ -31,7 +31,7 @@ class _Home extends State<Home2> {
     articles: [],
   );
 
-  final controller_article = ControllerAr.Controller();
+  final controller_article = ControllerAr.ControllerArt();
 
   @override
   void initState() {
