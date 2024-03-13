@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gabunginfrontend/pages/HasilIngredientDariNutritionName/controller.dart';
+import 'package:gabunginfrontend/pages/hasil_bahan.dart';
 import 'package:gabunginfrontend/pages/tapBar_search.dart';
 
 class hasilNutrisi extends StatefulWidget {
@@ -58,7 +59,7 @@ class _hasilNutrisiState extends State<hasilNutrisi> {
       
       body: SafeArea(
         child: Container(
-          color: Color(0xffF4FBF3),
+          color: Color.fromARGB(255, 255, 255, 255),
           child: Padding(
             padding: const EdgeInsets.only(top: 0, left: 15, right: 15),
             child: Column(
@@ -90,6 +91,14 @@ class _hasilNutrisiState extends State<hasilNutrisi> {
                     ],
                   ),
                 ),
+                const SizedBox(height: 5),
+                Container(
+                  height: 2,
+                  color: Colors.grey,
+                  margin: EdgeInsets.symmetric(vertical: 20),
+                ),
+                const SizedBox(height: 10),
+
 
                 // Garis
               //   Container(
@@ -193,59 +202,73 @@ class _hasilNutrisiState extends State<hasilNutrisi> {
               //       },
               //     ),
               //   ),
-                SizedBox(height: 5,),
+                // SizedBox(height: 5,),
                 // Garis
                 Expanded(
                   child: ListView.builder(
                     itemCount: articlestate.ingredient.length,
-                    itemBuilder: (context, index){
-                      return Column(
-                        children: [
-                          Container(
-                            width: 340,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.6),
-                                  offset: Offset(0, 10),
-                                  blurRadius: 10,
-                                  spreadRadius: -6
-                                ),
-                              ]
-                            ),
-                          
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 20,
-                                    backgroundImage: NetworkImage(articlestate.ingredient[index].image),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 20),
-                                    child: Text(
-                                      articlestate.ingredient[index].name,
-                                      style: Theme.of(context).textTheme.bodyText2,
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Text(
-                                    articlestate.ingredient[index].amount.toString() + ' gram',
-                                    style: Theme.of(context).textTheme.bodyText2,
-                                  ),
-                                ]
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HasilBahan(
+                                searchText: articlestate.ingredient[index].name,
                               ),
                             ),
-                          ),
-                          SizedBox(height: 10,)
-                        ],
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              width: 340,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 250, 255, 250),
+                                borderRadius: BorderRadius.circular(15),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.6),
+                                    offset: Offset(0, 10),
+                                    blurRadius: 10,
+                                    spreadRadius: -6,
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 20,
+                                      backgroundImage: NetworkImage(
+                                        articlestate.ingredient[index].image,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 20),
+                                      child: Text(
+                                        articlestate.ingredient[index].name,
+                                        style: Theme.of(context).textTheme.bodyText2,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      articlestate.ingredient[index].amount.toString() +
+                                          ' gram',
+                                      style: Theme.of(context).textTheme.bodyText2,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                          ],
+                        ),
                       );
-                    }
-                  )
+                    },
+                  ),
                 )
               ],
             ),

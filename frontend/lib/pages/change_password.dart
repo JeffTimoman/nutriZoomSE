@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gabunginfrontend/pages/layout_textfield.dart';
+import 'package:gabunginfrontend/pages/utility/sharedPreferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -81,27 +82,36 @@ class _change_passwordState extends State<change_password> {
 
   final _oldPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
-  var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMDI0MDAzNSwianRpIjoiZDBhNDM5MGItMWIwNS00ZGY4LWI0NGQtOGExNDFjMjEyYWFlIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MTYsIm5iZiI6MTcxMDI0MDAzNSwiY3NyZiI6IjY0NzQyZjgxLTM0YWQtNGI2MC1hYjRiLTAyNjQ3YWJiY2Y5OSIsImV4cCI6MTc0MTc3NjAzNX0.cL_oakN2EQTBgXVunq78YDgFvOACO9KsXTbZ7VGEMyQ";
+  var _token = "";
+  // var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMDI0MDAzNSwianRpIjoiZDBhNDM5MGItMWIwNS00ZGY4LWI0NGQtOGExNDFjMjEyYWFlIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MTYsIm5iZiI6MTcxMDI0MDAzNSwiY3NyZiI6IjY0NzQyZjgxLTM0YWQtNGI2MC1hYjRiLTAyNjQ3YWJiY2Y5OSIsImV4cCI6MTc0MTc3NjAzNX0.cL_oakN2EQTBgXVunq78YDgFvOACO9KsXTbZ7VGEMyQ";
   var controller = Controller();
   var user = User(name: "", email: "", username: "", birth: "");
 
   @override
-  void initState() {
+ void initState() {
     super.initState();
-    getUserData();
+    checkLoginStatus(context).then((token) {
+      print('Ini Token: $token');
+      if (token != null) {
+        setState(() {
+          _token = token;
+        });
+        getUserData(_token!);
+      }
+    });
   }
-
-  Future <void> getUserData() async{
-    var response = await controller.getUserData(token);
+  Future <void> getUserData(String s) async{
+    var response = await controller.getUserData(_token);
 
     if (response != null){
       setState(() {
         user = response;
+
       });
     }
     
   }
-
+  
   Future <void> _changePasswordApi(String bearerToken)async{
     var oldPassword = _oldPasswordController.text;
     var newPassword = _newPasswordController.text;
@@ -312,7 +322,7 @@ class _change_passwordState extends State<change_password> {
                             width: 150,
                             child: TextButton(
                               onPressed: () {
-                                _changePasswordApi(token);
+                                _changePasswordApi(_token);
                               }, 
                               child: Text("SIMPAN",
                                 style: TextStyle(

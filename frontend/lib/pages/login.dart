@@ -23,6 +23,7 @@ class _loginPageState extends State<loginPage> {
 
   // Function to handle sign in
   Future<void> signInUser(BuildContext context) async {
+
     print('This works');
     final String apiUrl = 'http://nutrizoom.site/api/auth/login';
     try {

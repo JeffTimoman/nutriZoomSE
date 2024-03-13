@@ -157,7 +157,7 @@ class MMyApp extends StatelessWidget {
         //info resep
         bodyText2: TextStyle(
             fontFamily: 'Montserrat',
-            fontSize: 12,
+            fontSize: 12,             
             color: Colors.black54,
             fontStyle: FontStyle.normal,
             fontWeight: FontWeight.w500),

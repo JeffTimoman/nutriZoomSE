@@ -226,9 +226,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: Theme.of(context).textTheme.headline3,
                     textAlign: TextAlign.justify,
                   ),
-                  // SizedBox(height: 5,),
+                  SizedBox(height: 5,),
                   Text(
-                    user?.username ?? "@unknown_user",
+                    '@' + (user?.username ?? "unknown_user"),
                     style: Theme.of(context).textTheme.subtitle1,
                   )
                 ],
@@ -333,10 +333,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                   height: 10,
                                 ),
                                 InkWell(
-                                  onTap: (){
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => pusatBantuan()));
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => PusatBantuan(username: user?.name ?? "Unknown"),
+                                      ),
+                                    );
                                   },
-                                  child: AkunOption(context, "Pusat Bantuan")),
+                                  child: AkunOption(context, "Pusat Bantuan"),
+                                ),
+
                                 Divider(
                                   height: 20,
                                   thickness: 1,
