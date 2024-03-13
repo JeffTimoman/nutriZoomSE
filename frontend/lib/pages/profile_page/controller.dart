@@ -9,7 +9,7 @@ class User{
 
 }
 
-class Controller{
+class Controller12{
   Future changePassword(String oldPassword, String newPassword, String bearerToken) async {
     /*
     curl -X 'POST' \

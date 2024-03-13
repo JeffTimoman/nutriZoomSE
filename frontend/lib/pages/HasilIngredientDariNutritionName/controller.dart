@@ -99,7 +99,7 @@ class HasilNutrisiApi {
   }
 }
 
-class Controller {
+class Controller1 {
   Future<HasilNutrisiApi> getIngredientByNutritionName(final String name) async {
     var url = "http://nutrizoom.site/api/nutrition/showingredients/$name";
     var uri = Uri.parse(url);

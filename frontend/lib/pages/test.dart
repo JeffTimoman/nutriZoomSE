@@ -18,7 +18,7 @@ class Home2 extends StatefulWidget {
 
 class _Home extends State<Home2> {
   User? user;
-  final controller = Controller();
+  final controller = Controller12();
   final controller2 = Controller2();
   var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMDE3MzQ3MCwianRpIjoiMGIwMDE1MzQtMzQ4Zi00M2NlLTk4NjgtYTE3OWI4NDBlY2Y1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNzEwMTczNDcwLCJjc3JmIjoiNTVhYWU4NDUtOTg4Zi00NmNjLWFkNmUtZDFkODhlZjJmMjM0IiwiZXhwIjoxNzQxNzA5NDcwfQ.DIvB3DmFa0U-KiHqEXJf_b4Kr1M978YGPdFhg5t4Pwg";
   late Future<HasilRecipeApi> favoriteRecipes;

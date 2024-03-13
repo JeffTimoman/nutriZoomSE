@@ -13,7 +13,6 @@ import 'package:gabunginfrontend/pages/utility/sharedPreferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-
 class User{
   final String name, email, username, birth;
 

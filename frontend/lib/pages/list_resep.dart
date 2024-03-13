@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 // import 'package:gabunginfrontend/Alen/list_resep/controller.dart';
 import 'package:gabunginfrontend/pages/listResep_tile.dart';
 import 'package:gabunginfrontend/pages/list_resep/controller.dart';
+import 'package:gabunginfrontend/pages/recipe_details.dart';
+import 'package:gabunginfrontend/pages/tapBar_search.dart';
 
 class ListResepPage extends StatefulWidget {
   final String judul_page;
@@ -56,7 +58,7 @@ class _ListResepPage extends State<ListResepPage>{
                   bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20))),
           leading: IconButton(
-            onPressed: () => Navigator.pop(context), 
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => TapBar())), 
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
@@ -83,20 +85,34 @@ class _ListResepPage extends State<ListResepPage>{
           child: Container(
             padding: EdgeInsets.only(top: 15, left: 5),
             child: Expanded(
-                child: hasilRecipeApi == null ? Center(child: CircularProgressIndicator()) : ListView.builder(
-                  itemCount: hasilRecipeApi!.recipes.length,
-                  itemBuilder: (context, index){
-                    return ListResep(
-                      recipe_img: hasilRecipeApi!.recipes[index].image, 
-                      recipe_name: hasilRecipeApi!.recipes[index].name, 
-                      number_ofCal: hasilRecipeApi!.recipes[index].totalCalory, 
-                      cooking_time: hasilRecipeApi!.recipes[index].cooktime, 
-                      portion: hasilRecipeApi!.recipes[index].portions, 
-                      difficulty: hasilRecipeApi!.recipes[index].difficulty, 
-                      cooking_step: hasilRecipeApi!.recipes[index].steps);
-                  })
-                
-                ),
+              child: hasilRecipeApi == null
+                  ? Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                      itemCount: hasilRecipeApi!.recipes.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            var recipeName = hasilRecipeApi!.recipes[index].id;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailsRec(selectedItem: recipeName),
+                              ),
+                            );
+                          },
+                          child: ListResep(
+                            recipe_img: hasilRecipeApi!.recipes[index].image,
+                            recipe_name: hasilRecipeApi!.recipes[index].name,
+                            number_ofCal: hasilRecipeApi!.recipes[index].totalCalory,
+                            cooking_time: hasilRecipeApi!.recipes[index].cooktime,
+                            portion: hasilRecipeApi!.recipes[index].portions,
+                            difficulty: hasilRecipeApi!.recipes[index].difficulty,
+                            cooking_step: hasilRecipeApi!.recipes[index].steps,
+                          ),
+                        );
+                      },
+                    ),
+            ),
           ),
         ));
   }

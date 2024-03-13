@@ -41,12 +41,7 @@ class _BmiCalcState extends State<BmiCalc> {
                   bottomRight: Radius.circular(20))),
           leading: Container(
             margin: EdgeInsets.all(18),
-            child: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
-              size: 20,
-              weight: 10,
-            ),
+            
           ),
         ),
         body: SingleChildScrollView(

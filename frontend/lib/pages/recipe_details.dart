@@ -4,20 +4,41 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gabunginfrontend/pages/Recipe_Details/AddedToFavoAPI.dart';
 import 'package:gabunginfrontend/pages/Recipe_Details/recipe_detailsAPI.dart';
+import 'package:gabunginfrontend/pages/profile_page/controller.dart';
+import 'package:gabunginfrontend/pages/utility/sharedPreferences.dart';
 
 class DetailsRec extends StatefulWidget {
-  const DetailsRec({super.key});
+  final int selectedItem;
+
+  const DetailsRec({Key? key, required this.selectedItem}) : super(key: key);
 
   @override
   State<DetailsRec> createState() => _DetailsRecState();
 }
 
 class _DetailsRecState extends State<DetailsRec> {
+  User? user;
+
   late HasilRecipeApi hasilRecipeApi = HasilRecipeApi(id: 0, name: "", steps: [], cooktime: 0, portions: 0, difficulty: "", image: "", ingredients: [], nutritionList: []);
+  var _token = "";
 
   final controller = Controller();
+  final conLog = Controller12();
   
   @override
+  void initState() {
+    super.initState();
+    checkLoginStatus(context).then((token) {
+      print('Ini Token: $token');
+      if (token != null) {
+        setState(() {
+          _token = token;
+        });
+        getUserData(_token!);
+      }
+    });
+    getRecipe();
+  }
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -53,15 +74,19 @@ class _DetailsRecState extends State<DetailsRec> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    getRecipe(2);
-  }
+  
 
-  Future<void> getRecipe(int id) async {
-    final hasil = await controller.fetchHasilRecipeApi(id);
+  Future<void> getRecipe() async {
+    final hasil = await controller.fetchHasilRecipeApi(widget.selectedItem);
     setState(() {
       hasilRecipeApi = hasil;
+    });
+  }
+
+  Future<void> getUserData(String bearerToken) async {
+    var result = await conLog.getUserData(bearerToken);
+    setState(() {
+      user = result;
     });
   }
 

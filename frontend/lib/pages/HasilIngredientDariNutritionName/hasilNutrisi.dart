@@ -14,13 +14,14 @@ class hasilNutrisi extends StatefulWidget {
 class _hasilNutrisiState extends State<hasilNutrisi> {
   HasilNutrisiApi articlestate =
       HasilNutrisiApi(name: '', unit: '', id: 0, ingredient: []);
-  final controller = Controller();
+  final controller = Controller1();
 
   @override
   void initState() {
     super.initState();
     getArticle();
   }
+  
 
   @override
   Widget build(BuildContext context) {
