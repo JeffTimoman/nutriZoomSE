@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gabunginfrontend/pages/layout_textfield.dart';
+import 'package:gabunginfrontend/pages/utility/sharedPreferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -14,19 +15,6 @@ class User{
 class Controller{
 
   Future changeUserData(String name, String email, String username, String birth, String bearerToken) async{
-    /*
-      curl -X 'POST' \
-  'http://nutrizoom.site/api/auth/update_user_data' \
-  -H 'accept: application/json' \
-  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMDA4MDA3NywianRpIjoiYWRiMmI2YzQtODk0Yy00MDBlLWEzMWQtNzZkYjIyZjE3OWU2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6OSwibmJmIjoxNzEwMDgwMDc3LCJjc3JmIjoiZmY3ZDI0ODctYTIxNS00OTRhLTliZTItNGJkMDgzMjZjN2IwIiwiZXhwIjoxNzEwMDgzNjc3fQ.qtWC65D6vrQVSmi1L5BpDuR52H5Fhkop370jWsSe8Js' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "name": "",
-  "email": "",
-  "username": "",
-  "birth": ""
-}'
-    */
     var url = Uri.parse('http://nutrizoom.site/api/auth/update_user_data');
 
     var response = await http.post(url,
@@ -89,18 +77,26 @@ class _change_profileState extends State<change_profile> {
   TextEditingController fullNameController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMDI0MDAzNSwianRpIjoiZDBhNDM5MGItMWIwNS00ZGY4LWI0NGQtOGExNDFjMjEyYWFlIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MTYsIm5iZiI6MTcxMDI0MDAzNSwiY3NyZiI6IjY0NzQyZjgxLTM0YWQtNGI2MC1hYjRiLTAyNjQ3YWJiY2Y5OSIsImV4cCI6MTc0MTc3NjAzNX0.cL_oakN2EQTBgXVunq78YDgFvOACO9KsXTbZ7VGEMyQ";
+  var _token = "";
+  // var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxMDI0MDAzNSwianRpIjoiZDBhNDM5MGItMWIwNS00ZGY4LWI0NGQtOGExNDFjMjEyYWFlIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MTYsIm5iZiI6MTcxMDI0MDAzNSwiY3NyZiI6IjY0NzQyZjgxLTM0YWQtNGI2MC1hYjRiLTAyNjQ3YWJiY2Y5OSIsImV4cCI6MTc0MTc3NjAzNX0.cL_oakN2EQTBgXVunq78YDgFvOACO9KsXTbZ7VGEMyQ";
 
   var controller = Controller();
 
   @override
   void initState() {
     super.initState();
-    getUserData();
+    checkLoginStatus(context).then((token) {
+      print('Ini Token: $token');
+      if (token != null) {
+        setState(() {
+          _token = token;
+        });
+        getUserData(_token!);
+      }
+    });
   }
-
-  Future <void> getUserData() async{
-    var response = await controller.getUserData(token);
+  Future <void> getUserData(String s) async{
+    var response = await controller.getUserData(_token);
 
     if (response != null){
       setState(() {
@@ -162,7 +158,7 @@ class _change_profileState extends State<change_profile> {
       return;
     }
 
-    var response = await controller.changeUserData(name, email, username, birth, token);
+    var response = await controller.changeUserData(name, email, username, birth, _token);
     if (response == 200){
       print("Data berhasil diubah");
         showDialog(
@@ -183,7 +179,7 @@ class _change_profileState extends State<change_profile> {
           },
         );
         
-        getUserData();
+        getUserData(_token);
     } else {
       print("Data gagal diubah");
       showDialog(
@@ -230,10 +226,10 @@ class _change_profileState extends State<change_profile> {
                                 Navigator.pop(context);
                               },
                               child: Icon(Icons.arrow_back_ios_new_sharp, color: Colors.white,)),
-                            Icon(
-                              Icons.arrow_back_ios_new_sharp,
-                              color: Colors.white,
-                            ),
+                            // Icon(
+                            //   Icons.arrow_back_ios_new_sharp,
+                            //   color: Colors.white,
+                            // ),
                           ],
                         ),
                       ),

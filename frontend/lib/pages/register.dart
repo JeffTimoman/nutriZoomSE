@@ -185,7 +185,7 @@ class _registerPageState extends State<registerPage> {
                     child: TextButton(
                       onPressed: registerData, // Call registerData function on button press
                       child: Text(
-                        "MASUK",
+                        "REGISTRASI",
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold

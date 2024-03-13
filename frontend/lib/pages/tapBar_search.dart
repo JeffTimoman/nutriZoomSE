@@ -48,7 +48,7 @@ class _TapBarState extends State<TapBar>
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => NavBar()),
+                MaterialPageRoute(builder: (context) => NavBar(currentIndex: 0,)),
               );
             },
             icon: Icon(

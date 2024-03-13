@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:another_carousel_pro/another_carousel_pro.dart';
 import 'package:gabunginfrontend/pages/Article_Home/article_homelist.dart' as ControllerAr;
+import 'package:gabunginfrontend/pages/artikel.dart';
 import 'package:gabunginfrontend/pages/artikel_page.dart';
 import 'package:gabunginfrontend/pages/profile_page/controller.dart';
 // import 'package:gabunginfrontend/Alen/profile_page/controller.dart';
@@ -33,7 +34,7 @@ class _MyWidgetState extends State<Home> {
     articles: [],
   );
 
-  final controller_article = ControllerAr.Controller();
+  final controller_article = ControllerAr.ControllerArt();
 
   @override
   void initState() {
@@ -283,24 +284,32 @@ class _MyWidgetState extends State<Home> {
                     ),
                       SizedBox(height: 20,),
                       Container(
-                      // padding: EdgeInsets.only(bottom: 20),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: articleState.articles.length,
-                        itemBuilder: (context, index) {  
-                          var article = articleState.articles[index];
-                          return ArticleCard(
-                            image: article.image,
-                            author: article.author, 
-                            publishDate: article.publishdate, 
-                            title: article.title,
-                            description: article.content,
-                          );
-                        },
-                        // padding: EdgeInsets.only(bottom: 20),
-                      ),
-                    )
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: articleState.articles.length,
+                          itemBuilder: (context, index) {
+                            var article = articleState.articles[index];
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ArtikelPage(articleId: article.id),
+                                  ),
+                                );
+                              },
+                              child: ArticleCard(
+                                image: article.image,
+                                author: article.author,
+                                publishDate: article.publishdate,
+                                title: article.title,
+                                description: article.content,
+                              ),
+                            );
+                          },
+                        ),
+                      )
               
                     ],
                   ),

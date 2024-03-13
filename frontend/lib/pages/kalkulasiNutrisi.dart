@@ -1,7 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:gabunginfrontend/pages/bottom_nav.dart';
 import 'package:gabunginfrontend/pages/dataKalkulasiNutrisi.dart';
 import 'package:gabunginfrontend/pages/login.dart';
+import 'package:gabunginfrontend/pages/profile_page.dart';
 import 'package:gabunginfrontend/pages/resep.dart';
 import 'package:gabunginfrontend/pages/tapBar_search.dart';
 import 'package:pie_chart/pie_chart.dart';
@@ -62,7 +64,7 @@ class _WidgetNutrisiState extends State<WidgetNutrisi> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => nutritionPage()), // TOMBOL BACK SEMENTARA
+              MaterialPageRoute(builder: (context) => ProfilePage()), // TOMBOL BACK SEMENTARA
             );
           },
         ),
@@ -158,7 +160,7 @@ class _WidgetNutrisiState extends State<WidgetNutrisi> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => TapBar()),
+                        MaterialPageRoute(builder: (context) => NavBar(currentIndex: 4,)),
                       );
                     },
                     child: Container(

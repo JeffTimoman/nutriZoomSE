@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:gabunginfrontend/pages/artikel_page.dart';
 import 'package:gabunginfrontend/pages/bottom_nav.dart';
 import 'package:gabunginfrontend/pages/home.dart';
 import 'package:http/http.dart' as http;
@@ -49,16 +50,16 @@ class Controller {
   }
 }
 
-class ArtikelPage extends StatefulWidget {
+class ArtikelPagePage extends StatefulWidget {
   final int articleId;
 
-  ArtikelPage({required this.articleId});
+  ArtikelPagePage({required this.articleId});
 
   @override
-  _ArtikelPageState createState() => _ArtikelPageState();
+  _ArtikelPagePageState createState() => _ArtikelPagePageState();
 }
 
-class _ArtikelPageState extends State<ArtikelPage> {
+class _ArtikelPagePageState extends State<ArtikelPagePage> {
   late final Controller controller;
   late Article article;
 
@@ -99,7 +100,7 @@ class _ArtikelPageState extends State<ArtikelPage> {
               child: article.image.isNotEmpty
                   ? Image.network(
                       article.image,
-                      fit: BoxFit.fill,
+                      fit: BoxFit.cover,
                     )
                   : Container(),
             ),
@@ -122,7 +123,7 @@ class _ArtikelPageState extends State<ArtikelPage> {
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => NavBar(currentIndex: 0,)), // Replace "Navbar" with the appropriate widget representing your navbar
+                        MaterialPageRoute(builder: (context) => NavBar(currentIndex: 3)), // Replace "Navbar" with the appropriate widget representing your navbar
                       );
                     },
                     icon: Icon(
