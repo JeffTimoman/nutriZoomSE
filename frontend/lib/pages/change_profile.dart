@@ -276,20 +276,12 @@ class _change_profileState extends State<change_profile> {
                       Text(
                         "${user.name}",
                         textAlign: TextAlign.justify,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.headline3,
                       ),
                       Text(
                         "@${user.username}",
                         textAlign: TextAlign.justify,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.subtitle1,
                       ),
                     ],
                   ),
@@ -322,18 +314,22 @@ class _change_profileState extends State<change_profile> {
                                 padding: EdgeInsets.symmetric(horizontal: 20),
                                 child: ListView(
                                   children: [
-                                    Text("Nama Lengkap"),
+                                    Text("Nama Lengkap",
+                                    style: Theme.of(context).textTheme.bodyText1,),
                                     TextFormField(
                                       controller: fullNameController,
                                     ), // Nama
                                     SizedBox(height: 20),
-                                    Text("Username"),
+                                    Text("Username",
+                                    style: Theme.of(context).textTheme.bodyText1,),
                                     TextFormField(
                                       controller: usernameController,
                                     ), // Username
                                     //email
                                     SizedBox(height: 20),
-                                    Text("Email"),
+                                    Text("Email",
+                                    style: Theme.of(context).textTheme.bodyText1,
+                                    ),
                                     TextFormField(
                                       controller: emailController,
                                     ), // Email

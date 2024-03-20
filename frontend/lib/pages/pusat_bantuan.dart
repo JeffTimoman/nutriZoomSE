@@ -307,7 +307,11 @@ class _PusatBantuanState extends State<PusatBantuan> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Topic paling dicari"),
+                                Text("Topic paling dicari",
+                                style: TextStyle(
+                                  color: Colors.black
+                                ),
+                                ),
                                 Divider(
                                   color: Colors.grey.shade500,
                                   thickness: 2,
@@ -315,13 +319,13 @@ class _PusatBantuanState extends State<PusatBantuan> {
                                 layoutTopikBantuan(
                                     context, "Bagaimana cara ubah password?"),
                                 layoutTopikBantuan(
-                                    context, "Bagaimana cara ubah password?"),
+                                    context, "Bagaimana cara melihat resep?"),
                                 layoutTopikBantuan(
-                                    context, "Bagaimana cara ubah password?"),
+                                    context, "Apakah bisa kita membuat artikel sendiri?"),
                                 layoutTopikBantuan(
-                                    context, "Bagaimana cara ubah password?"),
+                                    context, "Menghitung Nutrisi Gimana sih?"),
                                 layoutTopikBantuan(
-                                    context, "Bagaimana cara ubah password?"),
+                                    context, "Bagaimana menghitunf BMI?"),
                               ],
                             )
                           ],

@@ -86,24 +86,24 @@ class _SearchNutrisiState extends State<SearchNutrisi> {
         ),
 
         //Search Suggestions
-        Container(
-          width: double.infinity,
-          // padding: EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Sugesti Pencarian", style: Theme.of(context).textTheme.bodyText1),
-              const SizedBox(height: 20,),
-              Wrap(
-                spacing: 10,
-                children: dropDownApi != null ? dropDownApi!.nutritionList.map<Widget>((e){
-                  return searchSuggestionItem(e.name);
-                }).toList() : []
+        // Container(
+        //   width: double.infinity,
+        //   // padding: EdgeInsets.all(10),
+        //   child: Column(
+        //     crossAxisAlignment: CrossAxisAlignment.start,
+        //     children: [
+        //       Text("Sugesti Pencarian", style: Theme.of(context).textTheme.bodyText1),
+        //       const SizedBox(height: 20,),
+        //       Wrap(
+        //         spacing: 10,
+        //         children: dropDownApi != null ? dropDownApi!.nutritionList.map<Widget>((e){
+        //           return searchSuggestionItem(e.name);
+        //         }).toList() : []
 
-              ),
-              ],
-          ),
-        ),
+        //       ),
+        //       ],
+        //   ),
+        // ),
                 // ListView.builder(
                   //   shrinkWrap: true,
                   //   physics: NeverScrollableScrollPhysics(),

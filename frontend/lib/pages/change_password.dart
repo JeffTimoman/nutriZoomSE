@@ -279,7 +279,8 @@ class _change_passwordState extends State<change_password> {
                               padding: EdgeInsets.symmetric(horizontal: 20),
                               child: ListView(
                                 children: [
-                                  Text("Password Lama"),
+                                  Text("Password Lama",
+                                  style: Theme.of(context).textTheme.bodyText1,),
                                   TextFormField(
                                     controller: _oldPasswordController,
                                     decoration: InputDecoration(
@@ -293,7 +294,8 @@ class _change_passwordState extends State<change_password> {
                                     ),
                                   ),
                                   SizedBox(height: 20,),
-                                  Text("Password Baru"),
+                                  Text("Password Baru",
+                                  style: Theme.of(context).textTheme.bodyText1,),
                                   TextFormField(
                                     controller: _newPasswordController,
                                     decoration: InputDecoration(

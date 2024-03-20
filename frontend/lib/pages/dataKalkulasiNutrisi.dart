@@ -28,19 +28,15 @@ class _nutritionPageState extends State<nutritionPage> {
       appBar: AppBar(
         title: Text(
           "Hitung Nutrisi Harian",
-          style: TextStyle(
-            color: Colors.white,
-            fontFamily: 'Montserrat',
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.headline1
         ),
         centerTitle: true,
         backgroundColor: Color(0xff3C6142),
-        toolbarHeight: 90,
-        shape: ContinuousRectangleBorder(
+        // toolbarHeight: 90,
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(25.0),
-            bottomRight: Radius.circular(25.0),
+            bottomLeft: Radius.circular(20.0),
+            bottomRight: Radius.circular(20.0),
           ),
         ),
         leading: IconButton(
@@ -63,16 +59,13 @@ class _nutritionPageState extends State<nutritionPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 5),
+                  // const SizedBox(height: 5),
                   Text.rich(
                     TextSpan(
                       children: [
                         TextSpan(
                           text: 'Mari kita mulai perhitungannya',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
+                          style: Theme.of(context).textTheme.headline2
                         ),
                       ],
                     ),
@@ -80,15 +73,12 @@ class _nutritionPageState extends State<nutritionPage> {
                   Container(
                     height: 2,
                     color: Colors.grey,
-                    margin: EdgeInsets.symmetric(vertical: 20),
+                    margin: EdgeInsets.symmetric(vertical: 15),
                   ),
                   const SizedBox(height: 0),
                   Text(
                     'Jenis Kelamin',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
-                        fontSize: 15),
+                    style: Theme.of(context).textTheme.bodyText1,
                   ),
                   const SizedBox(height: 2),
                   Row(
@@ -119,10 +109,7 @@ class _nutritionPageState extends State<nutritionPage> {
                   const SizedBox(height: 0),
                   Text(
                     'Berat Badan',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
-                        fontSize: 15),
+                    style: Theme.of(context).textTheme.bodyText1,
                   ),
                   const SizedBox(height: 2),
                   TextFormField(
@@ -146,10 +133,7 @@ class _nutritionPageState extends State<nutritionPage> {
                   const SizedBox(height: 25),
                   Text(
                     'Tinggi Badan',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
-                        fontSize: 15),
+                    style: Theme.of(context).textTheme.bodyText1
                   ),
                   const SizedBox(height: 2),
                   TextFormField(
@@ -173,10 +157,7 @@ class _nutritionPageState extends State<nutritionPage> {
                   const SizedBox(height: 25),
                   Text(
                     'Usia',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
-                        fontSize: 15),
+                    style: Theme.of(context).textTheme.bodyText1
                   ),
                   const SizedBox(height: 2),
                   TextFormField(
@@ -200,10 +181,7 @@ class _nutritionPageState extends State<nutritionPage> {
                   const SizedBox(height: 25),
                   Text(
                     'Intensitas Berolahraga',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
-                        fontSize: 15),
+                    style: Theme.of(context).textTheme.bodyText1
                   ),
                   const SizedBox(height: 2),
                   DropdownButton<String>(
