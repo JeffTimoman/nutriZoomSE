@@ -237,7 +237,7 @@ class _DetailsRecState extends State<DetailsRec> {
                 ),
 
                 // Bahan
-                Text("Bahan", style: Theme.of(context).textTheme.bodyText1,),
+                Text("Bahan", style: Theme.of(context).textTheme.headline2,),
                 SizedBox(height: 10,),
                 // List Bahan
                 layoutIngredientsList(context, hasilRecipeApi.ingredients),
@@ -245,7 +245,7 @@ class _DetailsRecState extends State<DetailsRec> {
                 SizedBox(height: 10,),
                 
                 // Steps
-                Text("Langkah Memasak", style: Theme.of(context).textTheme.bodyText1,),
+                Text("Langkah Memasak", style: Theme.of(context).textTheme.headline2,),
                 SizedBox(height: 10,),
                 // List Steps
                 layoutStepsList(context, hasilRecipeApi.steps),
@@ -273,7 +273,7 @@ class _DetailsRecState extends State<DetailsRec> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
-                    child: Text(ingredient.name, style: Theme.of(context).textTheme.bodyText2,),
+                    child: Text(ingredient.name, style: Theme.of(context).textTheme.bodyText1,),
                   ),
                   Spacer(),
                   Text(ingredient.amount.toString(), style: Theme.of(context).textTheme.bodyText2,),
@@ -312,6 +312,7 @@ class _DetailsRecState extends State<DetailsRec> {
                   Expanded(
                     child: Text(
                       step,
+                      style: Theme.of(context).textTheme.bodyText1,
                       softWrap: true,
                     ),
                   ),

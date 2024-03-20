@@ -155,7 +155,7 @@ class BmiResult extends StatelessWidget {
       bmiStatusColor = Colors.red;
     } else if (bmiScore >= 25) {
       bmiStatus = "Kelebihan Berat Badan";
-      bmiIntrepretation = "pokonya ini overweight";
+      bmiIntrepretation = "Ayo jaga makan dan gaya hidup untuk kurangi kelebihan berat badanmu!";
       bmiStatusColor = Colors.orange;
     } else if (bmiScore >= 18.5) {
       bmiStatus = "Normal";
@@ -163,7 +163,7 @@ class BmiResult extends StatelessWidget {
       bmiStatusColor = Colors.green;
     } else if (bmiScore < 18.5) {
       bmiStatus = "Kekurangan Berat Badan";
-      bmiIntrepretation = "pokonya ini underweight";
+      bmiIntrepretation = "Ayo tingkatkan pola makan dan gaya hidup sehatmu!";
       bmiStatusColor = Colors.blue;
     }
   }

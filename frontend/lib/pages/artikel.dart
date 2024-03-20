@@ -95,11 +95,21 @@ class _ArtikelPageState extends State<ArtikelPage> {
         backgroundColor: Colors.black,
         body: Stack(
           children: [
-            Positioned.fill(
-              child: article.image.isNotEmpty
+            // Positioned.fill(
+            //   child: article.image.isNotEmpty
+            //       ? Image.network(
+            //           article.image,
+            //           fit: BoxFit.fill,
+            //         )
+            //       : Container(),
+            // ),
+            Container(
+            width: double.infinity,
+            height: 350,
+            child: article.image.isNotEmpty
                   ? Image.network(
                       article.image,
-                      fit: BoxFit.fill,
+                      fit: BoxFit.cover,
                     )
                   : Container(),
             ),
@@ -172,10 +182,7 @@ class _ArtikelPageState extends State<ArtikelPage> {
                         ),
                         Text(
                           '${article.title}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25,
-                          ),
+                          style: Theme.of(context).textTheme.headline2
                         ),
                         const SizedBox(height: 25),
                         Row(
@@ -198,7 +205,7 @@ class _ArtikelPageState extends State<ArtikelPage> {
                                         size: 25,
                                       ),
                                     ),
-                                    const SizedBox(width: 5),
+                                    // const SizedBox(width: 5),
                                     Text(
                                       '${article.author}',
                                       style: TextStyle(
@@ -230,7 +237,7 @@ class _ArtikelPageState extends State<ArtikelPage> {
                                         size: 25,
                                       ),
                                     ),
-                                    const SizedBox(width: 5),
+                                    // const SizedBox(width: 5),
                                     Text(
                                       '${article.publishdate}',
                                       style: TextStyle(
@@ -248,9 +255,7 @@ class _ArtikelPageState extends State<ArtikelPage> {
                         const SizedBox(height: 35),
                         Text(
                           '${article.content}',
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
+                          style: Theme.of(context).textTheme.bodyText1
                         ),
                         const SizedBox(height: 30),
                       ],
