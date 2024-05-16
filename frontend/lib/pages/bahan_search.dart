@@ -54,7 +54,7 @@ class _search_bahanState extends State<search_bahan> {
                   child: Container(
                     child: Text(
                       "Cari Bahan Makananmu",
-                      // style: Theme.of(context).textTheme.headline2,
+                      style: Theme.of(context).textTheme.headline2,
                     ),
                   ),
                 ),
@@ -80,13 +80,15 @@ class _search_bahanState extends State<search_bahan> {
                                 setState(() {});
                               },
                               onEditingComplete: (){
-                                saveSearchHistory(searchController.text);
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => HasilBahan(searchText: searchController.text),
-                                  ),
-                                );
+                                if(searchController.text.isNotEmpty){
+                                  saveSearchHistory(searchController.text);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => HasilBahan(searchText: searchController.text),
+                                    ),
+                                  );
+                                }
                               },
                           )
                         ),
@@ -95,7 +97,7 @@ class _search_bahanState extends State<search_bahan> {
                   ),
                 ),
           
-                // Precious Search
+                // Previous Search
                 Container(
                   color: Colors.white,
                   child: ListView.builder(
@@ -107,30 +109,30 @@ class _search_bahanState extends State<search_bahan> {
                 ),
           
                 // Search Suggestion
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Container(
-                    width: double.infinity,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Sugesti Pencarian", style: Theme.of(context).textTheme.bodyText1),
-                        const SizedBox(height: 20,),
-                        Wrap(
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal: 20),
+                //   child: Container(
+                //     width: double.infinity,
+                //     child: Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         Text("Sugesti Pencarian", style: Theme.of(context).textTheme.bodyText1),
+                //         const SizedBox(height: 20,),
+                //         Wrap(
                           
-                          children: [
-                            searchSuggestionItem("Ayam"),
-                            searchSuggestionItem("Tempe"),
-                            searchSuggestionItem("Tahu"),
-                            searchSuggestionItem("Kentang"),
-                            searchSuggestionItem("Jeruk"),
-                            searchSuggestionItem("Soy Sauce"),
-                          ],
-                        )
-                        ],
-                    ),
-                  ),
-                )
+                //           children: [
+                //             searchSuggestionItem("Ayam"),
+                //             searchSuggestionItem("Tempe"),
+                //             searchSuggestionItem("Tahu"),
+                //             searchSuggestionItem("Kentang"),
+                //             searchSuggestionItem("Jeruk"),
+                //             searchSuggestionItem("Soy Sauce"),
+                //           ],
+                //         )
+                //         ],
+                //     ),
+                //   ),
+                // )
               ],
             ),
           ),

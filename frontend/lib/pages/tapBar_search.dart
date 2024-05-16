@@ -34,7 +34,7 @@ class _TapBarState extends State<TapBar>
       appBar: AppBar(
         backgroundColor: Color(0xff3C6142),
         title: Text(
-          "Pencarian",
+          "Cari Resep",
           style: Theme.of(context).textTheme.headline1,
         ),
         centerTitle: true,

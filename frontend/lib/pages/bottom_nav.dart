@@ -69,6 +69,8 @@ class _NavBarState extends State<NavBar> {
               icon: Icon(Icons.person_2_outlined, color: Color(0xff3C6142))
           ),
         ],
+        selectedLabelStyle: TextStyle(color: Colors.black),
+        // unselectedLabelStyle: TextStyle(color: Colors.black),
       ),
     );
   }
